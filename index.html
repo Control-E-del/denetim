@@ -7,423 +7,115 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green: #2ecc71;
-    --green-dark: #27ae60;
-    --red: #e74c3c;
-    --red-dark: #c0392b;
-    --bg: #0f1923;
-    --card: #182330;
-    --card2: #1e2e3d;
-    --border: #2a3f54;
-    --text: #e8f4fd;
-    --muted: #7fa8c8;
-    --accent: #3498db;
-    --accent2: #f39c12;
-    --header-h: 80px;
+    --green:#2ecc71;--green-dark:#27ae60;--red:#e74c3c;--red-dark:#c0392b;
+    --bg:#0f1923;--card:#182330;--card2:#1e2e3d;--border:#2a3f54;
+    --text:#e8f4fd;--muted:#7fa8c8;--accent:#3498db;--accent2:#f39c12;
   }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  header{background:linear-gradient(135deg,#0d1e2e,#163550);border-bottom:2px solid var(--accent);padding:14px 20px 10px;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px #0008;}
+  .logo-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .logo-icon{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  header h1{font-family:'Orbitron',sans-serif;font-size:1.05rem;letter-spacing:1px;}
+  .subtitle{font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+  .progress-wrap{margin-top:8px;}
+  .progress-label{display:flex;justify-content:space-between;margin-bottom:4px;}
+  .progress-label span{font-size:0.78rem;color:var(--muted);font-weight:700;}
+  .pct{font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--green);transition:color 0.4s;}
+  .bar-bg{height:10px;background:#0d1f30;border-radius:999px;overflow:hidden;border:1px solid var(--border);}
+  .bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green-dark),var(--green));border-radius:999px;transition:width 0.5s cubic-bezier(.4,1.4,.6,1);box-shadow:0 0 10px #2ecc7188;}
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 60px;
-  }
+  .meta-bar{display:flex;gap:14px;padding:8px 20px;background:var(--card);border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  .meta-item{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);font-weight:700;}
+  .meta-item span{color:var(--text);}
 
-  /* ---- HEADER ---- */
-  header {
-    background: linear-gradient(135deg, #0d1e2e 0%, #163550 100%);
-    border-bottom: 2px solid var(--accent);
-    padding: 18px 24px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 24px #0008;
-  }
-  header .logo-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 10px;
-  }
-  header .logo-icon {
-    width: 44px; height: 44px;
-    background: var(--accent);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-  }
-  header h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.15rem;
-    color: var(--text);
-    letter-spacing: 1px;
-  }
-  header .subtitle {
-    font-size: 0.78rem;
-    color: var(--muted);
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
+  .tab-bar{display:flex;background:#0d1923;border-bottom:2px solid var(--border);position:sticky;top:128px;z-index:90;overflow-x:auto;}
+  .tab-btn{flex:1;min-width:110px;padding:13px 8px;background:transparent;border:none;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.76rem;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;}
+  .tab-btn:hover{color:var(--text);background:#12202e;}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:#12202e;}
+  .tab-btn.t-ariza.active{color:var(--accent2);border-bottom-color:var(--accent2);}
 
-  /* ---- PROGRESS BAR ---- */
-  .progress-wrap {
-    margin-top: 12px;
-  }
-  .progress-label {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 6px;
-  }
-  .progress-label span { font-size: 0.82rem; color: var(--muted); font-weight: 700; }
-  .progress-label .pct {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
-    color: var(--green);
-    transition: color 0.4s;
-  }
-  .bar-bg {
-    height: 12px;
-    background: #0d1f30;
-    border-radius: 999px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-  .bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--green-dark), var(--green), #7fffb0);
-    border-radius: 999px;
-    transition: width 0.5s cubic-bezier(.4,1.4,.6,1);
-    box-shadow: 0 0 12px #2ecc7188;
-  }
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
 
-  /* ---- DATE / INFO ---- */
-  .meta-bar {
-    display: flex;
-    gap: 16px;
-    padding: 10px 24px;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .meta-item {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 0.82rem; color: var(--muted); font-weight: 700;
-  }
-  .meta-item span { color: var(--text); }
-  .meta-item .ico { font-size: 1rem; }
+  .section{margin:16px 14px 0;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--card);}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 18px;background:linear-gradient(90deg,var(--card2),var(--card));border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+  .section-icon{font-size:1.2rem;}
+  .section-title{font-family:'Orbitron',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:var(--accent);flex:1;text-transform:uppercase;}
+  .section-score{font-weight:800;font-size:0.8rem;color:var(--muted);background:#0d1f30;padding:2px 9px;border-radius:999px;transition:color 0.3s;}
+  .section-score.full{color:var(--green);}
+  .chevron{font-size:0.85rem;color:var(--muted);transition:transform 0.3s;}
+  .section.collapsed .chevron{transform:rotate(-90deg);}
+  .section.collapsed .section-body{display:none;}
 
-  /* ---- SECTIONS ---- */
-  .section {
-    margin: 20px 16px 0;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    background: var(--card);
-  }
-  .section-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 20px;
-    background: linear-gradient(90deg, var(--card2), var(--card));
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-  }
-  .section-icon { font-size: 1.3rem; }
-  .section-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.82rem;
-    letter-spacing: 1.5px;
-    color: var(--accent);
-    flex: 1;
-    text-transform: uppercase;
-  }
-  .section-score {
-    font-weight: 800;
-    font-size: 0.85rem;
-    color: var(--muted);
-    background: #0d1f30;
-    padding: 3px 10px;
-    border-radius: 999px;
-    transition: color 0.3s;
-  }
-  .section-score.full { color: var(--green); }
-  .chevron { font-size: 0.9rem; color: var(--muted); transition: transform 0.3s; }
-  .section.collapsed .chevron { transform: rotate(-90deg); }
+  .question{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid #1a2e40;transition:background 0.2s;}
+  .question:last-child{border-bottom:none;}
+  .question:hover{background:#1e3348;}
+  .q-text{flex:1;font-size:0.85rem;font-weight:600;line-height:1.5;}
+  .q-num{font-size:0.7rem;font-weight:900;color:var(--muted);min-width:20px;text-align:right;}
+  .toggle-group{display:flex;gap:5px;}
+  .btn-evet,.btn-hayir{padding:5px 12px;border-radius:7px;border:2px solid var(--border);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.76rem;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);}
+  .btn-evet:hover{border-color:var(--green);color:var(--green);}
+  .btn-hayir:hover{border-color:var(--red);color:var(--red);}
+  .btn-evet.active{background:var(--green-dark);border-color:var(--green);color:#fff;box-shadow:0 0 8px #2ecc7155;}
+  .btn-hayir.active{background:var(--red-dark);border-color:var(--red);color:#fff;box-shadow:0 0 8px #e74c3c55;}
+  .question.answered-yes{border-left:3px solid var(--green);}
+  .question.answered-no{border-left:3px solid var(--red);}
 
-  .section-body { }
-  .section.collapsed .section-body { display: none; }
+  .reason-wrap{display:none;padding:0 18px 12px 50px;background:#12202e;border-bottom:1px solid #1a2e40;animation:slideDown 0.25s ease;}
+  .reason-wrap.show{display:block;}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  .reason-label{font-size:0.7rem;font-weight:800;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+  .reason-textarea{width:100%;background:#0d1923;border:1.5px solid var(--red-dark);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:600;padding:9px 12px;resize:vertical;min-height:65px;outline:none;}
+  .reason-textarea::placeholder{color:#4a6a82;}
+  .reason-textarea:focus{border-color:var(--red);box-shadow:0 0 8px #e74c3c33;}
 
-  /* ---- QUESTIONS ---- */
-  .question {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 20px;
-    border-bottom: 1px solid #1a2e40;
-    transition: background 0.2s;
-  }
-  .question:last-child { border-bottom: none; }
-  .question:hover { background: #1e3348; }
-  .q-text {
-    flex: 1;
-    font-size: 0.88rem;
-    font-weight: 600;
-    line-height: 1.5;
-    color: var(--text);
-  }
-  .q-num {
-    font-size: 0.72rem;
-    font-weight: 900;
-    color: var(--muted);
-    min-width: 22px;
-    text-align: right;
-  }
+  .ariza-body{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;}
+  .ariza-form-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .ariza-input,.ariza-select{flex:1;min-width:130px;background:#0d1923;border:1.5px solid #3d2a00;border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:600;padding:9px 12px;outline:none;transition:border-color 0.2s;}
+  .ariza-input::placeholder{color:#4a6a82;}
+  .ariza-input:focus,.ariza-select:focus{border-color:var(--accent2);box-shadow:0 0 8px #f39c1233;}
+  .ariza-select option{background:#0d1923;}
+  .ariza-textarea{width:100%;background:#0d1923;border:1.5px solid #3d2a00;border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:600;padding:9px 12px;resize:vertical;min-height:75px;outline:none;}
+  .ariza-textarea::placeholder{color:#4a6a82;}
+  .ariza-textarea:focus{border-color:var(--accent2);}
+  .ariza-add-btn{background:linear-gradient(135deg,#b7770d,var(--accent2));color:#fff;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:10px 20px;cursor:pointer;transition:all 0.2s;align-self:flex-start;}
+  .ariza-add-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px #f39c1244;}
+  .ariza-list{display:flex;flex-direction:column;gap:9px;}
+  .ariza-item{background:#0d1923;border:1px solid #3d2a00;border-left:4px solid var(--accent2);border-radius:9px;padding:11px 14px;display:flex;gap:10px;align-items:flex-start;animation:slideDown 0.25s ease;}
+  .ariza-item-info{flex:1;}
+  .ariza-item-title{font-size:0.82rem;font-weight:800;color:var(--accent2);margin-bottom:2px;}
+  .ariza-item-desc{font-size:0.79rem;color:var(--muted);line-height:1.4;}
+  .ariza-item-meta{font-size:0.71rem;color:#4a6a82;margin-top:3px;}
+  .ariza-badge{font-size:0.68rem;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap;}
+  .badge-yuksek{background:#3d0a0a;color:#ff6b6b;}
+  .badge-orta{background:#3d2a00;color:var(--accent2);}
+  .badge-dusuk{background:#0a2a1a;color:#2ecc71;}
+  .ariza-del-btn{background:none;border:none;color:#4a6a82;cursor:pointer;font-size:1rem;padding:2px 3px;transition:color 0.2s;}
+  .ariza-del-btn:hover{color:var(--red);}
+  .ariza-empty{text-align:center;color:#4a6a82;font-size:0.82rem;font-weight:600;padding:10px 0;}
 
-  /* ---- TOGGLE BUTTONS ---- */
-  .toggle-group {
-    display: flex;
-    gap: 6px;
-  }
-  .btn-evet, .btn-hayir {
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-    background: transparent;
-    color: var(--muted);
-    border-color: var(--border);
-  }
-  .btn-evet:hover { border-color: var(--green); color: var(--green); }
-  .btn-hayir:hover { border-color: var(--red); color: var(--red); }
+  .submit-wrap{padding:20px 14px 12px;text-align:center;}
+  .btn-submit{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border:none;border-radius:12px;font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;padding:14px 36px;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 18px #2ecc7155;transition:all 0.2s;width:100%;max-width:380px;}
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px #2ecc7177;}
+  .btn-submit:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
+  .btn-ariza{background:linear-gradient(135deg,#b7770d,var(--accent2))!important;box-shadow:0 4px 18px #f39c1255!important;}
 
-  .btn-evet.active {
-    background: var(--green-dark);
-    border-color: var(--green);
-    color: #fff;
-    box-shadow: 0 0 10px #2ecc7155;
-  }
-  .btn-hayir.active {
-    background: var(--red-dark);
-    border-color: var(--red);
-    color: #fff;
-    box-shadow: 0 0 10px #e74c3c55;
-  }
+  .modal-overlay{display:none;position:fixed;inset:0;background:#000c;z-index:999;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--card2);border:2px solid var(--green);border-radius:18px;padding:34px 26px;text-align:center;max-width:310px;width:90%;box-shadow:0 0 50px #2ecc7144;animation:popIn 0.4s cubic-bezier(.4,1.4,.6,1);}
+  @keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .modal .big-check{font-size:3.2rem;margin-bottom:8px;}
+  .modal h2{font-family:'Orbitron',sans-serif;font-size:0.95rem;color:var(--green);margin-bottom:5px;}
+  .modal p{font-size:0.82rem;color:var(--muted);margin-bottom:14px;}
+  .modal-score{font-family:'Orbitron',sans-serif;font-size:2rem;color:var(--text);margin-bottom:14px;}
+  .modal-score span{color:var(--green);}
+  .modal-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;padding:10px 26px;cursor:pointer;width:100%;}
 
-  /* ---- STATUS INDICATOR ---- */
-  .question.answered-yes { border-left: 3px solid var(--green); }
-  .question.answered-no { border-left: 3px solid var(--red); }
-
-  /* ---- REASON BOX ---- */
-  .reason-wrap {
-    display: none;
-    padding: 0 20px 14px 54px;
-    background: #12202e;
-    border-bottom: 1px solid #1a2e40;
-    animation: slideDown 0.25s ease;
-  }
-  .reason-wrap.show { display: block; }
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .reason-label {
-    font-size: 0.74rem;
-    font-weight: 800;
-    color: var(--red);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .reason-textarea {
-    width: 100%;
-    background: #0d1923;
-    border: 1.5px solid var(--red-dark);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    padding: 10px 14px;
-    resize: vertical;
-    min-height: 70px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .reason-textarea::placeholder { color: #4a6a82; }
-  .reason-textarea:focus {
-    border-color: var(--red);
-    box-shadow: 0 0 10px #e74c3c33;
-  }
-
-  /* ---- SUBMIT ---- */
-  .submit-wrap {
-    padding: 28px 16px 16px;
-    text-align: center;
-  }
-  #btn-submit {
-    background: linear-gradient(135deg, var(--green-dark), var(--green));
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    padding: 16px 48px;
-    cursor: pointer;
-    letter-spacing: 1.5px;
-    box-shadow: 0 4px 20px #2ecc7155;
-    transition: all 0.2s;
-    width: 100%;
-    max-width: 400px;
-  }
-  #btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px #2ecc7177;
-  }
-  #btn-submit:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* ---- SUCCESS MODAL ---- */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: #000c;
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal {
-    background: var(--card2);
-    border: 2px solid var(--green);
-    border-radius: 20px;
-    padding: 40px 32px;
-    text-align: center;
-    max-width: 340px;
-    width: 90%;
-    box-shadow: 0 0 60px #2ecc7144;
-    animation: popIn 0.4s cubic-bezier(.4,1.4,.6,1);
-  }
-  @keyframes popIn {
-    from { transform: scale(0.7); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-  .modal .big-check { font-size: 4rem; margin-bottom: 12px; }
-  .modal h2 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
-    color: var(--green);
-    margin-bottom: 8px;
-  }
-  .modal p { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; }
-  .modal .modal-score {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
-    color: var(--text);
-    margin-bottom: 20px;
-  }
-  .modal .modal-score span { color: var(--green); }
-  .modal-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 0.95rem;
-    padding: 12px 32px;
-    cursor: pointer;
-    width: 100%;
-  }
-  .modal-btn:hover { background: #2980b9; }
-
-  /* ---- ARIZA KAYDI ---- */
-  .ariza-section {
-    margin: 20px 16px 0;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #3d2a00;
-    background: var(--card);
-  }
-  .ariza-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 20px;
-    background: linear-gradient(90deg, #1e1500, #1a1200);
-    border-bottom: 1px solid #3d2a00;
-  }
-  .ariza-header .section-title { color: var(--accent2); }
-  .ariza-body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
-  .ariza-form-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .ariza-input, .ariza-select {
-    flex: 1; min-width: 140px;
-    background: #0d1923;
-    border: 1.5px solid #3d2a00;
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.88rem; font-weight: 600;
-    padding: 10px 14px; outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .ariza-input::placeholder { color: #4a6a82; }
-  .ariza-input:focus, .ariza-select:focus { border-color: var(--accent2); box-shadow: 0 0 10px #f39c1233; }
-  .ariza-select option { background: #0d1923; }
-  .ariza-textarea {
-    width: 100%; background: #0d1923;
-    border: 1.5px solid #3d2a00; border-radius: 10px;
-    color: var(--text); font-family: 'Nunito', sans-serif;
-    font-size: 0.88rem; font-weight: 600;
-    padding: 10px 14px; resize: vertical; min-height: 80px; outline: none;
-    transition: border-color 0.2s;
-  }
-  .ariza-textarea::placeholder { color: #4a6a82; }
-  .ariza-textarea:focus { border-color: var(--accent2); box-shadow: 0 0 10px #f39c1233; }
-  .ariza-add-btn {
-    background: linear-gradient(135deg, #b7770d, var(--accent2));
-    color: #fff; border: none; border-radius: 10px;
-    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem;
-    padding: 11px 22px; cursor: pointer; transition: all 0.2s; align-self: flex-start;
-  }
-  .ariza-add-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px #f39c1244; }
-  .ariza-list { display: flex; flex-direction: column; gap: 10px; }
-  .ariza-item {
-    background: #0d1923; border: 1px solid #3d2a00;
-    border-left: 4px solid var(--accent2); border-radius: 10px;
-    padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start;
-    animation: slideDown 0.25s ease;
-  }
-  .ariza-item-info { flex: 1; }
-  .ariza-item-title { font-size: 0.85rem; font-weight: 800; color: var(--accent2); margin-bottom: 3px; }
-  .ariza-item-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
-  .ariza-item-meta { font-size: 0.74rem; color: #4a6a82; margin-top: 4px; }
-  .ariza-badge { font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; letter-spacing: 0.5px; white-space: nowrap; }
-  .badge-yuksek { background: #3d0a0a; color: #ff6b6b; }
-  .badge-orta   { background: #3d2a00; color: var(--accent2); }
-  .badge-dusuk  { background: #0a2a1a; color: #2ecc71; }
-  .ariza-del-btn { background: none; border: none; color: #4a6a82; cursor: pointer; font-size: 1.1rem; padding: 2px 4px; transition: color 0.2s; }
-  .ariza-del-btn:hover { color: var(--red); }
-  .ariza-empty { text-align: center; color: #4a6a82; font-size: 0.85rem; font-weight: 600; padding: 10px 0 4px; }
-
-  /* ---- SCROLLBAR ---- */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
 </head>
 <body>
@@ -438,87 +130,150 @@
   </div>
   <div class="progress-wrap">
     <div class="progress-label">
-      <span id="answered-count">0 / <span id="total-count">0</span> Soru Yanıtlandı</span>
+      <span id="progress-text">0 / 0 Soru Yanıtlandı</span>
       <span class="pct" id="pct-label">%0</span>
     </div>
-    <div class="bar-bg">
-      <div class="bar-fill" id="bar-fill"></div>
-    </div>
+    <div class="bar-bg"><div class="bar-fill" id="bar-fill"></div></div>
   </div>
 </header>
 
 <div class="meta-bar">
-  <div class="meta-item"><span class="ico">📍</span> Kampüs: <span>Antep Doğa Koleji</span></div>
-  <div class="meta-item"><span class="ico">📅</span> Tarih: <span id="today-date"></span></div>
-  <div class="meta-item"><span class="ico">🕐</span> Saat: <span id="now-time"></span></div>
+  <div class="meta-item">📍 <span>Antep Doğa Koleji</span></div>
+  <div class="meta-item">📅 <span id="today-date"></span></div>
+  <div class="meta-item">🕐 <span id="now-time"></span></div>
 </div>
 
-<div id="form-container"></div>
+<div class="tab-bar">
+  <button class="tab-btn t-ariza active" onclick="switchTab('ariza')">🔨 Arıza Kaydı</button>
+  <button class="tab-btn" onclick="switchTab('onburo')">🏢 Ön Büro & Danışma</button>
+  <button class="tab-btn" onclick="switchTab('personel')">👥 Personel</button>
+</div>
 
-<div class="ariza-section">
-  <div class="ariza-header">
-    <span class="section-icon">🔨</span>
-    <span class="section-title">ARIZA KAYDI</span>
-    <span style="font-size:0.75rem;color:#4a6a82;font-weight:700;">Öğretmen / Personel Bildirimi</span>
-  </div>
-  <div class="ariza-body">
-    <div class="ariza-form-row">
-      <input class="ariza-input" id="ariza-sinif" placeholder="Sınıf / Konum (örn: 3-A, Koridor B)" />
-      <input class="ariza-input" id="ariza-bildiren" placeholder="Bildiren Kişi" />
-    </div>
-    <div class="ariza-form-row">
-      <select class="ariza-select" id="ariza-oncelik">
-        <option value="" disabled selected>Öncelik Seviyesi</option>
-        <option value="yuksek">🔴 Yüksek – Acil Müdahale</option>
-        <option value="orta">🟡 Orta – Bugün Çözülmeli</option>
-        <option value="dusuk">🟢 Düşük – Planlanabilir</option>
-      </select>
-      <select class="ariza-select" id="ariza-tur">
-        <option value="" disabled selected>Arıza Türü</option>
-        <option value="Cam / Pencere">🪟 Cam / Pencere</option>
-        <option value="Kapı / Kilit">🚪 Kapı / Kilit</option>
-        <option value="Elektrik / Aydınlatma">💡 Elektrik / Aydınlatma</option>
-        <option value="Su / Tesisat">🚰 Su / Tesisat</option>
-        <option value="Mobilya / Ekipman">🪑 Mobilya / Ekipman</option>
-        <option value="Isıtma / Soğutma">❄️ Isıtma / Soğutma</option>
-        <option value="Temizlik">🧹 Temizlik</option>
-        <option value="Diğer">📋 Diğer</option>
-      </select>
-    </div>
-    <textarea class="ariza-textarea" id="ariza-aciklama" placeholder="Arızayı / sorunu detaylıca açıklayınız... (örn: Pencere camı kırık, rüzgar içeri giriyor)"></textarea>
-    <button class="ariza-add-btn" onclick="addAriza()">➕ Arıza Kaydı Ekle</button>
-    <div class="ariza-list" id="ariza-list">
-      <div class="ariza-empty" id="ariza-empty">Henüz arıza kaydı eklenmedi.</div>
-    </div>
+<!-- TAB 1 -->
+<div class="tab-panel" id="panel-onburo">
+  <div id="form-onburo"></div>
+  <div class="submit-wrap">
+    <button class="btn-submit" id="btn-submit-onburo" disabled onclick="submitForm('onburo')">✅ Ön Büro & Danışma Kaydet</button>
   </div>
 </div>
 
-<div class="submit-wrap">
-  <button id="btn-submit" disabled>✅ Formu Tamamla &amp; Kaydet</button>
+<!-- TAB 2 -->
+<div class="tab-panel" id="panel-personel">
+  <div id="form-personel"></div>
+  <div class="submit-wrap">
+    <button class="btn-submit" id="btn-submit-personel" disabled onclick="submitForm('personel')">✅ Personel Formunu Kaydet</button>
+  </div>
 </div>
 
+<!-- TAB 3 -->
+<div class="tab-panel active" id="panel-ariza">
+  <div class="section" style="margin:16px 14px 0;">
+    <div class="section-header" style="cursor:default;">
+      <span class="section-icon">🔨</span>
+      <span class="section-title" style="color:var(--accent2);">ARIZA KAYDI</span>
+      <span style="font-size:0.7rem;color:#4a6a82;font-weight:700;">Öğretmen / Personel Bildirimi</span>
+    </div>
+    <div class="ariza-body">
+      <div class="ariza-form-row">
+        <input class="ariza-input" id="ariza-sinif" placeholder="Sınıf / Konum (örn: 3-A)"/>
+        <input class="ariza-input" id="ariza-bildiren" placeholder="Bildiren Kişi"/>
+      </div>
+      <div class="ariza-form-row">
+        <select class="ariza-select" id="ariza-oncelik">
+          <option value="" disabled selected>Öncelik Seviyesi</option>
+          <option value="yuksek">🔴 Yüksek – Acil</option>
+          <option value="orta">🟡 Orta – Bugün</option>
+          <option value="dusuk">🟢 Düşük – Planlanabilir</option>
+        </select>
+        <select class="ariza-select" id="ariza-tur">
+          <option value="" disabled selected>Arıza Türü</option>
+          <option value="Cam / Pencere">🪟 Cam / Pencere</option>
+          <option value="Kapı / Kilit">🚪 Kapı / Kilit</option>
+          <option value="Elektrik / Aydınlatma">💡 Elektrik / Aydınlatma</option>
+          <option value="Su / Tesisat">🚰 Su / Tesisat</option>
+          <option value="Mobilya / Ekipman">🪑 Mobilya / Ekipman</option>
+          <option value="Akıllı Tahta">📺 Akıllı Tahta</option>
+          <option value="Isıtma / Soğutma">❄️ Isıtma / Soğutma</option>
+          <option value="Temizlik">🧹 Temizlik</option>
+          <option value="Diğer">📋 Diğer</option>
+        </select>
+      </div>
+      <textarea class="ariza-textarea" id="ariza-aciklama" placeholder="Arızayı detaylıca açıklayınız... (örn: Pencere camı kırık)"></textarea>
+      <button class="ariza-add-btn" onclick="addAriza()">➕ Arıza Kaydı Ekle</button>
+      <div class="ariza-list" id="ariza-list">
+        <div class="ariza-empty" id="ariza-empty">Henüz arıza kaydı eklenmedi.</div>
+      </div>
+    </div>
+  </div>
+  <div class="submit-wrap">
+    <button class="btn-submit btn-ariza" onclick="submitAriza()">📤 Arıza Kayıtlarını Gönder</button>
+  </div>
+</div>
+
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <div class="big-check">✅</div>
-    <h2>Form Tamamlandı!</h2>
-    <p>Denetim başarıyla kaydedildi.</p>
+    <h2>Kaydedildi!</h2>
+    <p id="modal-msg">Form başarıyla gönderildi.</p>
     <div class="modal-score" id="modal-score"></div>
-    <button class="modal-btn" onclick="resetForm()">🔄 Yeni Form Başlat</button>
+    <button class="modal-btn" onclick="document.getElementById('modal-overlay').classList.remove('show')">🔄 Tamam</button>
   </div>
 </div>
 
 <script>
-const SECTIONS = [
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiGSG7OAM9N7b-V_ZtfuyezlioVxFlwiv891-X9-OzCsthaKbrfx5jLI8XlZ8SPttgoA/exec";
+
+const ONBURO_SECTIONS = [
+  {
+    title: "ÖN BÜRO",
+    icon: "🏢",
+    questions: [
+      "Personel üniforma talimatlarına uygun mu?",
+      "Personel odaları gezilip uygunluk ve her tip düzen incelendi mi?",
+      "Odalarda / alanlarda talepler var mı?",
+      "Odalar arası diyalog kontrol altında mı?",
+      "Gelen yazılar takip ediliyor mu?",
+      "Özlük işleri tam işliyor mu?",
+      "Revirde ilaç eksiği var mı?",
+      "Mola ve yemek saatlerine uyuluyor mu?",
+      "Tasarım ve grafik sosyal medya iyi mi?",
+      "Ruhsat alanları incelendi mi?",
+      "Konservatuar CRM'e bakıldı mı?",
+      "Kayıt görüşme evrakları düzenli mi?",
+      "Kayıt linkine gelen bildirimlere bakıldı mı?",
+      "Doğum günü ve özel gün paylaşımı hazırlandı mı?"
+    ]
+  },
   {
     title: "DANIŞMA PERSONELİ",
     icon: "🗂️",
     questions: [
-      "Personel bilforma ve talimatları uygun mu? Tam mı?",
-      "Görev yeri tertipi ve düzeni mi? Görev yerinde radyo, tv, vb. yasak malzemeler var mı?",
-      "Personel görevi esnasında duyarlı ve dikkatli mi? Göreve yapmaya engel sağlık sorunu var mı?",
+      "Personel kılık kıyafeti uygun ve temiz mi?",
+      "Görev deski tertipli ve düzenli mi?",
+      "Personel görevi esnasında duyarlı ve dikkatli mi? Göreve engel sağlık sorunu var mı?",
       "Personel şikayeti var mı? Sıralı Amirlerini tanıyor mu? Aksaklıkları aktarıyor mu?",
-      "Mali mesuliyet sigortaları dosyada mevcut mu?",
-      "Personel görev bilinci ve sorumluluğunu sahip mi?"
+      "Ön lobi temiz mi? Tvler açık mı? Koyalıklar temiz mi?",
+      "Personel gelenlere karşı güler yüzlü ve kurumda saygıda kusur etmiyor mu?",
+      "Giriş saatleri müdüre atıldı mı?",
+      "Kartı olmayan öğrencilerin siparişi verildi mi?"
+    ]
+  }
+];
+
+const PERSONEL_SECTIONS = [
+  {
+    title: "GÜVENLİK PERSONELİ",
+    icon: "🛡️",
+    questions: [
+      "Güvenlik forması temiz ve uygun mu?",
+      "Dedektör, X-ray, turnike alanı temiz ve çalışıyor mu?",
+      "Veli kaydı alınıp içeri bilgi verildikten sonra danışmaya kadar eşlik ediliyor mu?",
+      "Bekleme alanının temizliği ve tertibi konusunda hassas mı?",
+      "Dışarıya öğrenciyi izinsiz çıkarmıyor mu?",
+      "Ön taraf araç trafiğini kontrol edip düzenliyor mu?",
+      "İçeri giren araçlara refakat ediliyor mu?",
+      "Güvenlik önü ve çıkışının temizliği, camlar vs. tamam mı?"
     ]
   },
   {
@@ -531,9 +286,14 @@ const SECTIONS = [
       "Ekibin sorumluluk alanları ile ilgili görülen aksaklık var mı?",
       "Personel şikayeti var mı? Sıralı Amirlerini tanıyor mu? Aksaklıkları aktarıyor mu?",
       "Kampüs içlerinde planlanan iş programı var mı?",
-      "Kimyasal / MSDS / Ürün bilgi formları varını?",
-      "Kimyasal ve sarf malzeme zamanında geliyor mu?",
-      "Makine parkında arıza veya çalışmayan var mı?"
+      "Kimyasal / MSDS / Ürün bilgi formları var mı?",
+      "Kimyasal ve sarf malzemeleri güvenli alanda tutuluyor mu?",
+      "Makine parkında arıza veya çalışmayan var mı?",
+      "Sınıf camları ve akıllı tahtaların tozu alındı mı?",
+      "Sınıf cam kilitleri kontrol edilmiş mi?",
+      "Sınıf sıraları silinmiş ve temizlenmiş mi?",
+      "Sınıflardaki kırık ve arızalar için arıza kaydı açılmış mı?",
+      "Tuvalet sabunluk ve peçete tedariki yapılmış mı?"
     ]
   },
   {
@@ -543,79 +303,69 @@ const SECTIONS = [
       "Personel üniforması talimatlara uygun mu? Tam mı?",
       "Personelin sorumlu olduğu alanlar gezildi mi? Bütün alanlar denetlendi mi?",
       "Personelin sorumluluk alanları ile ilgili görülen aksaklık var mı?",
-      "Tesisin kritik noktaları bilinyor mu?",
+      "Tesisin kritik noktaları biliniyor mu?",
       "Personel şikayeti var mı? Sıralı Amirlerini tanıyor mu? Aksaklıkları aktarıyor mu?",
       "Kampüs içerisinde oluşan arızaları zamanında müdahale ediliyor mu?",
       "Personel kullanması gereken ekipman ve malzeme yeterli mi?",
-      "Kampüs içerisinde arıza durumunda uygulaması gereken görev ve sorumluluklarını biliyor mu?",
-      "Arıza anasında İSG kurallarına uygun çalışıyor mu?"
+      "Kampüs içerisinde arıza durumunda görev ve sorumluluklarını biliyor mu?",
+      "Arıza anında İSG kurallarına uygun çalışıyor mu?",
+      "Açılan arıza kayıtlarına dönüş sağlanmış ve takibi yapılmış mı?",
+      "Çalışmayan sistemler hakkında ilgililere bilgi verildi mi?",
+      "Reji düzenli mi?"
     ]
   },
   {
     title: "BAHÇE PERSONELİ",
     icon: "🌳",
     questions: [
-      "Personel üniforması talimatlara uygun mu? Tam mı?",
-      "Personelin sorumlu olduğu alanlar gezildi mi? Bütün alanlar denetlendi mi?",
-      "Personelin sorumluluk alanları ile ilgili görülen aksaklık var mı?",
-      "Personelin görevi ile ilgili ekipmanları var mı? Sağlam ve kullanılır durumda mı?",
-      "Personel şikayeti var mı? Sıralı Amirlerini tanıyor mu? Aksaklıkları aktarıyor mu?"
+      "Hayvan yemleri verildi mi?",
+      "Deşilmesi ve ekilmesi gereken yerler deşilip ekildi mi?",
+      "Veteriner gerektiren bir durum oluşmadı mı?",
+      "Ağaçlar budanıp sulama yapıldı mı?"
     ]
   }
 ];
 
-// State: { "s-q": true/false/null }
 const state = {};
 let totalQ = 0;
+let arizaList = [];
+let arizaCounter = 0;
 
-function buildForm() {
-  const container = document.getElementById('form-container');
-  let total = 0;
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
 
-  SECTIONS.forEach((sec, si) => {
-    total += sec.questions.length;
+function buildSections(sections, containerId, tabKey, submitBtnId) {
+  const container = document.getElementById(containerId);
+  sections.forEach((sec, si) => {
+    totalQ += sec.questions.length;
     const secDiv = document.createElement('div');
     secDiv.className = 'section';
-    secDiv.id = `section-${si}`;
 
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
-    hdr.innerHTML = `
-      <span class="section-icon">${sec.icon}</span>
-      <span class="section-title">${sec.title}</span>
-      <span class="section-score" id="score-${si}">0/${sec.questions.length}</span>
-      <span class="chevron">▾</span>
-    `;
-    hdr.addEventListener('click', () => {
-      secDiv.classList.toggle('collapsed');
-    });
+    hdr.innerHTML = `<span class="section-icon">${sec.icon}</span><span class="section-title">${sec.title}</span><span class="section-score" id="score-${tabKey}-${si}">0/${sec.questions.length}</span><span class="chevron">▾</span>`;
+    hdr.addEventListener('click', () => secDiv.classList.toggle('collapsed'));
 
     const body = document.createElement('div');
     body.className = 'section-body';
 
     sec.questions.forEach((q, qi) => {
-      const key = `${si}-${qi}`;
+      const key = tabKey + '-' + si + '-' + qi;
       state[key] = null;
 
       const qDiv = document.createElement('div');
       qDiv.className = 'question';
-      qDiv.id = `q-${key}`;
-      qDiv.innerHTML = `
-        <span class="q-num">${qi + 1}</span>
-        <span class="q-text">${q}</span>
-        <div class="toggle-group">
-          <button class="btn-evet" data-key="${key}" data-val="true">EVET</button>
-          <button class="btn-hayir" data-key="${key}" data-val="false">HAYIR</button>
-        </div>
-      `;
+      qDiv.id = 'q-' + key;
+      qDiv.innerHTML = `<span class="q-num">${qi+1}</span><span class="q-text">${q}</span><div class="toggle-group"><button class="btn-evet" data-key="${key}" data-val="true">EVET</button><button class="btn-hayir" data-key="${key}" data-val="false">HAYIR</button></div>`;
 
       const reasonDiv = document.createElement('div');
       reasonDiv.className = 'reason-wrap';
-      reasonDiv.id = `reason-${key}`;
-      reasonDiv.innerHTML = `
-        <div class="reason-label">⚠️ Sorunun Nedeni / Açıklama</div>
-        <textarea class="reason-textarea" id="textarea-${key}" placeholder="Lütfen sorunun nedenini veya açıklamasını buraya yazınız..."></textarea>
-      `;
+      reasonDiv.id = 'reason-' + key;
+      reasonDiv.innerHTML = `<div class="reason-label">⚠️ Sorunun Nedeni</div><textarea class="reason-textarea" id="textarea-${key}" placeholder="Lütfen sorunun nedenini yazınız..."></textarea>`;
 
       body.appendChild(qDiv);
       body.appendChild(reasonDiv);
@@ -626,190 +376,161 @@ function buildForm() {
     container.appendChild(secDiv);
   });
 
-  totalQ = total;
-  document.getElementById('total-count').textContent = total;
-
-  // Event delegation
   container.addEventListener('click', e => {
     const btn = e.target.closest('.btn-evet, .btn-hayir');
     if (!btn) return;
-    const key = btn.dataset.key;
-    const val = btn.dataset.val === 'true';
-    setAnswer(key, val);
+    setAnswer(btn.dataset.key, btn.dataset.val === 'true', tabKey, sections, submitBtnId);
   });
 }
 
-function setAnswer(key, val) {
+function setAnswer(key, val, tabKey, sections, submitBtnId) {
   state[key] = val;
-  const [si] = key.split('-');
+  const parts = key.split('-');
+  const si = parseInt(parts[1]);
 
-  // Update button styles
-  const qDiv = document.getElementById(`q-${key}`);
-  qDiv.querySelectorAll('.btn-evet, .btn-hayir').forEach(b => {
-    b.classList.remove('active');
-  });
-  const target = qDiv.querySelector(val ? '.btn-evet' : '.btn-hayir');
-  target.classList.add('active');
-
-  // Update row color
+  const qDiv = document.getElementById('q-' + key);
+  qDiv.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  qDiv.querySelector(val ? '.btn-evet' : '.btn-hayir').classList.add('active');
   qDiv.classList.remove('answered-yes', 'answered-no');
   qDiv.classList.add(val ? 'answered-yes' : 'answered-no');
 
-  // Show/hide reason box
-  const reasonDiv = document.getElementById(`reason-${key}`);
-  if (!val) {
-    reasonDiv.classList.add('show');
-    document.getElementById(`textarea-${key}`).focus();
-  } else {
-    reasonDiv.classList.remove('show');
-    document.getElementById(`textarea-${key}`).value = '';
-  }
+  const reasonDiv = document.getElementById('reason-' + key);
+  if (!val) { reasonDiv.classList.add('show'); document.getElementById('textarea-' + key).focus(); }
+  else { reasonDiv.classList.remove('show'); document.getElementById('textarea-' + key).value = ''; }
 
-  updateProgress();
-  updateSectionScore(parseInt(si));
-}
+  // Section score
+  const sec = sections[si];
+  let ans = 0;
+  sec.questions.forEach((_, qi) => { if (state[tabKey+'-'+si+'-'+qi] !== null) ans++; });
+  const el = document.getElementById('score-' + tabKey + '-' + si);
+  el.textContent = ans + '/' + sec.questions.length;
+  el.classList.toggle('full', ans === sec.questions.length);
 
-function updateSectionScore(si) {
-  const sec = SECTIONS[si];
-  let answered = 0;
-  sec.questions.forEach((_, qi) => {
-    if (state[`${si}-${qi}`] !== null) answered++;
-  });
-  const scoreEl = document.getElementById(`score-${si}`);
-  scoreEl.textContent = `${answered}/${sec.questions.length}`;
-  scoreEl.classList.toggle('full', answered === sec.questions.length);
-}
-
-function updateProgress() {
-  const answers = Object.values(state).filter(v => v !== null).length;
-  const pct = Math.round((answers / totalQ) * 100);
+  // Global progress
+  const allAns = Object.values(state).filter(v => v !== null).length;
+  const pct = Math.round((allAns / totalQ) * 100);
   document.getElementById('bar-fill').style.width = pct + '%';
-  document.getElementById('pct-label').textContent = `%${pct}`;
-  document.getElementById('answered-count').innerHTML = `${answers} / <span id="total-count">${totalQ}</span> Soru Yanıtlandı`;
+  document.getElementById('pct-label').textContent = '%' + pct;
+  document.getElementById('pct-label').style.color = pct===100?'#2ecc71':pct>=50?'#f39c12':'#e74c3c';
+  document.getElementById('progress-text').textContent = allAns + ' / ' + totalQ + ' Soru Yanıtlandı';
 
-  // Color the percentage label
-  const pctEl = document.getElementById('pct-label');
-  if (pct === 100) pctEl.style.color = '#2ecc71';
-  else if (pct >= 50) pctEl.style.color = '#f39c12';
-  else pctEl.style.color = '#e74c3c';
-
-  document.getElementById('btn-submit').disabled = answers < totalQ;
-}
-
-function resetForm() {
-  Object.keys(state).forEach(k => state[k] = null);
-  document.querySelectorAll('.question').forEach(q => {
-    q.classList.remove('answered-yes', 'answered-no');
-    q.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  // Tab submit btn
+  let tabTotal = 0, tabAns = 0;
+  sections.forEach((s, ssi) => {
+    s.questions.forEach((_, qqi) => {
+      tabTotal++;
+      if (state[tabKey+'-'+ssi+'-'+qqi] !== null) tabAns++;
+    });
   });
-  SECTIONS.forEach((_, si) => updateSectionScore(si));
-  updateProgress();
-  document.querySelectorAll('.reason-wrap').forEach(r => r.classList.remove('show'));
-  document.querySelectorAll('.reason-textarea').forEach(t => t.value = '');
-  document.getElementById('modal-overlay').classList.remove('show');
+  document.getElementById(submitBtnId).disabled = (tabAns < tabTotal);
 }
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiGSG7OAM9N7b-V_ZtfuyezlioVxFlwiv891-X9-OzCsthaKbrfx5jLI8XlZ8SPttgoA/exec";
+async function submitForm(tabKey) {
+  const btnId = 'btn-submit-' + tabKey;
+  const btn = document.getElementById(btnId);
+  const sections = tabKey === 'onburo' ? ONBURO_SECTIONS : PERSONEL_SECTIONS;
+  const sekme = tabKey === 'onburo' ? 'Ön Büro & Danışma' : 'Personel Denetimi';
 
-document.getElementById('btn-submit').addEventListener('click', async () => {
-  const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.textContent = '⏳ Kaydediliyor...';
 
   const now = new Date();
-  const tarih = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  const saat  = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  const tarih = now.toLocaleDateString('tr-TR', {day:'2-digit',month:'2-digit',year:'numeric'});
+  const saat  = now.toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit'});
 
   const sorular = [];
-  SECTIONS.forEach((sec, si) => {
+  sections.forEach((sec, si) => {
     sec.questions.forEach((q, qi) => {
-      const key = si + '-' + qi;
-      const cevap = state[key] === true ? 'EVET' : 'HAYIR';
+      const key = tabKey + '-' + si + '-' + qi;
       const ta = document.getElementById('textarea-' + key);
-      const aciklama = ta ? ta.value : '';
-      sorular.push({ bolum: sec.title, soru: q, cevap, aciklama });
+      sorular.push({ bolum: sec.title, soru: q, cevap: state[key]===true?'EVET':'HAYIR', aciklama: ta?ta.value:'' });
     });
   });
 
-  const payload = {
-    tarih,
-    saat,
-    kampus: 'Antep Doğa Koleji',
-    sorular,
-    arizalar: arizaList
-  };
+  const payload = { tarih, saat, kampus: 'Antep Doğa Koleji', sekme, sorular, arizalar: [] };
 
   try {
-    // Google Apps Script en güvenilir şekilde form-data ile çalışır
     const form = new FormData();
     form.append('data', JSON.stringify(payload));
-
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: form
-    });
-
-    const yes = Object.values(state).filter(v => v === true).length;
-    const pct = Math.round((yes / totalQ) * 100);
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: form });
+    const yes = sorular.filter(s => s.cevap==='EVET').length;
+    const pct = Math.round((yes / sorular.length) * 100);
+    document.getElementById('modal-msg').textContent = sekme + ' formu kaydedildi.';
     document.getElementById('modal-score').innerHTML = '<span>' + pct + '%</span> Evet';
     document.getElementById('modal-overlay').classList.add('show');
   } catch(err) {
     alert('Bağlantı hatası! İnternet bağlantınızı kontrol edin.');
-    btn.disabled = false;
-    btn.textContent = '✅ Formu Tamamla & Kaydet';
   }
-});
+  btn.disabled = false;
+  btn.textContent = tabKey==='onburo' ? '✅ Ön Büro & Danışma Kaydet' : '✅ Personel Formunu Kaydet';
+}
 
-// Date / time
+async function submitAriza() {
+  if (arizaList.length === 0) { alert('Önce en az bir arıza kaydı ekleyiniz!'); return; }
+  const now = new Date();
+  const tarih = now.toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const saat  = now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  const payload = { tarih, saat, kampus:'Antep Doğa Koleji', sekme:'Arıza Kayıtları', sorular:[], arizalar: arizaList };
+  try {
+    const form = new FormData();
+    form.append('data', JSON.stringify(payload));
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: form });
+    document.getElementById('modal-msg').textContent = arizaList.length + ' arıza kaydı gönderildi.';
+    document.getElementById('modal-score').innerHTML = '<span>' + arizaList.length + '</span> Kayıt';
+    document.getElementById('modal-overlay').classList.add('show');
+    arizaList = [];
+    document.getElementById('ariza-list').innerHTML = '<div class="ariza-empty" id="ariza-empty">Henüz arıza kaydı eklenmedi.</div>';
+  } catch(err) { alert('Bağlantı hatası!'); }
+}
+
+function addAriza() {
+  const sinif    = document.getElementById('ariza-sinif').value.trim();
+  const bildiren = document.getElementById('ariza-bildiren').value.trim();
+  const oncelik  = document.getElementById('ariza-oncelik').value;
+  const tur      = document.getElementById('ariza-tur').value;
+  const aciklama = document.getElementById('ariza-aciklama').value.trim();
+  if (!sinif || !aciklama || !oncelik || !tur) { alert('Lütfen tüm alanları doldurunuz.'); return; }
+
+  const id = ++arizaCounter;
+  const now = new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  arizaList.push({id,sinif,bildiren,oncelik,tur,aciklama,saat:now});
+
+  const emptyEl = document.getElementById('ariza-empty');
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  const badgeClass = 'badge-'+oncelik;
+  const badgeLabel = oncelik==='yuksek'?'🔴 ACİL':oncelik==='orta'?'🟡 ORTA':'🟢 DÜŞÜK';
+  const item = document.createElement('div');
+  item.className = 'ariza-item';
+  item.id = 'ariza-item-'+id;
+  item.innerHTML = `<div class="ariza-item-info"><div class="ariza-item-title">${tur} — ${sinif}</div><div class="ariza-item-desc">${aciklama}</div><div class="ariza-item-meta"><span class="ariza-badge ${badgeClass}">${badgeLabel}</span>${bildiren?' · <b>'+bildiren+'</b>':''} · 🕐 ${now}</div></div><button class="ariza-del-btn" onclick="delAriza(${id})">✕</button>`;
+  document.getElementById('ariza-list').appendChild(item);
+
+  document.getElementById('ariza-sinif').value='';
+  document.getElementById('ariza-bildiren').value='';
+  document.getElementById('ariza-oncelik').selectedIndex=0;
+  document.getElementById('ariza-tur').selectedIndex=0;
+  document.getElementById('ariza-aciklama').value='';
+}
+
+function delAriza(id) {
+  const el = document.getElementById('ariza-item-'+id);
+  if (el) el.remove();
+  arizaList = arizaList.filter(a => a.id !== id);
+  if (!arizaList.length) document.getElementById('ariza-list').innerHTML='<div class="ariza-empty" id="ariza-empty">Henüz arıza kaydı eklenmedi.</div>';
+}
+
 function updateClock() {
   const now = new Date();
-  document.getElementById('today-date').textContent = now.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
-  document.getElementById('now-time').textContent = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('today-date').textContent = now.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('now-time').textContent   = now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
 }
 updateClock();
 setInterval(updateClock, 10000);
 
-// ---- ARIZA KAYDI ----
-let arizaList = [];
-let arizaCounter = 0;
-
-function addAriza() {
-  const sinif = document.getElementById("ariza-sinif").value.trim();
-  const bildiren = document.getElementById("ariza-bildiren").value.trim();
-  const oncelik = document.getElementById("ariza-oncelik").value;
-  const tur = document.getElementById("ariza-tur").value;
-  const aciklama = document.getElementById("ariza-aciklama").value.trim();
-  if (!sinif || !aciklama || !oncelik || !tur) {
-    alert("Lütfen sınıf/konum, arıza türü, öncelik seviyesi ve açıklama alanlarını doldurunuz.");
-    return;
-  }
-  const id = ++arizaCounter;
-  const now = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
-  arizaList.push({ id, sinif, bildiren, oncelik, tur, aciklama, saat: now });
-  document.getElementById("ariza-empty").style.display = "none";
-  const badgeClass = "badge-" + oncelik;
-  const badgeLabel = oncelik === "yuksek" ? "🔴 ACİL" : oncelik === "orta" ? "🟡 ORTA" : "🟢 DÜŞÜK";
-  const item = document.createElement("div");
-  item.className = "ariza-item";
-  item.id = "ariza-item-" + id;
-  item.innerHTML = "<div class=\"ariza-item-info\"><div class=\"ariza-item-title\">" + tur + " — " + sinif + "</div><div class=\"ariza-item-desc\">" + aciklama + "</div><div class=\"ariza-item-meta\"><span class=\"ariza-badge " + badgeClass + "\">" + badgeLabel + "</span>" + (bildiren ? " · Bildiren: <b>" + bildiren + "</b>" : "") + " · 🕐 " + now + "</div></div><button class=\"ariza-del-btn\" onclick=\"delAriza(" + id + ")\" title=\"Sil\">✕</button>";
-  document.getElementById("ariza-list").appendChild(item);
-  document.getElementById("ariza-sinif").value = "";
-  document.getElementById("ariza-bildiren").value = "";
-  document.getElementById("ariza-oncelik").selectedIndex = 0;
-  document.getElementById("ariza-tur").selectedIndex = 0;
-  document.getElementById("ariza-aciklama").value = "";
-}
-
-function delAriza(id) {
-  const el = document.getElementById("ariza-item-" + id);
-  if (el) el.remove();
-  arizaList = arizaList.filter(a => a.id !== id);
-  if (arizaList.length === 0) document.getElementById("ariza-empty").style.display = "";
-}
-
-buildForm();
+buildSections(ONBURO_SECTIONS,   'form-onburo',   'onburo',   'btn-submit-onburo');
+buildSections(PERSONEL_SECTIONS, 'form-personel', 'personel', 'btn-submit-personel');
+document.getElementById('progress-text').textContent = '0 / ' + totalQ + ' Soru Yanıtlandı';
 </script>
 </body>
 </html>
