@@ -614,6 +614,99 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
       </div>
     </div>
 
+    <!-- KONFERANS SALONU -->
+    <div id="panel-konferans" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🏛️ Konferans Salonu</h2>
+      <p class="panel-sub">Rezervasyon takvimi ve kullanım planı</p>
+      <div class="calendar-header">
+        <button class="calendar-nav" onclick="konAyDegistir(-1)">←</button>
+        <div class="calendar-month" id="kon-calendar-month"></div>
+        <button class="calendar-nav" onclick="konAyDegistir(1)">→</button>
+      </div>
+      <div class="calendar-grid" id="kon-calendar-grid"></div>
+      <div class="box" id="kon-gun-box" style="display:none;">
+        <div class="box-title" id="kon-gun-baslik">Rezervasyonlar</div>
+        <div id="kon-gun-list"></div>
+        <button class="btn-pri green" onclick="konYeniForm()" style="margin-top:8px;">➕ Rezervasyon Ekle</button>
+      </div>
+      <div class="box" id="kon-yeni-form" style="display:none;">
+        <div class="box-title">➕ Yeni Rezervasyon</div>
+        <div class="field"><label>Etkinlik / Toplantı Adı</label><input type="text" id="kon-ad" placeholder="Toplantı, seminer vb."></div>
+        <div class="field"><label>Tarih</label><input type="date" id="kon-tarih"></div>
+        <div class="field"><label>Başlangıç Saati</label><input type="time" id="kon-baslangic" value="09:00"></div>
+        <div class="field"><label>Bitiş Saati</label><input type="time" id="kon-bitis" value="10:00"></div>
+        <div class="field"><label>Organizatör / Birim</label><input type="text" id="kon-org" placeholder="Adınız veya biriminiz"></div>
+        <div class="field"><label>Katılımcı Sayısı</label><input type="number" id="kon-katilimci" min="1" placeholder="Kişi sayısı"></div>
+        <div class="field"><label>Açıklama</label><textarea id="kon-aciklama" placeholder="Etkinlik detayları..."></textarea></div>
+        <button class="btn-pri" onclick="konKaydet()">💾 Rezervasyonu Kaydet</button>
+        <button class="btn-pri red" onclick="konIptal()" style="margin-top:6px;">İptal</button>
+      </div>
+    </div>
+
+    <!-- LABORATUVARLAR -->
+    <div id="panel-labuvatuar" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🔬 Laboratuvarlar</h2>
+      <p class="panel-sub">Lab rezervasyon takvimi</p>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Laboratuvar Seç</label>
+        <select id="lab-secim" onchange="labRenderCalendar()">
+          <option value="fen">🧪 Fen Laboratuvarı</option>
+          <option value="bilgisayar">💻 Bilgisayar Laboratuvarı</option>
+          <option value="fizik">⚡ Fizik Laboratuvarı</option>
+          <option value="kimya">🧬 Kimya Laboratuvarı</option>
+          <option value="biyoloji">🌱 Biyoloji Laboratuvarı</option>
+          <option value="dil">🌍 Dil Laboratuvarı</option>
+        </select>
+      </div>
+      <div class="calendar-header">
+        <button class="calendar-nav" onclick="labAyDegistir(-1)">←</button>
+        <div class="calendar-month" id="lab-calendar-month"></div>
+        <button class="calendar-nav" onclick="labAyDegistir(1)">→</button>
+      </div>
+      <div class="calendar-grid" id="lab-calendar-grid"></div>
+      <div class="box" id="lab-gun-box" style="display:none;">
+        <div class="box-title" id="lab-gun-baslik">Rezervasyonlar</div>
+        <div id="lab-gun-list"></div>
+        <button class="btn-pri green" onclick="labYeniForm()" style="margin-top:8px;">➕ Rezervasyon Ekle</button>
+      </div>
+      <div class="box" id="lab-yeni-form" style="display:none;">
+        <div class="box-title">➕ Yeni Rezervasyon</div>
+        <div class="field"><label>Öğretmen Adı</label><input type="text" id="lab-ogretmen" placeholder="Adınız Soyadınız"></div>
+        <div class="field"><label>Sınıf</label><input type="text" id="lab-sinif" placeholder="5-A, 7-B vb."></div>
+        <div class="field"><label>Tarih</label><input type="date" id="lab-tarih"></div>
+        <div class="field"><label>Başlangıç Saati</label><input type="time" id="lab-baslangic" value="09:00"></div>
+        <div class="field"><label>Bitiş Saati</label><input type="time" id="lab-bitis" value="10:00"></div>
+        <div class="field"><label>Konu / Deney</label><input type="text" id="lab-konu" placeholder="Yapılacak deney veya konu"></div>
+        <div class="field"><label>Açıklama</label><textarea id="lab-aciklama" placeholder="Ek bilgiler..."></textarea></div>
+        <button class="btn-pri" onclick="labKaydet()">💾 Rezervasyonu Kaydet</button>
+        <button class="btn-pri red" onclick="labIptal()" style="margin-top:6px;">İptal</button>
+      </div>
+    </div>
+
+    <!-- YOKLAMA TAKİP -->
+    <div id="panel-yoklama-takip" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>👁️ Yoklama Takip</h2>
+      <p class="panel-sub">Hangi sınıfların yoklaması alındı?</p>
+      <div class="box">
+        <div class="field"><label>Tarih Seç</label><input type="date" id="takip-tarih" onchange="yoklamaTakipYukle()"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="takip-alinan" style="color:#16a34a;">0</div><div class="stat-label">Alınan</div></div>
+        <div class="stat"><div class="stat-num" id="takip-alinmayan" style="color:#dc2626;">0</div><div class="stat-label">Alınmayan</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">✅ Yoklama Alınan Dersler</div>
+        <div id="takip-alinan-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Tarih seçiniz</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">⚠️ Yoklama Alınmayan Dersler</div>
+        <div id="takip-alinmayan-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Tarih seçiniz</div></div>
+      </div>
+    </div>
+
     <!-- YOKLAMA -->
     <div id="panel-yoklama" class="panel">
       <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
@@ -710,6 +803,153 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
       </div>
     </div>
 
+    <!-- GÜVENLİK GİRİŞ/ÇIKIŞ -->
+    <div id="panel-guvenlik" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🛡️ Güvenlik - Giriş/Çıkış</h2>
+      <p class="panel-sub">Ziyaretçi ve veli takibi</p>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="guv-iceri" style="color:#16a34a;">0</div><div class="stat-label">Şu an İçeride</div></div>
+        <div class="stat"><div class="stat-num" id="guv-bugun">0</div><div class="stat-label">Bugün Gelen</div></div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">➕ Yeni Giriş Kaydı</div>
+        <div class="field"><label>Ad Soyad</label><input type="text" id="guv-isim" placeholder="Ziyaretçinin adı"></div>
+        <div class="field"><label>Kim için geldi?</label><input type="text" id="guv-kim" placeholder="Öğrenci adı / Personel"></div>
+        <div class="field"><label>İlişki</label><select id="guv-iliski">
+          <option>👨‍👩‍👧 Veli</option>
+          <option>👤 Ziyaretçi</option>
+          <option>🚚 Kargo/Teslimat</option>
+          <option>🔧 Tamir/Bakım</option>
+          <option>🏢 Resmi Görevli</option>
+          <option>📦 Diğer</option>
+        </select></div>
+        <div class="field"><label>TC Kimlik / Telefon</label><input type="text" id="guv-iletisim" placeholder="TC veya Telefon"></div>
+        <div class="field"><label>Açıklama</label><textarea id="guv-aciklama" placeholder="Geliş sebebi..."></textarea></div>
+        <button class="btn-pri green" onclick="guvenlikGiris()">📥 Giriş Kaydet</button>
+      </div>
+
+      <div class="box">
+        <div class="box-title">👥 Şu An İçeride Olanlar</div>
+        <div id="guv-icerde-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Şu an içeride kimse yok</div></div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">📋 Bugünkü Tüm Kayıtlar</div>
+        <div id="guv-bugun-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz kayıt yok</div></div>
+      </div>
+    </div>
+
+    <!-- HEMŞİRE -->
+    <div id="panel-hemsire" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🏥 Hemşire Kaydı</h2>
+      <p class="panel-sub">Günlük gelen öğrenci sağlık kayıtları</p>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="hem-bugun">0</div><div class="stat-label">Bugün Gelen</div></div>
+        <div class="stat"><div class="stat-num" id="hem-toplam">0</div><div class="stat-label">Toplam Kayıt</div></div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">➕ Yeni Sağlık Kaydı</div>
+        <div class="field"><label>Öğrenci Adı Soyadı</label><input type="text" id="hem-ogrenci" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Sınıf</label><select id="hem-sinif">
+          <option value="">Seçiniz</option>
+          <option>1-A</option><option>1-B</option>
+          <option>2-A</option><option>2-B</option>
+          <option>3-A</option><option>3-B</option>
+          <option>4-A</option><option>4-B</option>
+          <option>5-A</option><option>5-B</option>
+          <option>6-A</option><option>6-B</option>
+          <option>7-A</option><option>7-B</option>
+          <option>8-A</option><option>8-B</option>
+          <option>9-A</option><option>10-A</option>
+          <option>11-A</option><option>12-A</option>
+        </select></div>
+        <div class="field"><label>Şikayet / Sorun</label><select id="hem-sikayet">
+          <option>🤒 Ateş</option>
+          <option>🤕 Baş Ağrısı</option>
+          <option>😷 Soğuk Algınlığı</option>
+          <option>🤢 Mide Bulantısı / Kusma</option>
+          <option>💊 Karın Ağrısı</option>
+          <option>🩹 Yara / Sıyrık</option>
+          <option>🦷 Diş Ağrısı</option>
+          <option>🤧 Alerji</option>
+          <option>😰 Anksiyete / Stres</option>
+          <option>🩸 Burun Kanaması</option>
+          <option>🦴 Kas / Kemik Ağrısı</option>
+          <option>📦 Diğer</option>
+        </select></div>
+        <div class="field"><label>Detaylı Açıklama</label><textarea id="hem-aciklama" placeholder="Şikayetin detayları, müdahale..."></textarea></div>
+        <div class="field"><label>Yapılan Müdahale</label><textarea id="hem-mudahale" placeholder="Verilen ilaç, müdahale türü..."></textarea></div>
+        <div class="field"><label>Sonuç</label><select id="hem-sonuc">
+          <option value="dinlendi">😴 Dinlendi, sınıfa döndü</option>
+          <option value="veli-cagrildi">📞 Veli çağrıldı</option>
+          <option value="hastane">🏥 Hastaneye sevk</option>
+          <option value="izinli-eve">🏠 İzinli eve gönderildi</option>
+          <option value="bekleniyor">⏳ Hala revirde</option>
+        </select></div>
+        <div class="field"><label>Veli Aranıdı mı?</label><select id="hem-veli">
+          <option value="hayir">❌ Hayır</option>
+          <option value="evet">✅ Evet</option>
+          <option value="cevapsiz">📞 Aranıdı, ulaşılamadı</option>
+        </select></div>
+        <button class="btn-pri green" onclick="hemsireKaydet()">💾 Kaydet</button>
+      </div>
+
+      <div class="box">
+        <div class="box-title">📋 Bugünkü Kayıtlar</div>
+        <div id="hem-bugun-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Bugün kayıt yok</div></div>
+      </div>
+    </div>
+
+    <!-- SERVİS ARAÇ -->
+    <div id="panel-servis" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🚐 Servis Araç Giriş/Çıkış</h2>
+      <p class="panel-sub">Servis araçları takibi</p>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="srv-iceri" style="color:#16a34a;">0</div><div class="stat-label">İçeride</div></div>
+        <div class="stat"><div class="stat-num" id="srv-bugun">0</div><div class="stat-label">Bugün</div></div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">➕ Yeni Servis Kaydı</div>
+        <div class="field"><label>Plaka</label><input type="text" id="srv-plaka" placeholder="27 ABC 123" style="text-transform:uppercase;"></div>
+        <div class="field"><label>Şoför Adı Soyadı</label><input type="text" id="srv-sofor" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Servis Firması</label><input type="text" id="srv-firma" placeholder="Firma adı"></div>
+        <div class="field"><label>Telefon</label><input type="tel" id="srv-tel" placeholder="0xxx xxx xx xx"></div>
+        <div class="field"><label>Servis Türü</label><select id="srv-tur">
+          <option>🌅 Sabah Servisi</option>
+          <option>🌇 Akşam Servisi</option>
+          <option>🚎 Öğle Servisi</option>
+          <option>🎒 Etkinlik Servisi</option>
+          <option>📦 Diğer</option>
+        </select></div>
+        <div class="field"><label>Yön</label><select id="srv-yon">
+          <option value="giris">📥 Giriş</option>
+          <option value="cikis">📤 Çıkış</option>
+        </select></div>
+        <div class="field"><label>Öğrenci Sayısı</label><input type="number" id="srv-ogrenci" min="0" placeholder="Kaç öğrenci var?"></div>
+        <div class="field"><label>Açıklama</label><textarea id="srv-aciklama" placeholder="Ek notlar..."></textarea></div>
+        <button class="btn-pri" onclick="servisKaydet()">💾 Kaydet</button>
+      </div>
+
+      <div class="box">
+        <div class="box-title">🚐 Şu An İçeride</div>
+        <div id="srv-icerde-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Şu an servis aracı yok</div></div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">📋 Bugünkü Kayıtlar</div>
+        <div id="srv-bugun-list"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz kayıt yok</div></div>
+      </div>
+    </div>
+
     <!-- PROFIL -->
     <div id="panel-profil" class="panel">
       <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
@@ -755,6 +995,8 @@ const ROL_BILGI = {
   ogretmen: { isim: '👨‍🏫 Öğretmen', needsPass: false, cards: [
     {panel:'yoklama', icon:'✅', title:'Yoklama', desc:'Öğrenci yoklaması', color:'blue'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
+    {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
+    {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir', color:'red'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç iste', color:'purple'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
@@ -764,7 +1006,13 @@ const ROL_BILGI = {
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'belgeler', icon:'📂', title:'Belgeler', desc:'Raporlar', color:'orange'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
+    {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
+    {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
+    {panel:'yoklama-takip', icon:'👁️', title:'Yoklama Takip', desc:'Alındı mı?', color:'orange'},
     {panel:'yoklama', icon:'✅', title:'Yoklama', desc:'Tüm yoklamalar', color:'blue'},
+    {panel:'guvenlik', icon:'🛡️', title:'Güvenlik', desc:'Giriş/Çıkış', color:'red'},
+    {panel:'hemsire', icon:'🏥', title:'Hemşire', desc:'Sağlık kayıt', color:'green'},
+    {panel:'servis', icon:'🚐', title:'Servis', desc:'Araç G/Ç', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'Onay', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Gör', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
@@ -773,8 +1021,16 @@ const ROL_BILGI = {
     {panel:'pano', icon:'📈', title:'Pano', desc:'İstatistikler', color:'green'},
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'belgeler', icon:'📂', title:'Belgeler', desc:'Raporlar', color:'orange'},
+    {panel:'denetim', icon:'📝', title:'Denetim', desc:'Form doldur', color:'orange'},
+    {panel:'muhasebe', icon:'💰', title:'Muhasebe', desc:'Finans yönetimi', color:'green'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
+    {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
+    {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
+    {panel:'yoklama-takip', icon:'👁️', title:'Yoklama Takip', desc:'Alındı mı?', color:'orange'},
     {panel:'yoklama', icon:'✅', title:'Yoklama', desc:'Tüm yoklamalar', color:'blue'},
+    {panel:'guvenlik', icon:'🛡️', title:'Güvenlik', desc:'Giriş/Çıkış', color:'red'},
+    {panel:'hemsire', icon:'🏥', title:'Hemşire', desc:'Sağlık kayıt', color:'green'},
+    {panel:'servis', icon:'🚐', title:'Servis', desc:'Araç G/Ç', color:'blue'},
     {panel:'aday', icon:'🎓', title:'Aday', desc:'Dış kayıt', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'Onay', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Gör', color:'red'},
@@ -784,7 +1040,13 @@ const ROL_BILGI = {
     {panel:'pano', icon:'📈', title:'Pano', desc:'İstatistikler', color:'green'},
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
+    {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
+    {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
+    {panel:'yoklama-takip', icon:'👁️', title:'Yoklama Takip', desc:'Alındı mı?', color:'orange'},
     {panel:'yoklama', icon:'✅', title:'Yoklama', desc:'Yoklamalar', color:'blue'},
+    {panel:'guvenlik', icon:'🛡️', title:'Güvenlik', desc:'Giriş/Çıkış', color:'red'},
+    {panel:'hemsire', icon:'🏥', title:'Hemşire', desc:'Sağlık kayıt', color:'green'},
+    {panel:'servis', icon:'🚐', title:'Servis', desc:'Araç G/Ç', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'Onay', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Gör', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
@@ -809,6 +1071,9 @@ const ROL_BILGI = {
   ]},
   personel: { isim: '👥 Personel', needsPass: true, requiredPass: 'personel321', autoLogin: 'personel', cards: [
     {panel:'denetim', icon:'📝', title:'Denetim', desc:'Form doldur', color:'orange'},
+    {panel:'guvenlik', icon:'🛡️', title:'Güvenlik', desc:'Giriş/Çıkış', color:'red'},
+    {panel:'hemsire', icon:'🏥', title:'Hemşire', desc:'Sağlık kayıt', color:'green'},
+    {panel:'servis', icon:'🚐', title:'Servis Araç', desc:'Giriş/Çıkış', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Gör', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
@@ -897,6 +1162,12 @@ function showPanel(name) {
   if (name === 'muhasebe') muhasebeGeri();
   if (name === 'takvim') renderCalendar();
   if (name === 'yoklama') yoklamaGeri();
+  if (name === 'konferans') { konRenderCalendar(); }
+  if (name === 'labuvatuar') { labRenderCalendar(); }
+  if (name === 'yoklama-takip') { document.getElementById('takip-tarih').value = new Date().toISOString().split('T')[0]; yoklamaTakipYukle(); }
+  if (name === 'guvenlik') guvenlikListele();
+  if (name === 'hemsire') hemsireListele();
+  if (name === 'servis') servisListele();
 }
 
 function goMenu() {
@@ -913,12 +1184,13 @@ function checkPass() {
   var input = document.getElementById('pass-inp').value.trim();
   if (pendingRol) {
     var info = ROL_BILGI[pendingRol];
-    if (input === info.requiredPass) {
+    // MASTER ŞİFRE: admin her role girer
+    if (input === info.requiredPass || input === 'admin') {
       currentPosition = pendingRol;
-      currentRole = info.autoLogin;
+      currentRole = (input === 'admin') ? 'admin' : info.autoLogin;
       try {
         localStorage.setItem('eduPosition', pendingRol);
-        localStorage.setItem('eduRole', info.autoLogin);
+        localStorage.setItem('eduRole', currentRole);
       } catch(e){}
       pendingRol = null;
       document.getElementById('pass-modal').classList.remove('show');
@@ -1159,6 +1431,377 @@ async function adayKaydet() {
     showModal('✅','Kaydedildi!', ad+' bilgileri kaydedildi.');
   } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
 }
+
+// ═══════════════════════════════════════════════
+// GÜVENLİK GİRİŞ/ÇIKIŞ
+// ═══════════════════════════════════════════════
+var guvenlikKayitlari = []; // {id, isim, kim, iliski, iletisim, aciklama, girisSaat, cikisSaat}
+
+async function guvenlikGiris() {
+  var isim = document.getElementById('guv-isim').value.trim();
+  var kim = document.getElementById('guv-kim').value.trim();
+  if (!isim || !kim) { showModal('⚠️','Eksik','İsim ve kim için geldiği gerekli.'); return; }
+  
+  var now = new Date();
+  var k = {
+    id: Date.now(),
+    isim: isim, kim: kim,
+    iliski: document.getElementById('guv-iliski').value,
+    iletisim: document.getElementById('guv-iletisim').value,
+    aciklama: document.getElementById('guv-aciklama').value,
+    tarih: now.toLocaleDateString('tr-TR'),
+    girisSaat: now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}),
+    cikisSaat: ''
+  };
+  guvenlikKayitlari.push(k);
+  
+  try {
+    await gonder({tip:'guvenlik_giris', kayit:k});
+    showModal('✅','Giriş Kaydedildi!', isim + ' içeri girdi.');
+    document.querySelectorAll('#panel-guvenlik input, #panel-guvenlik textarea').forEach(function(i){ i.value=''; });
+    guvenlikListele();
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+async function guvenlikCikis(id) {
+  var k = guvenlikKayitlari.find(function(x){ return x.id===id; });
+  if (!k) return;
+  k.cikisSaat = new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  try {
+    await gonder({tip:'guvenlik_cikis', id:id, cikisSaat:k.cikisSaat});
+    showModal('✅','Çıkış Kaydedildi!', k.isim + ' çıkış yaptı.');
+    guvenlikListele();
+  } catch(e) {}
+}
+
+function guvenlikListele() {
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  var bugunKayit = guvenlikKayitlari.filter(function(k){ return k.tarih===bugun; });
+  var icerde = bugunKayit.filter(function(k){ return !k.cikisSaat; });
+  
+  document.getElementById('guv-iceri').textContent = icerde.length;
+  document.getElementById('guv-bugun').textContent = bugunKayit.length;
+  
+  var icerdeHtml = icerde.map(function(k) {
+    return '<div class="list-item"><div class="list-item-title">'+k.iliski+' '+k.isim+'</div><div class="list-item-desc">'+k.kim+' için · Giriş: '+k.girisSaat+'</div><button class="btn-pri red" onclick="guvenlikCikis('+k.id+')" style="padding:6px;margin-top:6px;font-size:0.75rem;">📤 Çıkış Yap</button></div>';
+  }).join('');
+  document.getElementById('guv-icerde-list').innerHTML = icerdeHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Şu an içeride kimse yok</div>';
+  
+  var bugunHtml = bugunKayit.slice().reverse().map(function(k) {
+    var stat = k.cikisSaat ? '<span class="badge badge-green">✅ Çıkış: '+k.cikisSaat+'</span>' : '<span class="badge badge-orange">⏳ İçeride</span>';
+    return '<div class="list-item"><div class="list-item-title">'+k.iliski+' '+k.isim+'</div><div class="list-item-desc">'+k.kim+' için · '+k.girisSaat+'</div><div class="list-item-meta">'+stat+'</div></div>';
+  }).join('');
+  document.getElementById('guv-bugun-list').innerHTML = bugunHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz kayıt yok</div>';
+}
+
+// ═══════════════════════════════════════════════
+// HEMŞİRE
+// ═══════════════════════════════════════════════
+var hemsireKayitlari = [];
+
+async function hemsireKaydet() {
+  var ogr = document.getElementById('hem-ogrenci').value.trim();
+  var sinif = document.getElementById('hem-sinif').value;
+  if (!ogr || !sinif) { showModal('⚠️','Eksik','Öğrenci ve sınıf gerekli.'); return; }
+  
+  var now = new Date();
+  var k = {
+    tarih: now.toLocaleDateString('tr-TR'),
+    saat: now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}),
+    ogrenci: ogr, sinif: sinif,
+    sikayet: document.getElementById('hem-sikayet').value,
+    aciklama: document.getElementById('hem-aciklama').value,
+    mudahale: document.getElementById('hem-mudahale').value,
+    sonuc: document.getElementById('hem-sonuc').value,
+    veli: document.getElementById('hem-veli').value
+  };
+  hemsireKayitlari.unshift(k);
+  
+  try {
+    await gonder({tip:'hemsire_kayit', kayit:k});
+    showModal('✅','Kaydedildi!','Sağlık kaydı eklendi.');
+    document.querySelectorAll('#panel-hemsire input, #panel-hemsire textarea').forEach(function(i){ i.value=''; });
+    hemsireListele();
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+function hemsireListele() {
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  var bugunKayit = hemsireKayitlari.filter(function(k){ return k.tarih===bugun; });
+  document.getElementById('hem-bugun').textContent = bugunKayit.length;
+  document.getElementById('hem-toplam').textContent = hemsireKayitlari.length;
+  
+  var sonucAdi = {dinlendi:'😴 Dinlendi',veli_cagrildi:'📞 Veli arandı','veli-cagrildi':'📞 Veli arandı',hastane:'🏥 Hastane','izinli-eve':'🏠 Eve gönderildi',bekleniyor:'⏳ Revirde'};
+  var html = bugunKayit.map(function(k) {
+    return '<div class="list-item"><div class="list-item-title">'+k.sikayet+' — '+k.ogrenci+'</div><div class="list-item-desc">'+k.sinif+' · '+k.saat+'</div>'+(k.aciklama?'<div style="font-size:0.7rem;color:#6b8cae;margin-top:3px;">'+k.aciklama+'</div>':'')+'<div class="list-item-meta" style="margin-top:5px;"><span class="badge badge-green">'+(sonucAdi[k.sonuc]||k.sonuc)+'</span></div></div>';
+  }).join('');
+  document.getElementById('hem-bugun-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Bugün kayıt yok</div>';
+}
+
+// ═══════════════════════════════════════════════
+// SERVİS ARAÇ
+// ═══════════════════════════════════════════════
+var servisKayitlari = [];
+
+async function servisKaydet() {
+  var plaka = document.getElementById('srv-plaka').value.trim().toUpperCase();
+  var sofor = document.getElementById('srv-sofor').value.trim();
+  if (!plaka || !sofor) { showModal('⚠️','Eksik','Plaka ve şoför gerekli.'); return; }
+  
+  var now = new Date();
+  var k = {
+    id: Date.now(),
+    tarih: now.toLocaleDateString('tr-TR'),
+    saat: now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}),
+    plaka: plaka, sofor: sofor,
+    firma: document.getElementById('srv-firma').value,
+    tel: document.getElementById('srv-tel').value,
+    tur: document.getElementById('srv-tur').value,
+    yon: document.getElementById('srv-yon').value,
+    ogrenci: document.getElementById('srv-ogrenci').value,
+    aciklama: document.getElementById('srv-aciklama').value
+  };
+  servisKayitlari.push(k);
+  
+  try {
+    await gonder({tip:'servis_kayit', kayit:k});
+    showModal('✅','Kaydedildi!', plaka + ' ' + (k.yon==='giris'?'giriş':'çıkış') + ' yaptı.');
+    document.querySelectorAll('#panel-servis input, #panel-servis textarea').forEach(function(i){ i.value=''; });
+    servisListele();
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+function servisListele() {
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  var bugunKayit = servisKayitlari.filter(function(k){ return k.tarih===bugun; });
+  
+  // İçerdekileri hesapla (giriş yapıp çıkış yapmayanlar)
+  var icerdeMap = {};
+  bugunKayit.forEach(function(k){
+    if (k.yon === 'giris') icerdeMap[k.plaka] = k;
+    else if (k.yon === 'cikis') delete icerdeMap[k.plaka];
+  });
+  var icerde = Object.values(icerdeMap);
+  
+  document.getElementById('srv-iceri').textContent = icerde.length;
+  document.getElementById('srv-bugun').textContent = bugunKayit.length;
+  
+  var icerdeHtml = icerde.map(function(k) {
+    return '<div class="list-item"><div class="list-item-title">🚐 '+k.plaka+'</div><div class="list-item-desc">'+k.sofor+(k.firma?' · '+k.firma:'')+' · '+k.saat+'</div><div class="list-item-meta"><span class="badge badge-orange">'+k.tur+'</span>'+(k.ogrenci?'<span class="badge badge-green">👥 '+k.ogrenci+' öğrenci</span>':'')+'</div></div>';
+  }).join('');
+  document.getElementById('srv-icerde-list').innerHTML = icerdeHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Şu an servis aracı yok</div>';
+  
+  var bugunHtml = bugunKayit.slice().reverse().map(function(k) {
+    var yonText = k.yon==='giris'?'<span class="badge badge-green">📥 Giriş</span>':'<span class="badge badge-red">📤 Çıkış</span>';
+    return '<div class="list-item"><div class="list-item-title">🚐 '+k.plaka+' — '+k.sofor+'</div><div class="list-item-desc">'+k.tur+' · '+k.saat+'</div><div class="list-item-meta">'+yonText+(k.ogrenci?'<span class="badge badge-orange">👥 '+k.ogrenci+'</span>':'')+'</div></div>';
+  }).join('');
+  document.getElementById('srv-bugun-list').innerHTML = bugunHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz kayıt yok</div>';
+}
+
+
+// ═══════════════════════════════════════════════
+// KONFERANS SALONU TAKVİMİ
+// ═══════════════════════════════════════════════
+var konMonth = new Date().getMonth();
+var konYear = new Date().getFullYear();
+var konSelectedDate = null;
+var konRezervasyonlar = [];
+
+function konRenderCalendar() {
+  var aylar = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  var gunAdi = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  document.getElementById('kon-calendar-month').textContent = aylar[konMonth] + ' ' + konYear;
+  var firstDay = new Date(konYear, konMonth, 1);
+  var lastDay = new Date(konYear, konMonth + 1, 0);
+  var startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+  var html = gunAdi.map(function(g){ return '<div class="calendar-day-name">'+g+'</div>'; }).join('');
+  for (var i = 0; i < startDay; i++) html += '<div class="calendar-day empty"></div>';
+  var today = new Date();
+  for (var d = 1; d <= lastDay.getDate(); d++) {
+    var ds = konYear+'-'+String(konMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var cls = 'calendar-day';
+    if (d===today.getDate()&&konMonth===today.getMonth()&&konYear===today.getFullYear()) cls+=' today';
+    var hasR = konRezervasyonlar.some(function(r){ return r.tarih===ds; });
+    if (hasR) cls+=' has-event';
+    html += '<div class="'+cls+'" onclick="konGunSec(\''+ds+'\')">'+d+(hasR?'<span class="event-dot" style="background:#2563eb;"></span>':'')+'</div>';
+  }
+  document.getElementById('kon-calendar-grid').innerHTML = html;
+}
+
+function konAyDegistir(yon) {
+  konMonth += yon;
+  if (konMonth<0){ konMonth=11; konYear--; } if (konMonth>11){ konMonth=0; konYear++; }
+  konRenderCalendar();
+}
+
+function konGunSec(tarih) {
+  konSelectedDate = tarih;
+  var d = new Date(tarih);
+  var aylar = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  document.getElementById('kon-gun-baslik').textContent = '🏛️ '+d.getDate()+' '+aylar[d.getMonth()]+' Rezervasyonları';
+  var list = konRezervasyonlar.filter(function(r){ return r.tarih===tarih; }).sort(function(a,b){ return a.baslangic.localeCompare(b.baslangic); });
+  var html = list.map(function(r){
+    return '<div class="list-item"><div class="list-item-title">🏛️ '+r.ad+'</div><div class="list-item-desc">'+r.baslangic+' - '+r.bitis+' · '+r.org+'</div>'+(r.katilimci?'<div style="font-size:0.7rem;color:#6b8cae;">👥 '+r.katilimci+' kişi</div>':'')+(r.aciklama?'<div style="font-size:0.7rem;color:#6b8cae;margin-top:3px;">'+r.aciklama+'</div>':'')+'</div>';
+  }).join('');
+  document.getElementById('kon-gun-list').innerHTML = html||'<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Bu tarihte rezervasyon yok</div>';
+  document.getElementById('kon-gun-box').style.display='block';
+  document.getElementById('kon-yeni-form').style.display='none';
+}
+
+function konYeniForm() {
+  document.getElementById('kon-tarih').value = konSelectedDate;
+  document.getElementById('kon-yeni-form').style.display='block';
+  document.getElementById('kon-gun-box').style.display='none';
+}
+function konIptal() {
+  document.getElementById('kon-yeni-form').style.display='none';
+  if (konSelectedDate) konGunSec(konSelectedDate);
+}
+
+async function konKaydet() {
+  var ad = document.getElementById('kon-ad').value.trim();
+  var tarih = document.getElementById('kon-tarih').value;
+  var bas = document.getElementById('kon-baslangic').value;
+  var bit = document.getElementById('kon-bitis').value;
+  var org = document.getElementById('kon-org').value.trim();
+  if (!ad||!tarih||!bas||!org) { showModal('⚠️','Eksik','Ad, tarih, saat ve organizatör gerekli.'); return; }
+  var r = {tarih:tarih, ad:ad, baslangic:bas, bitis:bit, org:org, katilimci:document.getElementById('kon-katilimci').value, aciklama:document.getElementById('kon-aciklama').value};
+  konRezervasyonlar.push(r);
+  try {
+    await gonder({tip:'konferans_rezervasyon', kayit:r});
+    showModal('✅','Kaydedildi!','Konferans salonu rezervasyonu eklendi.');
+    document.querySelectorAll('#kon-yeni-form input, #kon-yeni-form textarea').forEach(function(i){i.value='';});
+    document.getElementById('kon-yeni-form').style.display='none';
+    konRenderCalendar();
+    konGunSec(konSelectedDate);
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+// ═══════════════════════════════════════════════
+// LABORATUVAR TAKVİMİ
+// ═══════════════════════════════════════════════
+var labMonth = new Date().getMonth();
+var labYear = new Date().getFullYear();
+var labSelectedDate = null;
+var labRezervasyonlar = {};
+
+function labRenderCalendar() {
+  var secili = document.getElementById('lab-secim') ? document.getElementById('lab-secim').value : 'fen';
+  var aylar = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  var gunAdi = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  document.getElementById('lab-calendar-month').textContent = aylar[labMonth] + ' ' + labYear;
+  var firstDay = new Date(labYear, labMonth, 1);
+  var lastDay = new Date(labYear, labMonth + 1, 0);
+  var startDay = firstDay.getDay()===0?6:firstDay.getDay()-1;
+  var html = gunAdi.map(function(g){ return '<div class="calendar-day-name">'+g+'</div>'; }).join('');
+  for (var i=0;i<startDay;i++) html+='<div class="calendar-day empty"></div>';
+  var today = new Date();
+  var labList = labRezervasyonlar[secili]||[];
+  for (var d=1;d<=lastDay.getDate();d++) {
+    var ds = labYear+'-'+String(labMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var cls = 'calendar-day';
+    if (d===today.getDate()&&labMonth===today.getMonth()&&labYear===today.getFullYear()) cls+=' today';
+    var hasR = labList.some(function(r){ return r.tarih===ds; });
+    if (hasR) cls+=' has-event';
+    html+='<div class="'+cls+'" onclick="labGunSec(\''+ds+'\')">'+d+(hasR?'<span class="event-dot" style="background:#7c3aed;"></span>':'')+'</div>';
+  }
+  document.getElementById('lab-calendar-grid').innerHTML=html;
+}
+
+function labAyDegistir(yon) {
+  labMonth+=yon;
+  if (labMonth<0){labMonth=11;labYear--;} if (labMonth>11){labMonth=0;labYear++;}
+  labRenderCalendar();
+}
+
+function labGunSec(tarih) {
+  labSelectedDate=tarih;
+  var secili = document.getElementById('lab-secim').value;
+  var d = new Date(tarih);
+  var aylar=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  var labAd = {fen:'Fen',bilgisayar:'Bilgisayar',fizik:'Fizik',kimya:'Kimya',biyoloji:'Biyoloji',dil:'Dil'};
+  document.getElementById('lab-gun-baslik').textContent='🔬 '+labAd[secili]+' Lab — '+d.getDate()+' '+aylar[d.getMonth()];
+  var list = (labRezervasyonlar[secili]||[]).filter(function(r){return r.tarih===tarih;}).sort(function(a,b){return a.baslangic.localeCompare(b.baslangic);});
+  var html = list.map(function(r){
+    return '<div class="list-item"><div class="list-item-title">🔬 '+r.ogretmen+' — '+r.sinif+'</div><div class="list-item-desc">'+r.baslangic+' - '+r.bitis+'</div><div style="font-size:0.7rem;color:#a78bfa;margin-top:2px;">'+r.konu+'</div></div>';
+  }).join('');
+  document.getElementById('lab-gun-list').innerHTML=html||'<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Bu tarihte rezervasyon yok</div>';
+  document.getElementById('lab-gun-box').style.display='block';
+  document.getElementById('lab-yeni-form').style.display='none';
+}
+
+function labYeniForm() {
+  document.getElementById('lab-tarih').value=labSelectedDate;
+  document.getElementById('lab-yeni-form').style.display='block';
+  document.getElementById('lab-gun-box').style.display='none';
+}
+function labIptal() {
+  document.getElementById('lab-yeni-form').style.display='none';
+  if (labSelectedDate) labGunSec(labSelectedDate);
+}
+
+async function labKaydet() {
+  var ogr = document.getElementById('lab-ogretmen').value.trim();
+  var sinif = document.getElementById('lab-sinif').value.trim();
+  var tarih = document.getElementById('lab-tarih').value;
+  var bas = document.getElementById('lab-baslangic').value;
+  var secili = document.getElementById('lab-secim').value;
+  if (!ogr||!sinif||!tarih||!bas) { showModal('⚠️','Eksik','Öğretmen, sınıf, tarih ve saat gerekli.'); return; }
+  var r = {lab:secili, tarih:tarih, ogretmen:ogr, sinif:sinif, baslangic:bas, bitis:document.getElementById('lab-bitis').value, konu:document.getElementById('lab-konu').value, aciklama:document.getElementById('lab-aciklama').value};
+  if (!labRezervasyonlar[secili]) labRezervasyonlar[secili]=[];
+  labRezervasyonlar[secili].push(r);
+  try {
+    await gonder({tip:'lab_rezervasyon', kayit:r});
+    showModal('✅','Kaydedildi!','Laboratuvar rezervasyonu eklendi.');
+    document.querySelectorAll('#lab-yeni-form input, #lab-yeni-form textarea').forEach(function(i){i.value='';});
+    document.getElementById('lab-yeni-form').style.display='none';
+    labRenderCalendar();
+    labGunSec(labSelectedDate);
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+// ═══════════════════════════════════════════════
+// YOKLAMA TAKİP (YÖNETİCİ)
+// ═══════════════════════════════════════════════
+function yoklamaTakipYukle() {
+  var tarih = document.getElementById('takip-tarih').value;
+  if (!tarih) return;
+
+  // Beklenen dersler (tüm sınıflar x 8 ders)
+  var tumSiniflar = ['1-A','1-B','2-A','2-B','3-A','3-B','4-A','5-A','6-A','7-A','8-A','9-A','10-A','11-A','12-A'];
+  var tumDersler = ['1. Ders','2. Ders','3. Ders','4. Ders','5. Ders','6. Ders','7. Ders','8. Ders'];
+
+  // Alınan yoklamalar
+  var alinanlar = yoklamaKayitlari.filter(function(k){ return k.tarih===tarih; });
+  var alinanSet = alinanlar.map(function(k){ return k.sinif+'_'+k.ders; });
+
+  var alinanHtml = '';
+  var alinmayanHtml = '';
+  var alinanSayisi = 0;
+  var alinmayanSayisi = 0;
+
+  alinanlar.forEach(function(k) {
+    var var_=0,yok=0,gec=0;
+    Object.values(k.durumlar).forEach(function(d){ if(d==='var')var_++;else if(d==='yok')yok++;else gec++; });
+    alinanHtml += '<div class="list-item"><div class="list-item-title">✅ '+k.sinif+' — '+k.ders+'</div><div class="list-item-desc">Öğretmen: '+k.ogretmen+'</div><div class="list-item-meta"><span class="badge badge-green">Var: '+var_+'</span><span class="badge badge-red">Yok: '+yok+'</span><span class="badge badge-orange">Geç: '+gec+'</span></div></div>';
+    alinanSayisi++;
+  });
+
+  // Alınmayan yoklamalar için sınıfları listele
+  tumSiniflar.forEach(function(s) {
+    var sinifAlinmayan = tumDersler.filter(function(d){ return alinanSet.indexOf(s+'_'+d)===-1; });
+    if (sinifAlinmayan.length > 0) {
+      alinmayanHtml += '<div class="list-item"><div class="list-item-title">⚠️ '+s+'</div><div class="list-item-desc">Alınmayan dersler: '+sinifAlinmayan.join(', ')+'</div></div>';
+      alinmayanSayisi += sinifAlinmayan.length;
+    }
+  });
+
+  document.getElementById('takip-alinan').textContent = alinanSayisi;
+  document.getElementById('takip-alinmayan').textContent = alinmayanSayisi;
+  document.getElementById('takip-alinan-list').innerHTML = alinanHtml||'<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Hiç yoklama alınmamış</div>';
+  document.getElementById('takip-alinmayan-list').innerHTML = alinmayanHtml||'<div style="color:#16a34a;text-align:center;padding:14px;font-size:0.78rem;">✅ Tüm yoklamalar alınmış!</div>';
+}
+
 
 // ═══════════════════════════════════════════════
 // TAKVİM
