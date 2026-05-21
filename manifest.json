@@ -1,0 +1,43 @@
+{
+  "name": "EduControl - Doğa Koleji",
+  "short_name": "EduControl",
+  "description": "Dijital Denetim ve Yönetim Sistemi",
+  "start_url": "/denetim/",
+  "scope": "/denetim/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "lang": "tr",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "https://control-e-del.github.io/denetim/logo3.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://control-e-del.github.io/denetim/logo3.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Arıza Bildir",
+      "short_name": "Arıza",
+      "description": "Hızlı arıza bildirimi",
+      "url": "/denetim/?panel=ariza",
+      "icons": [{"src": "https://control-e-del.github.io/denetim/logo3.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Güvenlik",
+      "short_name": "Güvenlik",
+      "description": "Giriş/Çıkış kaydı",
+      "url": "/denetim/?panel=guvenlik",
+      "icons": [{"src": "https://control-e-del.github.io/denetim/logo3.png", "sizes": "96x96"}]
+    }
+  ]
+}
