@@ -1028,22 +1028,114 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
   }
 })();
 
-// PWA - Service Worker Kayıt
+// iOS Tespiti ve Banner
+(function() {
+  var isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+  var isStandalone = window.navigator.standalone;
+  var bannerClosed = localStorage.getItem('iosBannerClosed');
+  if (isIos && !isStandalone && !bannerClosed) {
+    setTimeout(function() {
+      var b = document.getElementById('ios-banner');
+      if (b) b.style.display = 'block';
+    }, 2000);
+  }
+})();
+
+// iOS Tespiti ve Banner
+(function() {
+  var isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+  var isStandalone = window.navigator.standalone;
+  var bannerClosed = localStorage.getItem('iosBannerClosed');
+  if (isIos && !isStandalone && !bannerClosed) {
+    setTimeout(function() {
+      var b = document.getElementById('ios-banner');
+      if (b) b.style.display = 'block';
+    }, 2000);
+  }
+})();
+
+// iOS Tespiti ve Banner
+(function() {
+  var isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+  var isStandalone = window.navigator.standalone;
+  var bannerClosed = localStorage.getItem('iosBannerClosed');
+  if (isIos && !isStandalone && !bannerClosed) {
+    setTimeout(function() {
+      var b = document.getElementById('ios-banner');
+      if (b) b.style.display = 'block';
+    }, 2000);
+  }
+})();
+
+
+</script>
+<!-- Firebase - EN SONDA YÜKLENMELİ -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+<script>
+
+</script>
+<!-- Firebase Scripts - BODY SONUNDA -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+<script>
+// ── FIREBASE FCM ─────────────────────────────────
+firebase.initializeApp({
+  apiKey: "AIzaSyAhwuxl3fCGYXg2DUNUTJim02GaPkm5538",
+  authDomain: "educontrol-doga.firebaseapp.com",
+  projectId: "educontrol-doga",
+  storageBucket: "educontrol-doga.firebasestorage.app",
+  messagingSenderId: "31902771311",
+  appId: "1:31902771311:web:fcf151e4dae4e898d8859a"
+});
+
+var messaging = null;
+var fcmToken = null;
+var VAPID_KEY = "BOONvv0nlk_ENkfj0KR7PRgcmNOejieHlRFXG99zdsBD4dsvj09SqUJNGv_wZqG8S7bkiKR9BfI8kP2eInHkLZw";
+var SCRIPT_FCM = "https://script.google.com/macros/s/AKfycbw0XqxTQpbCjaJauS2e1hz5FtJKfkOxz2BKXCgTdwJz_pblFOywIpnq79L11rtmlJJrmQ/exec";
+
+// Service Worker kayıt + FCM başlatma
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/denetim/sw.js')
       .then(function(reg) {
-        console.log('[PWA] Service Worker kayıtlı:', reg.scope);
-        // Push bildirim izni iste
-        if ('Notification' in window && Notification.permission === 'default') {
-          setTimeout(function() {
-            Notification.requestPermission().then(function(permission) {
-              console.log('[PWA] Bildirim izni:', permission);
+        console.log('[FCM] SW kayıtlı:', reg.scope);
+        messaging = firebase.messaging();
+        
+        // Bildirim izni iste ve token al
+        Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+            messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: reg })
+              .then(function(token) {
+                if (token) {
+                  fcmToken = token;
+                  console.log('[FCM] Token alındı');
+                  // Token'ı Sheets'e kaydet
+                  fetch(SCRIPT_FCM + '?data=' + encodeURIComponent(JSON.stringify({
+                    tip: 'fcm_token',
+                    token: token,
+                    cihaz: navigator.userAgent.substring(0, 50),
+                    tarih: new Date().toLocaleDateString('tr-TR')
+                  })), {mode: 'no-cors'});
+                }
+              }).catch(function(err) { console.log('[FCM] Token hatası:', err); });
+
+            // Sayfa AÇIKKEN gelen bildirimler
+            messaging.onMessage(function(payload) {
+              console.log('[FCM] Ön plan bildirimi:', payload);
+              var title = payload.notification.title || 'EduControl';
+              var body = payload.notification.body || '';
+              if ('Notification' in window) {
+                new Notification(title, {
+                  body: body,
+                  icon: 'https://control-e-del.github.io/denetim/logo3.png'
+                });
+              }
             });
-          }, 3000);
-        }
+          }
+        });
       })
-      .catch(function(err) { console.log('[PWA] SW hata:', err); });
+      .catch(function(err) { console.log('[FCM] SW hata:', err); });
   });
 }
 
