@@ -210,6 +210,248 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
       <div id="menu-cards"></div>
     </div>
 
+    <!-- ACİL DESTEK PANELİ -->
+    <div id="panel-acil" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+
+      <!-- ACİL BUTON -->
+      <div style="text-align:center;padding:20px 0 10px;">
+        <div id="acil-btn-wrap" style="position:relative;display:inline-block;">
+          <button id="acil-btn"
+            onmousedown="acilBasildi()" onmouseup="acilBirakildi()" onmouseleave="acilBirakildi()"
+            ontouchstart="acilBasildi()" ontouchend="acilBirakildi()"
+            style="width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#ff2222,#991111);border:6px solid #ff4444;color:#fff;font-size:1.2rem;font-weight:800;cursor:pointer;box-shadow:0 0 30px rgba(220,38,38,0.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;user-select:none;-webkit-user-select:none;transition:all 0.1s;font-family:'Plus Jakarta Sans',sans-serif;">
+            <span style="font-size:2.5rem;">🚨</span>
+            <span>ACİL</span>
+            <span>DESTEK</span>
+          </button>
+          <!-- Geri sayım halkası -->
+          <svg id="acil-ring" style="position:absolute;top:-8px;left:-8px;display:none;" width="196" height="196">
+            <circle cx="98" cy="98" r="90" fill="none" stroke="#ff4444" stroke-width="6" stroke-dasharray="565" stroke-dashoffset="565" id="acil-circle" style="transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 0.1s linear;"/>
+          </svg>
+        </div>
+        <div id="acil-countdown" style="font-size:1.2rem;font-weight:800;color:#dc2626;margin-top:14px;min-height:30px;"></div>
+        <div style="font-size:0.72rem;color:#6b8cae;margin-top:6px;">Aktif etmek için butonu <b style="color:#f59e0b;">2 saniye</b> basılı tut</div>
+      </div>
+
+      <!-- ACİL DURUM AKTİF -->
+      <div id="acil-aktif-box" style="display:none;background:rgba(220,38,38,0.15);border:2px solid #dc2626;border-radius:14px;padding:16px;text-align:center;margin-bottom:14px;">
+        <div style="font-size:1.1rem;font-weight:800;color:#dc2626;margin-bottom:6px;">🚨 ACİL DURUM AKTİF!</div>
+        <div style="font-size:0.78rem;color:#6b8cae;">Tüm acil kişiler bilgilendirildi</div>
+      </div>
+
+      <!-- HIZLI İŞLEMLER -->
+      <div class="box">
+        <div class="box-title">⚡ Hızlı İşlemler</div>
+        <div class="grid">
+          <div class="card red" onclick="acilOlayKayit()" style="min-height:90px;">
+            <div class="icon" style="font-size:2rem;">📝</div>
+            <div class="title" style="font-size:0.78rem;">Olay Kaydı</div>
+            <div class="desc">Hızlıca olay oluştur</div>
+          </div>
+          <div class="card orange" onclick="showPanel('ariza')" style="min-height:90px;">
+            <div class="icon" style="font-size:2rem;">📋</div>
+            <div class="title" style="font-size:0.78rem;">Olay Geçmişi</div>
+            <div class="desc">Kayıtları görüntüle</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACİL REHBER -->
+      <div class="box">
+        <div class="box-title">📞 Acil Rehber</div>
+        <div id="acil-rehber-list"></div>
+        <button class="add-btn" onclick="acilKisiEkleGoster()" style="margin-top:8px;">➕ Kişi Ekle / Düzenle</button>
+      </div>
+
+      <!-- KİŞİ EKLEME FORMU -->
+      <div class="box" id="acil-kisi-form" style="display:none;">
+        <div class="box-title">➕ Acil Kişi Ekle</div>
+        <div class="field"><label>Unvan</label>
+          <select id="acil-unvan">
+            <option>🚔 Okul Polisi</option>
+            <option>📻 Kumlu Haber Merkezi</option>
+            <option>🛡️ Okul Güvenliği</option>
+            <option>👑 Okul Müdürü</option>
+            <option>👔 Müdür Yardımcısı</option>
+            <option>🏥 Hemşire</option>
+            <option>🔧 Tesis Sorumlusu</option>
+            <option>📞 Diğer</option>
+          </select>
+        </div>
+        <div class="field"><label>Ad Soyad</label><input type="text" id="acil-kisi-ad" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Telefon</label><input type="tel" id="acil-kisi-tel" placeholder="0xxx xxx xx xx"></div>
+        <div class="field"><label>Açıklama</label><input type="text" id="acil-kisi-aciklama" placeholder="Görev açıklaması"></div>
+        <button class="btn-pri green" onclick="acilKisiKaydet()">💾 Kaydet</button>
+        <button class="btn-pri red" onclick="document.getElementById('acil-kisi-form').style.display='none'" style="margin-top:6px;">İptal</button>
+      </div>
+
+      <!-- OLAY KAYDI FORMU -->
+      <div class="box" id="acil-olay-form" style="display:none;">
+        <div class="box-title">📝 Hızlı Olay Kaydı</div>
+        <div class="field"><label>Olay Türü</label>
+          <select id="olay-tur">
+            <option>🔥 Yangın</option>
+            <option>🤕 Yaralanma</option>
+            <option>⚡ Elektrik Arızası</option>
+            <option>💧 Su Baskını</option>
+            <option>🚨 Güvenlik İhlali</option>
+            <option>🤒 Sağlık Acili</option>
+            <option>⚠️ Diğer</option>
+          </select>
+        </div>
+        <div class="field"><label>Konum</label><input type="text" id="olay-konum" placeholder="Sınıf, kat, bölüm..."></div>
+        <div class="field"><label>Açıklama</label><textarea id="olay-aciklama" placeholder="Ne oldu?"></textarea></div>
+        <button class="btn-pri red" onclick="olayKaydet()">🚨 Olayı Kaydet ve Bildir</button>
+        <button class="btn-pri" onclick="document.getElementById('acil-olay-form').style.display='none'" style="margin-top:6px;background:#1a2f4a;">İptal</button>
+      </div>
+    </div>
+
+    <!-- DERS PROGRAMI (ÖĞRETMEN) -->
+    <div id="panel-ders-program" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>📚 Ders Programım</h2>
+      <p class="panel-sub">Bugünkü dersler ve hatırlatıcılar</p>
+
+      <div class="box" id="bugun-ders-box">
+        <div class="box-title">📅 Bugünkü Dersler</div>
+        <div id="bugun-ders-list"></div>
+      </div>
+
+      <div class="box" id="nobet-box">
+        <div class="box-title">🦺 Nöbet Bilgim</div>
+        <div id="nobet-bilgi-list"></div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">⏰ Haftalık Program</div>
+        <div id="haftalik-ders-list"></div>
+      </div>
+    </div>
+
+    <!-- DERS YÖNETİMİ (MÜDÜR) -->
+    <div id="panel-ders-yonetim" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>📚 Ders & Nöbet Yönetimi</h2>
+      <p class="panel-sub">Öğretmen ders programı ve nöbet tanımlama</p>
+
+      <div id="ders-yonetim-menu">
+        <div class="grid">
+          <div class="card blue" onclick="dersYonetimPanel('ders-ekle')">
+            <div class="icon">📝</div>
+            <div class="title">Ders Ekle</div>
+            <div class="desc">Program tanımla</div>
+          </div>
+          <div class="card orange" onclick="dersYonetimPanel('nobet-ekle')">
+            <div class="icon">🦺</div>
+            <div class="title">Nöbet Tanımla</div>
+            <div class="desc">Nöbet ata</div>
+          </div>
+          <div class="card green" onclick="dersYonetimPanel('ders-listesi')">
+            <div class="icon">📋</div>
+            <div class="title">Tüm Program</div>
+            <div class="desc">Kayıtları gör</div>
+          </div>
+          <div class="card purple" onclick="dersYonetimPanel('nobet-listesi')">
+            <div class="icon">📊</div>
+            <div class="title">Nöbet Listesi</div>
+            <div class="desc">Tüm nöbetler</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DERS EKLE -->
+      <div id="ders-ekle-form" style="display:none;">
+        <button class="back-btn" onclick="dersYonetimGeri()">← Geri</button>
+        <div class="box">
+          <div class="box-title">➕ Ders Ekle</div>
+          <div class="field"><label>Öğretmen Adı</label><input type="text" id="d-ogretmen" placeholder="Ad Soyad"></div>
+          <div class="field"><label>Ders</label><input type="text" id="d-ders" placeholder="Matematik, Türkçe vb."></div>
+          <div class="field"><label>Sınıf</label><input type="text" id="d-sinif" placeholder="5-A, 7-B vb."></div>
+          <div class="field"><label>Gün</label>
+            <select id="d-gun">
+              <option value="1">Pazartesi</option>
+              <option value="2">Salı</option>
+              <option value="3">Çarşamba</option>
+              <option value="4">Perşembe</option>
+              <option value="5">Cuma</option>
+            </select>
+          </div>
+          <div class="field"><label>Ders Saati</label>
+            <select id="d-saat">
+              <option value="08:00">1. Ders — 08:00</option>
+              <option value="08:50">2. Ders — 08:50</option>
+              <option value="09:40">3. Ders — 09:40</option>
+              <option value="10:40">4. Ders — 10:40</option>
+              <option value="11:30">5. Ders — 11:30</option>
+              <option value="12:20">6. Ders — 12:20</option>
+              <option value="13:10">7. Ders — 13:10</option>
+              <option value="14:00">8. Ders — 14:00</option>
+            </select>
+          </div>
+          <div class="field"><label>Derslik / Oda</label><input type="text" id="d-derslik" placeholder="A101, Lab vb."></div>
+          <button class="btn-pri" onclick="dersEkle()">💾 Dersi Kaydet</button>
+        </div>
+      </div>
+
+      <!-- NÖBET EKLE -->
+      <div id="nobet-ekle-form" style="display:none;">
+        <button class="back-btn" onclick="dersYonetimGeri()">← Geri</button>
+        <div class="box">
+          <div class="box-title">🦺 Nöbet Tanımla</div>
+          <div class="field"><label>Öğretmen Adı</label><input type="text" id="n-ogretmen" placeholder="Ad Soyad"></div>
+          <div class="field"><label>Nöbet Türü</label>
+            <select id="n-tur">
+              <option>🌅 Sabah Girişi (07:45)</option>
+              <option>☀️ Teneffüs Nöbeti</option>
+              <option>🌇 Çıkış Nöbeti</option>
+              <option>🍽️ Yemekhane Nöbeti</option>
+              <option>🚌 Servis Nöbeti</option>
+            </select>
+          </div>
+          <div class="field"><label>Nöbet Saati</label><input type="time" id="n-saat" value="07:45"></div>
+          <div class="field"><label>Gün</label>
+            <select id="n-gun">
+              <option value="1">Pazartesi</option>
+              <option value="2">Salı</option>
+              <option value="3">Çarşamba</option>
+              <option value="4">Perşembe</option>
+              <option value="5">Cuma</option>
+              <option value="0">Her Gün</option>
+            </select>
+          </div>
+          <div class="field"><label>Nöbet Yeri</label><input type="text" id="n-yer" placeholder="Ana kapı, Koridor vb."></div>
+          <div class="field"><label>Hatırlatıcı</label>
+            <select id="n-hatirla">
+              <option value="5">5 dakika önce</option>
+              <option value="10">10 dakika önce</option>
+              <option value="15">15 dakika önce</option>
+              <option value="30">30 dakika önce</option>
+            </select>
+          </div>
+          <button class="btn-pri orange" onclick="nobetEkle()">💾 Nöbeti Kaydet</button>
+        </div>
+      </div>
+
+      <!-- DERS LİSTESİ -->
+      <div id="ders-listesi-panel" style="display:none;">
+        <button class="back-btn" onclick="dersYonetimGeri()">← Geri</button>
+        <div class="box">
+          <div class="box-title">📋 Tüm Ders Programı</div>
+          <div id="tum-ders-list"></div>
+        </div>
+      </div>
+
+      <!-- NÖBET LİSTESİ -->
+      <div id="nobet-listesi-panel" style="display:none;">
+        <button class="back-btn" onclick="dersYonetimGeri()">← Geri</button>
+        <div class="box">
+          <div class="box-title">📊 Tüm Nöbet Listesi</div>
+          <div id="tum-nobet-list"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- PANO -->
     <div id="panel-pano" class="panel">
       <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
@@ -1173,6 +1415,8 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0XqxTQpbCjaJauS2e1
 
 const ROL_BILGI = {
   ogretmen: { isim: '👨‍🏫 Öğretmen', needsPass: false, cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
+    {panel:'ders-program', icon:'📚', title:'Ders Programım', desc:'Dersler & Bildirim', color:'green'},
     {panel:'yoklama', icon:'✅', title:'Yoklama', desc:'Öğrenci yoklaması', color:'blue'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
     {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
@@ -1182,9 +1426,11 @@ const ROL_BILGI = {
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   mudur: { isim: '👑 Müdür', needsPass: true, requiredPass: 'admin321', autoLogin: 'admin', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'pano', icon:'📈', title:'Pano', desc:'İstatistikler', color:'green'},
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'belgeler', icon:'📂', title:'Belgeler', desc:'Raporlar', color:'orange'},
+    {panel:'ders-yonetim', icon:'📚', title:'Ders Yönetimi', desc:'Program & Nöbet', color:'blue'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
     {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
     {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
@@ -1198,6 +1444,7 @@ const ROL_BILGI = {
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   genel_mudur: { isim: '⭐ Genel Müdür', needsPass: true, requiredPass: 'admin', autoLogin: 'admin', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'pano', icon:'📈', title:'Pano', desc:'İstatistikler', color:'green'},
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'belgeler', icon:'📂', title:'Belgeler', desc:'Raporlar', color:'orange'},
@@ -1217,6 +1464,7 @@ const ROL_BILGI = {
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   mudur_yard: { isim: '👔 Müdür Yardımcısı', needsPass: true, requiredPass: 'birim321', autoLogin: 'birim', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'pano', icon:'📈', title:'Pano', desc:'İstatistikler', color:'green'},
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
@@ -1232,24 +1480,28 @@ const ROL_BILGI = {
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   tesis: { isim: '🔧 Tesis', needsPass: true, requiredPass: 'personel321', autoLogin: 'personel', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'denetim', icon:'📝', title:'Denetim', desc:'Teknik form', color:'orange'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Çöz', color:'red'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç', color:'purple'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   on_buro: { isim: '🏢 Ön Büro Yönetim', needsPass: true, requiredPass: 'buro321', autoLogin: 'buro', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'denetim', icon:'📝', title:'Denetim', desc:'Büro/Danışma', color:'orange'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   on_buro_personel: { isim: '💼 Ön Büro Personel', needsPass: true, requiredPass: 'buro321', autoLogin: 'buro', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'aday', icon:'🎓', title:'Aday Takibi', desc:'Dış kayıt', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   personel: { isim: '👥 Personel', needsPass: true, requiredPass: 'personel321', autoLogin: 'personel', cards: [
+    {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'denetim', icon:'📝', title:'Denetim', desc:'Form doldur', color:'orange'},
     {panel:'guvenlik', icon:'🛡️', title:'Güvenlik', desc:'Giriş/Çıkış', color:'red'},
     {panel:'hemsire', icon:'🏥', title:'Hemşire', desc:'Sağlık kayıt', color:'green'},
@@ -1345,6 +1597,9 @@ function showPanel(name) {
   if (name === 'konferans') { konRenderCalendar(); }
   if (name === 'labuvatuar') { labRenderCalendar(); }
   if (name === 'yoklama-takip') { document.getElementById('takip-tarih').value = new Date().toISOString().split('T')[0]; yoklamaTakipYukle(); }
+  if (name === 'acil') { acilRehberListele(); }
+  if (name === 'ders-program') { dersProgramiGuncelle(); }
+  if (name === 'ders-yonetim') { dersYonetimGeri(); }
   if (name === 'guvenlik') guvenlikListele();
   if (name === 'hemsire') hemsireListele();
   if (name === 'servis') servisListele();
@@ -1776,6 +2031,469 @@ function servisListele() {
     return '<div class="list-item"><div class="list-item-title">🚐 '+k.plaka+' — '+k.sofor+'</div><div class="list-item-desc">'+k.tur+' · '+k.saat+'</div><div class="list-item-meta">'+yonText+(k.ogrenci?'<span class="badge badge-orange">👥 '+k.ogrenci+'</span>':'')+'</div></div>';
   }).join('');
   document.getElementById('srv-bugun-list').innerHTML = bugunHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz kayıt yok</div>';
+}
+
+
+// ═══════════════════════════════════════════════
+// DERS PROGRAMI & NÖBET SİSTEMİ
+// ═══════════════════════════════════════════════
+var dersProgrami = [];
+var nobetler = [];
+var dersHatirlaticilar = [];
+
+var GUNLER = ['', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'];
+var DERS_SAATLERI = {
+  '08:00': '1. Ders', '08:50': '2. Ders', '09:40': '3. Ders',
+  '10:40': '4. Ders', '11:30': '5. Ders', '12:20': '6. Ders',
+  '13:10': '7. Ders', '14:00': '8. Ders'
+};
+
+// LocalStorage'dan yükle
+try {
+  var sd = localStorage.getItem('dersProgrami');
+  if (sd) dersProgrami = JSON.parse(sd);
+  var sn = localStorage.getItem('nobetler');
+  if (sn) nobetler = JSON.parse(sn);
+} catch(e) {}
+
+// Bugünkü günü al (1=Pzt, 5=Cum)
+function bugunGun() {
+  var gun = new Date().getDay(); // 0=Pazar
+  return gun === 0 ? null : gun; // Hafta sonu null
+}
+
+function bugunAd() {
+  var gun = bugunGun();
+  return gun ? GUNLER[gun] : 'Hafta Sonu';
+}
+
+// ── ÖĞRETMEN DERS PROGRAMI PANELİ ──────────────
+function dersProgramiGuncelle() {
+  var gun = bugunGun();
+  var ogr = currentPosition === 'ogretmen' ? (localStorage.getItem('ogretmenAd') || '') : '';
+
+  // Bugünkü dersler
+  var bugunDersler = dersProgrami.filter(function(d) {
+    return parseInt(d.gun) === gun;
+  }).sort(function(a, b) { return a.saat.localeCompare(b.saat); });
+
+  var now = new Date();
+  var nowMin = now.getHours() * 60 + now.getMinutes();
+
+  var html = bugunDersler.map(function(d) {
+    var [sh, sm] = d.saat.split(':').map(Number);
+    var dersMin = sh * 60 + sm;
+    var fark = dersMin - nowMin;
+    var durum = '';
+    if (fark < 0 && fark > -50) durum = '<span class="badge badge-green">🟢 Devam ediyor</span>';
+    else if (fark >= 0 && fark <= 5) durum = '<span class="badge badge-red">⚡ 5dk içinde!</span>';
+    else if (fark > 5 && fark <= 30) durum = '<span class="badge badge-orange">⏰ ' + fark + ' dk sonra</span>';
+    else if (fark < 0) durum = '<span class="badge" style="background:rgba(107,140,174,0.2);color:#6b8cae;">✓ Bitti</span>';
+    else durum = '<span class="badge badge-green">📅 ' + d.saat + '</span>';
+
+    return '<div class="list-item"><div class="list-item-title">📚 ' + d.ders + ' — ' + d.sinif + '</div>'
+      + '<div class="list-item-desc">' + (DERS_SAATLERI[d.saat] || d.saat) + ' · ' + d.saat + (d.derslik ? ' · ' + d.derslik : '') + '</div>'
+      + '<div class="list-item-meta">' + durum + '</div></div>';
+  }).join('');
+
+  var el = document.getElementById('bugun-ders-list');
+  if (el) el.innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">' + (gun ? 'Bugün ders yok' : 'Bugün hafta sonu') + '</div>';
+
+  // Nöbet bilgisi
+  var bugunNobet = nobetler.filter(function(n) {
+    return parseInt(n.gun) === gun || parseInt(n.gun) === 0;
+  });
+  var nobHtml = bugunNobet.map(function(n) {
+    return '<div class="list-item"><div class="list-item-title">🦺 ' + n.tur + '</div>'
+      + '<div class="list-item-desc">' + n.saat + (n.yer ? ' · ' + n.yer : '') + '</div>'
+      + '<div class="list-item-desc" style="color:#f59e0b;">👤 ' + n.ogretmen + '</div></div>';
+  }).join('');
+  var nel = document.getElementById('nobet-bilgi-list');
+  if (nel) nel.innerHTML = nobHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Bugün nöbet yok</div>';
+
+  // Haftalık program
+  var haftaHtml = '';
+  for (var g = 1; g <= 5; g++) {
+    var gunDers = dersProgrami.filter(function(d) { return parseInt(d.gun) === g; })
+      .sort(function(a, b) { return a.saat.localeCompare(b.saat); });
+    if (gunDers.length > 0) {
+      haftaHtml += '<div style="margin-bottom:10px;"><div style="font-size:0.7rem;font-weight:800;color:#f59e0b;margin-bottom:6px;">' + GUNLER[g] + '</div>';
+      gunDers.forEach(function(d) {
+        haftaHtml += '<div class="list-item" style="padding:8px 11px;margin-bottom:4px;"><div style="font-size:0.78rem;font-weight:700;">' + d.saat + ' · ' + d.ders + ' — ' + d.sinif + '</div></div>';
+      });
+      haftaHtml += '</div>';
+    }
+  }
+  var hel = document.getElementById('haftalik-ders-list');
+  if (hel) hel.innerHTML = haftaHtml || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Program girilmemiş</div>';
+
+  // Hatırlatıcı kur
+  dersHatirlaticiKur(bugunDersler, bugunNobet);
+}
+
+// 5 dakika önce bildirim
+function dersHatirlaticiKur(dersler, nobetler2) {
+  dersHatirlaticilar.forEach(function(t) { clearTimeout(t); });
+  dersHatirlaticilar = [];
+
+  var now = new Date();
+  var nowMs = now.getTime();
+
+  // Dersler için
+  dersler.forEach(function(d) {
+    var [sh, sm] = d.saat.split(':').map(Number);
+    var dersMs = new Date();
+    dersMs.setHours(sh, sm, 0, 0);
+    var farkMs = dersMs.getTime() - nowMs - 5 * 60 * 1000; // 5dk önce
+
+    if (farkMs > 0) {
+      var t = setTimeout(function() {
+        // Bildirim
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('📚 Ders Başlıyor!', {
+            body: d.ders + ' — ' + d.sinif + ' · ' + d.saat + (d.derslik ? ' · ' + d.derslik : ''),
+            icon: 'https://control-e-del.github.io/denetim/logo3.png',
+            requireInteraction: true
+          });
+        }
+        // Ses
+        try {
+          var ctx = new (window.AudioContext || window.webkitAudioContext)();
+          [523, 659, 784].forEach(function(freq, i) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.2);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.2 + 0.15);
+            osc.start(ctx.currentTime + i * 0.2);
+            osc.stop(ctx.currentTime + i * 0.2 + 0.15);
+          });
+        } catch(e) {}
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      }, farkMs);
+      dersHatirlaticilar.push(t);
+    }
+  });
+
+  // Nöbetler için
+  nobetler2.forEach(function(n) {
+    var hatirla = parseInt(n.hatirla) || 5;
+    var [sh, sm] = n.saat.split(':').map(Number);
+    var nobMs = new Date();
+    nobMs.setHours(sh, sm, 0, 0);
+    var farkMs = nobMs.getTime() - nowMs - hatirla * 60 * 1000;
+
+    if (farkMs > 0) {
+      var t = setTimeout(function() {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('🦺 Nöbet Hatırlatıcı!', {
+            body: n.tur + ' — ' + n.saat + (n.yer ? ' · ' + n.yer : ''),
+            icon: 'https://control-e-del.github.io/denetim/logo3.png',
+            requireInteraction: true
+          });
+        }
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+      }, farkMs);
+      dersHatirlaticilar.push(t);
+    }
+  });
+}
+
+// ── MÜDÜR DERS YÖNETİMİ PANELİ ──────────────────
+function dersYonetimPanel(name) {
+  document.getElementById('ders-yonetim-menu').style.display = 'none';
+  ['ders-ekle-form', 'nobet-ekle-form', 'ders-listesi-panel', 'nobet-listesi-panel'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  if (name === 'ders-ekle') document.getElementById('ders-ekle-form').style.display = 'block';
+  else if (name === 'nobet-ekle') document.getElementById('nobet-ekle-form').style.display = 'block';
+  else if (name === 'ders-listesi') {
+    document.getElementById('ders-listesi-panel').style.display = 'block';
+    tumDersleriGoster();
+  }
+  else if (name === 'nobet-listesi') {
+    document.getElementById('nobet-listesi-panel').style.display = 'block';
+    tumNobetleriGoster();
+  }
+}
+
+function dersYonetimGeri() {
+  ['ders-ekle-form', 'nobet-ekle-form', 'ders-listesi-panel', 'nobet-listesi-panel'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  document.getElementById('ders-yonetim-menu').style.display = 'block';
+}
+
+async function dersEkle() {
+  var ogr = document.getElementById('d-ogretmen').value.trim();
+  var ders = document.getElementById('d-ders').value.trim();
+  var sinif = document.getElementById('d-sinif').value.trim();
+  var gun = document.getElementById('d-gun').value;
+  var saat = document.getElementById('d-saat').value;
+  if (!ogr || !ders || !sinif) { showModal('⚠️','Eksik','Öğretmen, ders ve sınıf gerekli.'); return; }
+
+  var kayit = {ogretmen:ogr, ders:ders, sinif:sinif, gun:gun, saat:saat, derslik:document.getElementById('d-derslik').value.trim()};
+  dersProgrami.push(kayit);
+  try { localStorage.setItem('dersProgrami', JSON.stringify(dersProgrami)); } catch(e) {}
+
+  try {
+    await gonder({tip:'ders_ekle', kayit:kayit});
+    showModal('✅','Kaydedildi!', ogr + ' için ' + GUNLER[gun] + ' ' + saat + ' ' + ders + ' eklendi.');
+    document.querySelectorAll('#ders-ekle-form input').forEach(function(i){ i.value=''; });
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+async function nobetEkle() {
+  var ogr = document.getElementById('n-ogretmen').value.trim();
+  var tur = document.getElementById('n-tur').value;
+  var saat = document.getElementById('n-saat').value;
+  var gun = document.getElementById('n-gun').value;
+  var yer = document.getElementById('n-yer').value.trim();
+  var hatirla = document.getElementById('n-hatirla').value;
+  if (!ogr) { showModal('⚠️','Eksik','Öğretmen adı gerekli.'); return; }
+
+  var kayit = {ogretmen:ogr, tur:tur, saat:saat, gun:gun, yer:yer, hatirla:hatirla};
+  nobetler.push(kayit);
+  try { localStorage.setItem('nobetler', JSON.stringify(nobetler)); } catch(e) {}
+
+  try {
+    await gonder({tip:'nobet_ekle', kayit:kayit});
+    showModal('✅','Kaydedildi!', ogr + ' — ' + tur + ' nöbeti eklendi.');
+    document.getElementById('n-ogretmen').value = '';
+    document.getElementById('n-yer').value = '';
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
+}
+
+function tumDersleriGoster() {
+  var html = '';
+  for (var g = 1; g <= 5; g++) {
+    var gunDers = dersProgrami.filter(function(d) { return parseInt(d.gun) === g; })
+      .sort(function(a, b) { return a.saat.localeCompare(b.saat); });
+    if (gunDers.length > 0) {
+      html += '<div style="margin-bottom:12px;"><div style="font-size:0.7rem;font-weight:800;color:#f59e0b;margin-bottom:6px;">' + GUNLER[g] + '</div>';
+      gunDers.forEach(function(d, i) {
+        html += '<div class="list-item"><div class="list-item-title">' + d.saat + ' · ' + d.ders + ' — ' + d.sinif + '</div>'
+          + '<div class="list-item-desc">👤 ' + d.ogretmen + (d.derslik ? ' · ' + d.derslik : '') + '</div></div>';
+      });
+      html += '</div>';
+    }
+  }
+  var el = document.getElementById('tum-ders-list');
+  if (el) el.innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz ders girilmemiş</div>';
+}
+
+function tumNobetleriGoster() {
+  var html = nobetler.map(function(n) {
+    return '<div class="list-item"><div class="list-item-title">🦺 ' + n.tur + '</div>'
+      + '<div class="list-item-desc">👤 ' + n.ogretmen + ' · ' + (parseInt(n.gun) === 0 ? 'Her Gün' : GUNLER[n.gun]) + ' · ' + n.saat + '</div>'
+      + (n.yer ? '<div class="list-item-desc">📍 ' + n.yer + '</div>' : '')
+      + '<div class="list-item-meta"><span class="badge badge-orange">⏰ ' + n.hatirla + ' dk önce hatırlat</span></div></div>';
+  }).join('');
+  var el = document.getElementById('tum-nobet-list');
+  if (el) el.innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz nöbet girilmemiş</div>';
+}
+
+
+// ═══════════════════════════════════════════════
+// ACİL DESTEK SİSTEMİ
+// ═══════════════════════════════════════════════
+var acilKisiler = [];
+var acilTimer = null;
+var acilInterval = null;
+var acilBasilmaSuresi = 2000; // 2 saniye
+
+// LocalStorage'dan acil kişileri yükle
+try {
+  var savedAcil = localStorage.getItem('acilKisiler');
+  if (savedAcil) acilKisiler = JSON.parse(savedAcil);
+} catch(e) {}
+
+// Varsayılan kişiler (ilk açılışta)
+if (acilKisiler.length === 0) {
+  acilKisiler = [
+    {unvan:'🚔 Okul Polisi', ad:'', tel:'', aciklama:'Acil güvenlik'},
+    {unvan:'👑 Okul Müdürü', ad:'', tel:'', aciklama:'Okul yönetimi'},
+    {unvan:'🛡️ Okul Güvenliği', ad:'', tel:'', aciklama:'Güvenlik birimi'},
+    {unvan:'📻 Kumlu Haber Merkezi', ad:'', tel:'', aciklama:'Acil iletişim'}
+  ];
+}
+
+function acilRehberListele() {
+  var html = acilKisiler.map(function(k, i) {
+    var hasPhone = k.tel && k.tel.trim() !== '';
+    return '<div class="list-item" style="display:flex;align-items:center;gap:10px;">'
+      + '<div style="flex:1;">'
+      + '<div class="list-item-title">' + k.unvan + (k.ad ? ' — ' + k.ad : '') + '</div>'
+      + (k.aciklama ? '<div class="list-item-desc">' + k.aciklama + '</div>' : '')
+      + (k.tel ? '<div style="font-size:0.78rem;color:#f59e0b;font-weight:700;margin-top:3px;">📞 ' + k.tel + '</div>' : '<div style="font-size:0.72rem;color:#dc2626;">⚠️ Telefon girilmemiş</div>')
+      + '</div>'
+      + (hasPhone ? '<a href="tel:' + k.tel.replace(/\s/g,'') + '" style="background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:800;font-size:0.78rem;text-decoration:none;white-space:nowrap;">📞 Ara</a>' : '')
+      + '<button onclick="acilKisiSil(' + i + ')" style="background:rgba(220,38,38,0.2);border:none;border-radius:6px;color:#dc2626;cursor:pointer;padding:6px 10px;font-size:0.78rem;font-family:inherit;">✕</button>'
+      + '</div>';
+  }).join('');
+  var el = document.getElementById('acil-rehber-list');
+  if (el) el.innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz acil kişi eklenmemiş</div>';
+}
+
+function acilKisiEkleGoster() {
+  document.getElementById('acil-kisi-form').style.display = 'block';
+}
+
+function acilKisiKaydet() {
+  var unvan = document.getElementById('acil-unvan').value;
+  var ad = document.getElementById('acil-kisi-ad').value.trim();
+  var tel = document.getElementById('acil-kisi-tel').value.trim();
+  var aciklama = document.getElementById('acil-kisi-aciklama').value.trim();
+  if (!tel) { showModal('⚠️','Eksik','Telefon numarası gerekli.'); return; }
+  acilKisiler.push({unvan, ad, tel, aciklama});
+  try { localStorage.setItem('acilKisiler', JSON.stringify(acilKisiler)); } catch(e){}
+  document.getElementById('acil-kisi-form').style.display = 'none';
+  document.getElementById('acil-kisi-ad').value = '';
+  document.getElementById('acil-kisi-tel').value = '';
+  document.getElementById('acil-kisi-aciklama').value = '';
+  acilRehberListele();
+  showModal('✅','Eklendi!','Acil kişi eklendi.');
+}
+
+function acilKisiSil(idx) {
+  if (!confirm('Bu kişiyi silmek istediğinize emin misiniz?')) return;
+  acilKisiler.splice(idx, 1);
+  try { localStorage.setItem('acilKisiler', JSON.stringify(acilKisiler)); } catch(e){}
+  acilRehberListele();
+}
+
+// ACİL BUTON
+function acilBasildi() {
+  var btn = document.getElementById('acil-btn');
+  var ring = document.getElementById('acil-ring');
+  var circle = document.getElementById('acil-circle');
+  var countdown = document.getElementById('acil-countdown');
+  
+  btn.style.transform = 'scale(0.95)';
+  btn.style.boxShadow = '0 0 50px rgba(220,38,38,0.9)';
+  ring.style.display = 'block';
+  
+  var startTime = Date.now();
+  var circumference = 565;
+  
+  countdown.textContent = '2.0';
+  
+  acilInterval = setInterval(function() {
+    var elapsed = Date.now() - startTime;
+    var remaining = Math.max(0, (acilBasilmaSuresi - elapsed) / 1000);
+    var progress = elapsed / acilBasilmaSuresi;
+    circle.style.strokeDashoffset = circumference * (1 - progress);
+    countdown.textContent = remaining.toFixed(1) + ' sn';
+    if (remaining <= 0) countdown.textContent = '🚨 AKTİF!';
+  }, 50);
+  
+  acilTimer = setTimeout(function() {
+    acilTetikle();
+  }, acilBasilmaSuresi);
+}
+
+function acilBirakildi() {
+  if (acilTimer) { clearTimeout(acilTimer); acilTimer = null; }
+  if (acilInterval) { clearInterval(acilInterval); acilInterval = null; }
+  
+  var btn = document.getElementById('acil-btn');
+  var ring = document.getElementById('acil-ring');
+  var circle = document.getElementById('acil-circle');
+  var countdown = document.getElementById('acil-countdown');
+  
+  btn.style.transform = '';
+  btn.style.boxShadow = '0 0 30px rgba(220,38,38,0.6)';
+  ring.style.display = 'none';
+  circle.style.strokeDashoffset = '565';
+  
+  if (countdown.textContent !== '🚨 AKTİF!') {
+    countdown.textContent = '';
+  }
+}
+
+async function acilTetikle() {
+  if (acilInterval) { clearInterval(acilInterval); acilInterval = null; }
+  
+  document.getElementById('acil-aktif-box').style.display = 'block';
+  document.getElementById('acil-countdown').textContent = '🚨 AKTİF!';
+  
+  // Titreşim
+  if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+  
+  // Ses çal
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 660, 880, 660, 880].forEach(function(freq, i) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'square';
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.3 + 0.25);
+      osc.start(ctx.currentTime + i * 0.3);
+      osc.stop(ctx.currentTime + i * 0.3 + 0.25);
+    });
+  } catch(e) {}
+  
+  // Bildirim gönder
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('🚨 ACİL DURUM!', {
+      body: 'Acil destek çağrısı aktif edildi!',
+      icon: 'https://control-e-del.github.io/denetim/logo3.png',
+      requireInteraction: true
+    });
+  }
+  
+  // Apps Script'e kaydet
+  var now = new Date();
+  try {
+    await gonder({
+      tip: 'acil_tetik',
+      tarih: now.toLocaleDateString('tr-TR'),
+      saat: now.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}),
+      rol: currentPosition || 'bilinmiyor'
+    });
+  } catch(e) {}
+  
+  // 5 saniye sonra sıfırla
+  setTimeout(function() {
+    document.getElementById('acil-aktif-box').style.display = 'none';
+    document.getElementById('acil-countdown').textContent = '';
+    document.getElementById('acil-btn').style.transform = '';
+    document.getElementById('acil-btn').style.boxShadow = '0 0 30px rgba(220,38,38,0.6)';
+    document.getElementById('acil-ring').style.display = 'none';
+    document.getElementById('acil-circle').style.strokeDashoffset = '565';
+  }, 5000);
+}
+
+function acilOlayKayit() {
+  document.getElementById('acil-olay-form').style.display = 'block';
+}
+
+async function olayKaydet() {
+  var tur = document.getElementById('olay-tur').value;
+  var konum = document.getElementById('olay-konum').value.trim();
+  var aciklama = document.getElementById('olay-aciklama').value.trim();
+  if (!konum || !aciklama) { showModal('⚠️','Eksik','Konum ve açıklama gerekli.'); return; }
+  
+  var now = new Date();
+  try {
+    await gonder({
+      tip: 'acil_olay',
+      tarih: now.toLocaleDateString('tr-TR'),
+      saat: now.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}),
+      tur: tur, konum: konum, aciklama: aciklama,
+      bildiren: currentPosition || 'bilinmiyor'
+    });
+    showModal('🚨','Olay Kaydedildi!','Tüm yetkililer bilgilendirildi.');
+    document.getElementById('acil-olay-form').style.display = 'none';
+    document.getElementById('olay-konum').value = '';
+    document.getElementById('olay-aciklama').value = '';
+  } catch(e) { showModal('❌','Hata','Gönderilemedi.'); }
 }
 
 
