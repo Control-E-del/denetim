@@ -182,23 +182,31 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
 
   <div class="content">
 
-    <!-- ROL SEÇİM -->
+    <!-- GİRİŞ EKRANI -->
     <div id="rol-secim" class="panel active">
-      <div style="text-align:center;margin-bottom:24px;padding-top:14px;">
-        <div style="font-size:3.2rem;margin-bottom:8px;">👋</div>
-        <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:4px;">Hoş Geldiniz!</h2>
-        <p style="font-size:0.78rem;color:#6b8cae;">Lütfen rolünüzü seçiniz</p>
+      <div style="text-align:center;margin-bottom:28px;padding-top:20px;">
+        <img src="https://control-e-del.github.io/denetim/logo3.png" style="width:72px;height:72px;border-radius:18px;background:#fff;padding:6px;margin-bottom:12px;">
+        <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">EduControl</h2>
+        <p style="font-size:0.72rem;color:#6b8cae;letter-spacing:1px;">DOĞA KOLEJİ · ANTEP</p>
       </div>
-      <div class="grid">
-        <div class="card blue" onclick="rolSec('ogretmen')"><div class="icon">👨‍🏫</div><div class="title">Öğretmen</div><div class="desc">Arıza & Talep</div></div>
-        <div class="card orange" onclick="rolSec('mudur_yard')"><div class="icon">👔</div><div class="title">Müdür Yard.</div><div class="desc">Form & Onay</div></div>
-        <div class="card purple" onclick="rolSec('mudur')"><div class="icon">👑</div><div class="title">Müdür</div><div class="desc">Yönetim</div></div>
-        <div class="card orange" onclick="rolSec('genel_mudur')"><div class="icon">⭐</div><div class="title">Genel Müdür</div><div class="desc">Tüm yetkiler</div></div>
-        <div class="card red" onclick="rolSec('tesis')"><div class="icon">🔧</div><div class="title">Tesis</div><div class="desc">Bakım & Arıza</div></div>
-        <div class="card green" onclick="rolSec('on_buro')"><div class="icon">🏢</div><div class="title">Ön Büro</div><div class="desc">Yönetim</div></div>
-        <div class="card orange" onclick="rolSec('on_buro_personel')"><div class="icon">💼</div><div class="title">Ön Büro Personel</div><div class="desc">Aday & Danışma</div></div>
-        <div class="card blue" onclick="rolSec('personel')"><div class="icon">👥</div><div class="title">Personel</div><div class="desc">Güv. Tem. Bah.</div></div>
-        <div class="card green" onclick="rolSec('muhasebe')"><div class="icon">💰</div><div class="title">Muhasebe</div><div class="desc">Finans yönetimi</div></div>
+
+      <div class="box">
+        <div class="field">
+          <label>Kullanıcı Adı</label>
+          <input type="text" id="login-kullanici" placeholder="Ad Soyad veya kullanıcı adı" autocomplete="username">
+        </div>
+        <div class="field">
+          <label>PIN</label>
+          <input type="password" id="login-pin" placeholder="••••" maxlength="8" inputmode="numeric" autocomplete="current-password"
+            style="letter-spacing:6px;font-size:1.4rem;text-align:center;"
+            onkeydown="if(event.key==='Enter') loginYap()">
+        </div>
+        <div id="login-hata" style="color:#dc2626;font-size:0.72rem;font-weight:700;text-align:center;min-height:18px;margin-bottom:8px;"></div>
+        <button class="btn-pri" onclick="loginYap()" id="login-btn">🔐 Giriş Yap</button>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;">
+        <div style="font-size:0.65rem;color:#6b8cae;">Kullanıcı adı veya PIN'inizi unuttuysanız<br>müdürünüzle iletişime geçin.</div>
       </div>
     </div>
 
@@ -1218,6 +1226,49 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
       </div>
     </div>
 
+    <!-- KULLANICI YÖNETİMİ (MÜDÜR) -->
+    <div id="panel-kullanici" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>👥 Kullanıcı Yönetimi</h2>
+      <p class="panel-sub">Personel hesapları ve PIN yönetimi</p>
+
+      <div class="box">
+        <div class="box-title">➕ Yeni Kullanıcı Ekle</div>
+        <div class="field">
+          <label>Ad Soyad</label>
+          <input type="text" id="ku-ad" placeholder="Ad Soyad">
+        </div>
+        <div class="field">
+          <label>Kullanıcı Adı</label>
+          <input type="text" id="ku-kullanici" placeholder="kucuk harfle, bosluksuz (ahmetyil)">
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <select id="ku-rol">
+            <option value="ogretmen">👨‍🏫 Öğretmen</option>
+            <option value="mudur_yard">👔 Müdür Yardımcısı</option>
+            <option value="mudur">👑 Müdür</option>
+            <option value="genel_mudur">⭐ Genel Müdür</option>
+            <option value="tesis">🔧 Tesis</option>
+            <option value="on_buro">🏢 Ön Büro</option>
+            <option value="on_buro_personel">💼 Ön Büro Personel</option>
+            <option value="personel">👥 Personel</option>
+            <option value="muhasebe">💰 Muhasebe</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>PIN (4-8 haneli)</label>
+          <input type="text" id="ku-pin" placeholder="1234" maxlength="8" inputmode="numeric">
+        </div>
+        <button class="btn-pri" onclick="kullaniciEkle()">💾 Kullanıcı Ekle</button>
+      </div>
+
+      <div class="box">
+        <div class="box-title">👥 Mevcut Kullanıcılar</div>
+        <div id="kullanici-list">Yükleniyor...</div>
+      </div>
+    </div>
+
     <!-- PROFIL -->
     <div id="panel-profil" class="panel">
       <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
@@ -1312,12 +1363,7 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
 
 </script>
 <!-- Firebase - EN SONDA YÜKLENMELİ -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
-<script>
-
-</script>
-<!-- Firebase Scripts - BODY SONUNDA -->
+<!-- Firebase Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 <script>
@@ -1413,6 +1459,185 @@ function pwaCur() {
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0XqxTQpbCjaJauS2e1hz5FtJKfkOxz2BKXCgTdwJz_pblFOywIpnq79L11rtmlJJrmQ/exec";
 
+// ═══════════════════════════════════════════════
+// KULLANICI GİRİŞ SİSTEMİ
+// ═══════════════════════════════════════════════
+
+// Varsayılan admin kullanıcılar (ilk kurulum)
+var VARSAYILAN_KULLANICILAR = [
+  {ad:'Yönetici', kullanici:'admin', pin:'1234', rol:'genel_mudur'},
+  {ad:'Müdür', kullanici:'mudur', pin:'4321', rol:'mudur'}
+];
+
+var kullanicilar = [];
+var aktifKullanici = null;
+
+// LocalStorage'dan kullanıcıları yükle
+try {
+  var sk = localStorage.getItem('kullanicilar');
+  if (sk) kullanicilar = JSON.parse(sk);
+  else kullanicilar = JSON.parse(JSON.stringify(VARSAYILAN_KULLANICILAR));
+} catch(e) {
+  kullanicilar = JSON.parse(JSON.stringify(VARSAYILAN_KULLANICILAR));
+}
+
+// Oturum kontrolü
+try {
+  var savedSession = localStorage.getItem('aktifOturum');
+  if (savedSession) {
+    aktifKullanici = JSON.parse(savedSession);
+    currentPosition = aktifKullanici.rol;
+    currentRole = aktifKullanici.rol;
+    setTimeout(function() {
+      renderMenu();
+      showPanel('menu');
+    }, 50);
+  }
+} catch(e) {}
+
+async function loginYap() {
+  var kullanici = document.getElementById('login-kullanici').value.trim().toLowerCase();
+  var pin = document.getElementById('login-pin').value.trim();
+  var hata = document.getElementById('login-hata');
+  var btn = document.getElementById('login-btn');
+
+  if (!kullanici || !pin) {
+    hata.textContent = '⚠️ Kullanıcı adı ve PIN gerekli';
+    return;
+  }
+
+  btn.textContent = '⏳ Giriş yapılıyor...';
+  btn.disabled = true;
+  hata.textContent = '';
+
+  try {
+    // Önce local kontrol
+    var bulunan = kullanicilar.find(function(k) {
+      return k.kullanici.toLowerCase() === kullanici && String(k.pin) === String(pin);
+    });
+
+    if (!bulunan) {
+      // Sheets'ten kontrol et
+      var resp = await fetch(SCRIPT_URL + '?tip=login&kullanici=' + encodeURIComponent(kullanici) + '&pin=' + encodeURIComponent(pin) + '&t=' + Date.now());
+      var data = await resp.json();
+      if (data.basarili) {
+        bulunan = data.kullanici;
+        // Lokalе kaydet
+        var mevcut = kullanicilar.findIndex(function(k){ return k.kullanici === bulunan.kullanici; });
+        if (mevcut >= 0) kullanicilar[mevcut] = bulunan;
+        else kullanicilar.push(bulunan);
+        try { localStorage.setItem('kullanicilar', JSON.stringify(kullanicilar)); } catch(e) {}
+      }
+    }
+
+    if (bulunan) {
+      aktifKullanici = bulunan;
+      currentPosition = bulunan.rol;
+      currentRole = bulunan.rol;
+      try { localStorage.setItem('aktifOturum', JSON.stringify(bulunan)); } catch(e) {}
+      document.getElementById('login-kullanici').value = '';
+      document.getElementById('login-pin').value = '';
+      renderMenu();
+      showPanel('menu');
+    } else {
+      hata.textContent = '❌ Kullanıcı adı veya PIN hatalı!';
+      document.getElementById('login-pin').value = '';
+      document.getElementById('login-pin').classList.add('wrong');
+      setTimeout(function(){ document.getElementById('login-pin').classList.remove('wrong'); }, 400);
+    }
+  } catch(e) {
+    // Sadece local kontrol
+    var bulunan2 = kullanicilar.find(function(k) {
+      return k.kullanici.toLowerCase() === kullanici && String(k.pin) === String(pin);
+    });
+    if (bulunan2) {
+      aktifKullanici = bulunan2;
+      currentPosition = bulunan2.rol;
+      currentRole = bulunan2.rol;
+      try { localStorage.setItem('aktifOturum', JSON.stringify(bulunan2)); } catch(e) {}
+      renderMenu();
+      showPanel('menu');
+    } else {
+      hata.textContent = '❌ Kullanıcı adı veya PIN hatalı!';
+    }
+  }
+
+  btn.textContent = '🔐 Giriş Yap';
+  btn.disabled = false;
+}
+
+// ── KULLANICI YÖNETİMİ ────────────────────────────────────────
+async function kullaniciEkle() {
+  var ad = document.getElementById('ku-ad').value.trim();
+  var kullanici = document.getElementById('ku-kullanici').value.trim().toLowerCase().replace(/\s/g,'');
+  var rol = document.getElementById('ku-rol').value;
+  var pin = document.getElementById('ku-pin').value.trim();
+
+  if (!ad || !kullanici || !pin) { showModal('⚠️','Eksik','Tüm alanları doldurun.'); return; }
+  if (pin.length < 4) { showModal('⚠️','Hata','PIN en az 4 haneli olmalı.'); return; }
+
+  // Kullanıcı adı benzersiz mi?
+  if (kullanicilar.find(function(k){ return k.kullanici === kullanici; })) {
+    showModal('⚠️','Hata','Bu kullanıcı adı zaten var!');
+    return;
+  }
+
+  var yeniKullanici = {ad:ad, kullanici:kullanici, rol:rol, pin:pin};
+  kullanicilar.push(yeniKullanici);
+  try { localStorage.setItem('kullanicilar', JSON.stringify(kullanicilar)); } catch(e) {}
+
+  try {
+    await gonder({tip:'kullanici_ekle', kullanici:yeniKullanici});
+  } catch(e) {}
+
+  showModal('✅','Kullanıcı Eklendi!', ad + ' (' + kullanici + ') eklendi. PIN: ' + pin);
+  document.getElementById('ku-ad').value = '';
+  document.getElementById('ku-kullanici').value = '';
+  document.getElementById('ku-pin').value = '';
+  kullaniciListele();
+}
+
+function kullaniciListele() {
+  var ROL_ISIM = {
+    ogretmen:'👨‍🏫 Öğretmen', mudur:'👑 Müdür', genel_mudur:'⭐ Genel Müdür',
+    mudur_yard:'👔 Müdür Yard.', tesis:'🔧 Tesis', on_buro:'🏢 Ön Büro',
+    on_buro_personel:'💼 Ön Büro Personel', personel:'👥 Personel', muhasebe:'💰 Muhasebe'
+  };
+
+  var html = kullanicilar.map(function(k, i) {
+    return '<div class="list-item"><div style="display:flex;align-items:center;gap:10px;">'
+      + '<div style="flex:1;">'
+      + '<div class="list-item-title">' + k.ad + '</div>'
+      + '<div class="list-item-desc">@' + k.kullanici + ' · ' + (ROL_ISIM[k.rol]||k.rol) + '</div>'
+      + '</div>'
+      + '<button onclick="pinDegistir(' + i + ')" style="background:rgba(245,158,11,0.2);border:none;border-radius:7px;color:#f59e0b;cursor:pointer;padding:6px 10px;font-size:0.72rem;font-family:inherit;">🔑 PIN</button>'
+      + '<button onclick="kullaniciSil(' + i + ')" style="background:rgba(220,38,38,0.2);border:none;border-radius:7px;color:#dc2626;cursor:pointer;padding:6px 10px;font-size:0.72rem;font-family:inherit;">✕</button>'
+      + '</div></div>';
+  }).join('');
+
+  var el = document.getElementById('kullanici-list');
+  if (el) el.innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Kullanıcı yok</div>';
+}
+
+function pinDegistir(idx) {
+  var yeniPin = prompt(kullanicilar[idx].ad + ' için yeni PIN girin (4-8 hane):');
+  if (!yeniPin || yeniPin.length < 4) { showModal('⚠️','Hata','Geçersiz PIN'); return; }
+  kullanicilar[idx].pin = yeniPin.trim();
+  try { localStorage.setItem('kullanicilar', JSON.stringify(kullanicilar)); } catch(e) {}
+  gonder({tip:'kullanici_pin_guncelle', kullanici:kullanicilar[idx].kullanici, pin:yeniPin.trim()});
+  showModal('✅','PIN Değiştirildi!', kullanicilar[idx].ad + ' için PIN güncellendi.');
+  kullaniciListele();
+}
+
+function kullaniciSil(idx) {
+  if (!confirm(kullanicilar[idx].ad + ' kullanıcısını silmek istediğinize emin misiniz?')) return;
+  var silinen = kullanicilar.splice(idx, 1)[0];
+  try { localStorage.setItem('kullanicilar', JSON.stringify(kullanicilar)); } catch(e) {}
+  gonder({tip:'kullanici_sil', kullanici:silinen.kullanici});
+  kullaniciListele();
+}
+
+
 const ROL_BILGI = {
   ogretmen: { isim: '👨‍🏫 Öğretmen', needsPass: false, cards: [
     {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
@@ -1431,6 +1656,7 @@ const ROL_BILGI = {
     {panel:'kontroller', icon:'📊', title:'Kontroller', desc:'Geçmiş', color:'blue'},
     {panel:'belgeler', icon:'📂', title:'Belgeler', desc:'Raporlar', color:'orange'},
     {panel:'ders-yonetim', icon:'📚', title:'Ders Yönetimi', desc:'Program & Nöbet', color:'blue'},
+    {panel:'kullanici', icon:'👥', title:'Kullanıcılar', desc:'Hesap yönetimi', color:'green'},
     {panel:'takvim', icon:'📅', title:'Takvim', desc:'Etkinlikler', color:'orange'},
     {panel:'konferans', icon:'🏛️', title:'Konferans Salonu', desc:'Rezervasyon', color:'blue'},
     {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
@@ -1524,13 +1750,8 @@ var pendingRol = null;
 var talepCounter = 0;
 var cocukSayaci = 0;
 
-// Restore
+// Restore tema
 try {
-  if (localStorage.getItem('eduRole')) currentRole = localStorage.getItem('eduRole');
-  if (localStorage.getItem('eduPosition')) {
-    currentPosition = localStorage.getItem('eduPosition');
-    setTimeout(() => { renderMenu(); showPanel('menu'); }, 50);
-  }
   if (localStorage.getItem('eduTheme') === 'light') {
     document.body.classList.add('light');
     document.querySelector('.theme-btn').textContent = '🌙';
@@ -1560,17 +1781,22 @@ function rolSec(rol) {
 }
 
 function rolDegistir() {
+  aktifKullanici = null;
   currentPosition = null;
   currentRole = null;
-  try { localStorage.removeItem('eduPosition'); localStorage.removeItem('eduRole'); } catch(e){}
+  try {
+    localStorage.removeItem('aktifOturum');
+    localStorage.removeItem('eduRole');
+  } catch(e){}
   showPanel('rol-secim');
 }
 
 function renderMenu() {
   var info = ROL_BILGI[currentPosition];
   if (!info) return;
-  document.getElementById('menu-baslik').textContent = info.isim;
-  document.getElementById('menu-rol-text').textContent = 'Yetki: ' + (info.autoLogin || 'Şifresiz');
+  var hosgeldin = aktifKullanici ? '👋 ' + aktifKullanici.ad : info.isim;
+  document.getElementById('menu-baslik').textContent = hosgeldin;
+  document.getElementById('menu-rol-text').textContent = info.isim;
   var html = '<div class="grid">';
   info.cards.forEach(c => {
     html += '<div class="card '+c.color+'" onclick="showPanel(\''+c.panel+'\')"><div class="icon">'+c.icon+'</div><div class="title">'+c.title+'</div><div class="desc">'+c.desc+'</div></div>';
@@ -1598,6 +1824,7 @@ function showPanel(name) {
   if (name === 'labuvatuar') { labRenderCalendar(); }
   if (name === 'yoklama-takip') { document.getElementById('takip-tarih').value = new Date().toISOString().split('T')[0]; yoklamaTakipYukle(); }
   if (name === 'acil') { acilRehberListele(); }
+  if (name === 'kullanici') { kullaniciListele(); }
   if (name === 'ders-program') { dersProgramiGuncelle(); }
   if (name === 'ders-yonetim') { dersYonetimGeri(); }
   if (name === 'guvenlik') guvenlikListele();
@@ -1664,12 +1891,25 @@ function toggleTheme() {
 
 function cikisYap() {
   if (!confirm('Çıkış yapmak istediğinize emin misiniz?')) return;
-  rolDegistir();
+  aktifKullanici = null;
+  currentPosition = null;
+  currentRole = null;
+  try {
+    localStorage.removeItem('aktifOturum');
+    localStorage.removeItem('eduRole');
+  } catch(e){}
+  showPanel('rol-secim');
 }
 
 function updateProfil() {
-  var roles = {free:'Şifresiz', buro:'Büro', personel:'Personel', admin:'Admin', birim:'Birim Müdürü', muhasebe:'Muhasebe'};
-  document.getElementById('rol-text').textContent = roles[currentRole] || 'Şifresiz';
+  var ROL_ISIM = {
+    ogretmen:'👨‍🏫 Öğretmen', mudur:'👑 Müdür', genel_mudur:'⭐ Genel Müdür',
+    mudur_yard:'👔 Müdür Yardımcısı', tesis:'🔧 Tesis', on_buro:'🏢 Ön Büro',
+    on_buro_personel:'💼 Ön Büro Personel', personel:'👥 Personel', muhasebe:'💰 Muhasebe'
+  };
+  var isim = aktifKullanici ? aktifKullanici.ad : 'Misafir';
+  var rol = aktifKullanici ? (ROL_ISIM[aktifKullanici.rol] || aktifKullanici.rol) : '-';
+  document.getElementById('rol-text').textContent = isim + ' · ' + rol;
 }
 
 async function gonder(payload) {
