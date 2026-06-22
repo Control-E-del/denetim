@@ -1466,7 +1466,15 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0XqxTQpbCjaJauS2e1
 // Varsayılan admin kullanıcılar (ilk kurulum)
 var VARSAYILAN_KULLANICILAR = [
   {ad:'Yönetici', kullanici:'admin', pin:'1234', rol:'genel_mudur'},
-  {ad:'Müdür', kullanici:'mudur', pin:'4321', rol:'mudur'}
+  {ad:'Süper Admin', kullanici:'superadmin', pin:'4321', rol:'genel_mudur'},
+  {ad:'Müdür', kullanici:'mudur', pin:'4321', rol:'mudur'},
+  {ad:'Müdür Yardımcısı', kullanici:'mudury', pin:'4321', rol:'mudur_yard'},
+  {ad:'Öğretmen', kullanici:'ogretmen', pin:'4321', rol:'ogretmen'},
+  {ad:'Tesis Sorumlusu', kullanici:'tesis', pin:'4321', rol:'tesis'},
+  {ad:'Ön Büro Yönetim', kullanici:'onburo', pin:'4321', rol:'on_buro'},
+  {ad:'Ön Büro Personel', kullanici:'onburoper', pin:'4321', rol:'on_buro_personel'},
+  {ad:'Destek Personeli', kullanici:'personel', pin:'4321', rol:'personel'},
+  {ad:'Muhasebe', kullanici:'muhasebe', pin:'4321', rol:'muhasebe'}
 ];
 
 var kullanicilar = [];
