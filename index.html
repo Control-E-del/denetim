@@ -812,6 +812,8 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
           <div class="field"><label>Toplam (₺)</label><input type="number" id="fat-toplam" step="0.01"></div>
           <div class="field"><label>Ödeme Durumu</label><select id="fat-durum"><option value="bekliyor">⏳ Bekliyor</option><option value="odendi">✅ Ödendi</option><option value="kismen">🔶 Kısmen Ödendi</option></select></div>
           <div class="field"><label>Açıklama</label><input type="text" id="fat-aciklama"></div>
+          <div class="field"><label>📷 Fatura Fotoğrafı</label><input type="file" id="fatura-foto" accept="image/*" capture="environment" onchange="faturaFotoOnizle(this)"></div>
+          <div id="fatura-foto-onizle" style="display:none;margin-bottom:8px;"><img id="fatura-foto-img" style="width:100%;max-height:180px;object-fit:contain;border-radius:8px;border:1px solid #2a3b5c;" /></div>
           <button class="btn-pri" onclick="faturaKaydet()">💾 Kaydet</button>
         </div>
         <div class="box">
@@ -1270,6 +1272,230 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
     </div>
 
     <!-- PROFIL -->
+
+    <!-- KANTİN DENETİM -->
+    <div id="panel-kantin" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🍽️ Kantin</h2>
+      <p class="panel-sub">Kantin denetim, ciro, gider ve ödeme yönetimi</p>
+      <div class="card-grid">
+        <div class="card green" onclick="kantinPanel('denetim')"><div class="icon">📋</div><div class="title">Kantin Denetim</div><div class="desc">Hijyen & standart kontrol</div></div>
+        <div class="card blue" onclick="kantinPanel('ciro')"><div class="icon">💵</div><div class="title">Ciro Takibi</div><div class="desc">Günlük ciro kaydı</div></div>
+        <div class="card orange" onclick="kantinPanel('gider')"><div class="icon">📤</div><div class="title">Gider Kaydı</div><div class="desc">Malzeme & harcamalar</div></div>
+        <div class="card purple" onclick="kantinPanel('odeme')"><div class="icon">💳</div><div class="title">Ödeme / Barkod</div><div class="desc">Barkod okutma & tahsilat</div></div>
+      </div>
+      <div id="kantin-denetim-form" style="display:none;">
+        <button class="back-btn" onclick="kantinGeri()">← Kantin</button>
+        <h3 style="margin-bottom:8px;font-size:1rem;">📋 Kantin Denetim Formu</h3>
+        <div class="box">
+          <div class="box-title">🧹 Hijyen Kontrolleri</div>
+          <div class="field"><label>Tezgah temizliği</label><select id="k-tezgah"><option>✅ Temiz</option><option>⚠️ Eksik</option><option>❌ Kirli</option></select></div>
+          <div class="field"><label>Personel hijyeni</label><select id="k-personel"><option>✅ Uygun</option><option>⚠️ Eksik</option><option>❌ Uygunsuz</option></select></div>
+          <div class="field"><label>Yiyecek saklama</label><select id="k-saklama"><option>✅ Uygun</option><option>⚠️ Eksik</option><option>❌ Uygunsuz</option></select></div>
+          <div class="field"><label>Fiyat listesi</label><select id="k-fiyat"><option>✅ Görünür</option><option>❌ Yok</option></select></div>
+          <div class="field"><label>Açıklama</label><textarea id="k-denetim-aciklama" rows="2" placeholder="Notlar..."></textarea></div>
+          <button class="btn-pri green" onclick="kantinDenetimKaydet()">💾 Kaydet</button>
+        </div>
+        <div class="box"><div class="box-title">📋 Geçmiş Denetimler</div><div id="kantin-denetim-list"><div style="color:#6b8cae;font-size:0.78rem;text-align:center;padding:12px;">Kayıt yok</div></div></div>
+      </div>
+      <div id="kantin-ciro-form" style="display:none;">
+        <button class="back-btn" onclick="kantinGeri()">← Kantin</button>
+        <h3 style="margin-bottom:8px;font-size:1rem;">💵 Ciro Takibi</h3>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-num" id="kantin-gun-ciro" style="color:#16a34a;">₺0</div><div class="stat-label">Bugün</div></div>
+          <div class="stat"><div class="stat-num" id="kantin-ay-ciro" style="color:#2563eb;">₺0</div><div class="stat-label">Bu Ay</div></div>
+        </div>
+        <div class="box">
+          <div class="box-title">➕ Günlük Ciro Ekle</div>
+          <div class="field"><label>Tarih</label><input type="date" id="k-ciro-tarih"></div>
+          <div class="field"><label>Ciro (₺)</label><input type="number" id="k-ciro-tutar" placeholder="0.00"></div>
+          <div class="field"><label>Açıklama</label><input type="text" id="k-ciro-aciklama" placeholder="Not..."></div>
+          <button class="btn-pri green" onclick="kantinCiroKaydet()">💾 Kaydet</button>
+        </div>
+        <div class="box"><div class="box-title">📊 Ciro Grafiği</div><canvas id="kantin-ciro-grafik" style="width:100%;max-height:200px;"></canvas></div>
+        <div class="box"><div class="box-title">📋 Ciro Kayıtları</div><div id="kantin-ciro-list"></div></div>
+      </div>
+      <div id="kantin-gider-form" style="display:none;">
+        <button class="back-btn" onclick="kantinGeri()">← Kantin</button>
+        <h3 style="margin-bottom:8px;font-size:1rem;">📤 Gider Kaydı</h3>
+        <div class="box">
+          <div class="box-title">➕ Gider Ekle</div>
+          <div class="field"><label>Tarih</label><input type="date" id="k-gider-tarih"></div>
+          <div class="field"><label>Kategori</label><select id="k-gider-kategori"><option>Malzeme</option><option>Temizlik</option><option>Elektrik/Su</option><option>Personel</option><option>Diğer</option></select></div>
+          <div class="field"><label>Tutar (₺)</label><input type="number" id="k-gider-tutar" placeholder="0.00"></div>
+          <div class="field"><label>Açıklama</label><input type="text" id="k-gider-aciklama" placeholder="Gider detayı..."></div>
+          <button class="btn-pri red" onclick="kantinGiderKaydet()">💾 Kaydet</button>
+        </div>
+        <div class="box"><div class="box-title">📋 Gider Kayıtları</div><div id="kantin-gider-list"></div></div>
+      </div>
+      <div id="kantin-odeme-form" style="display:none;">
+        <button class="back-btn" onclick="kantinGeri()">← Kantin</button>
+        <h3 style="margin-bottom:8px;font-size:1rem;">💳 Ödeme & Barkod</h3>
+        <div class="box">
+          <div class="box-title">📷 Barkod Okut / Manuel Gir</div>
+          <div class="field"><label>Barkod / Ürün Kodu</label><input type="text" id="k-barkod" placeholder="Barkod girin veya okutun..." oninput="barkodAra(this.value)"></div>
+          <div id="barkod-sonuc" style="margin-bottom:8px;"></div>
+          <div class="field"><label>Ürün Adı</label><input type="text" id="k-urun-ad" placeholder="Ürün adı"></div>
+          <div class="field"><label>Fiyat (₺)</label><input type="number" id="k-urun-fiyat" placeholder="0.00"></div>
+          <div class="field"><label>Adet</label><input type="number" id="k-urun-adet" value="1" min="1"></div>
+          <button class="btn-pri green" onclick="kantinOdemeKaydet()">✅ Tahsil Et</button>
+        </div>
+        <div class="stat"><div class="stat-num" id="kantin-kasa" style="color:#16a34a;font-size:1.5rem;">₺0</div><div class="stat-label">Günlük Kasa</div></div>
+        <div class="box"><div class="box-title">📋 Ödeme Geçmişi</div><div id="kantin-odeme-list"></div></div>
+      </div>
+    </div>
+
+    <!-- DOĞA STORE -->
+    <div id="panel-store" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🛍️ Doğa Store</h2>
+      <p class="panel-sub">Günlük gelir ve gider takibi</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="store-gun-gelir" style="color:#16a34a;">₺0</div><div class="stat-label">Bugün Gelir</div></div>
+        <div class="stat"><div class="stat-num" id="store-gun-gider" style="color:#dc2626;">₺0</div><div class="stat-label">Bugün Gider</div></div>
+        <div class="stat"><div class="stat-num" id="store-net" style="color:#2563eb;">₺0</div><div class="stat-label">Net</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">➕ İşlem Ekle</div>
+        <div class="field"><label>Tür</label><select id="store-tur"><option value="gelir">💰 Gelir</option><option value="gider">📤 Gider</option></select></div>
+        <div class="field"><label>Kategori</label><select id="store-kategori"><option>Kırtasiye</option><option>Giyim</option><option>Aksesuar</option><option>Diğer</option></select></div>
+        <div class="field"><label>Tutar (₺)</label><input type="number" id="store-tutar" placeholder="0.00"></div>
+        <div class="field"><label>Açıklama</label><input type="text" id="store-aciklama" placeholder="Detay..."></div>
+        <button class="btn-pri green" onclick="storeKaydet()">💾 Kaydet</button>
+      </div>
+      <div class="box"><div class="box-title">📊 Gelir/Gider Grafiği</div><canvas id="store-grafik" style="width:100%;max-height:200px;"></canvas></div>
+      <div class="box"><div class="box-title">📋 İşlem Geçmişi</div><div id="store-list"></div></div>
+    </div>
+
+    <!-- KİŞİYE ÖZEL BORÇ DÜŞME -->
+    <div id="panel-borc" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>👤 Kişisel Borç Yönetimi</h2>
+      <p class="panel-sub">TC kimlik numarası üzerinden borç takibi ve düşme</p>
+      <div class="box">
+        <div class="box-title">🔍 TC ile Öğrenci Ara</div>
+        <div class="field"><label>TC Kimlik No</label><input type="text" id="borc-tc" placeholder="11 haneli TC..." maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <button class="btn-pri blue" onclick="tcAra()">🔍 Ara</button>
+      </div>
+      <div id="borc-kisi-bilgi" style="display:none;">
+        <div class="box">
+          <div class="box-title">👤 Kişi Bilgisi</div>
+          <div id="borc-kisi-detay"></div>
+          <div class="stat-grid" style="margin-top:8px;">
+            <div class="stat"><div class="stat-num" id="borc-toplam" style="color:#dc2626;">₺0</div><div class="stat-label">Toplam Borç</div></div>
+            <div class="stat"><div class="stat-num" id="borc-odenen" style="color:#16a34a;">₺0</div><div class="stat-label">Ödenen</div></div>
+            <div class="stat"><div class="stat-num" id="borc-kalan" style="color:#f59e0b;">₺0</div><div class="stat-label">Kalan</div></div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-title">💳 Ödeme / Borç Düş</div>
+          <div class="field"><label>Ödeme Tutarı (₺)</label><input type="number" id="borc-odeme-tutar" placeholder="0.00"></div>
+          <div class="field"><label>Açıklama</label><input type="text" id="borc-odeme-aciklama" placeholder="Ödeme notu..."></div>
+          <button class="btn-pri green" onclick="borcDus()">✅ Borç Düş</button>
+          <button class="btn-pri orange" onclick="borcEkle()">➕ Borç Ekle</button>
+        </div>
+        <div class="box"><div class="box-title">📋 Ödeme Geçmişi</div><div id="borc-gecmis-list"></div></div>
+      </div>
+    </div>
+
+    <!-- GELİR GİDER GRAFİK (Kantin + Store + Servis) -->
+    <div id="panel-gelir-grafik" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>📊 Gelir/Gider Analiz</h2>
+      <p class="panel-sub">Kantin, Store ve Servis birleşik grafik görünümü</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="gg-toplam-gelir" style="color:#16a34a;">₺0</div><div class="stat-label">Toplam Gelir</div></div>
+        <div class="stat"><div class="stat-num" id="gg-toplam-gider" style="color:#dc2626;">₺0</div><div class="stat-label">Toplam Gider</div></div>
+        <div class="stat"><div class="stat-num" id="gg-net" style="color:#2563eb;">₺0</div><div class="stat-label">Net</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">📊 Kaynak Karşılaştırma</div>
+        <canvas id="gg-kaynak-grafik" style="width:100%;max-height:220px;"></canvas>
+      </div>
+      <div class="box">
+        <div class="box-title">📈 Günlük Trend</div>
+        <canvas id="gg-trend-grafik" style="width:100%;max-height:200px;"></canvas>
+      </div>
+      <div class="box">
+        <div class="box-title">🍽️ Kantin</div>
+        <div id="gg-kantin-ozet"></div>
+      </div>
+      <div class="box">
+        <div class="box-title">🛍️ Store</div>
+        <div id="gg-store-ozet"></div>
+      </div>
+      <div class="box">
+        <div class="box-title">🚐 Servis</div>
+        <div id="gg-servis-ozet"></div>
+      </div>
+    </div>
+
+    <!-- ÖN KAYIT -->
+    <div id="panel-on-kayit" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>📝 Ön Kayıt</h2>
+      <p class="panel-sub">Aday öğrenci ön kayıt formu</p>
+      <div class="box">
+        <div class="box-title">👨‍👩‍👧 Veli Bilgileri</div>
+        <div class="field"><label>TC Kimlik No</label><input type="text" id="ok-tc" maxlength="11" placeholder="11 haneli TC..." oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="field"><label>Veli Adı Soyadı</label><input type="text" id="ok-veli-ad" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Telefon</label><input type="tel" id="ok-tel" placeholder="05XX XXX XX XX"></div>
+        <div class="field"><label>E-posta</label><input type="email" id="ok-email" placeholder="ornek@mail.com"></div>
+      </div>
+      <div class="box">
+        <div class="box-title">🎒 Öğrenci Bilgileri</div>
+        <div class="field"><label>Öğrenci Adı Soyadı</label><input type="text" id="ok-ogrenci-ad" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Doğum Tarihi</label><input type="date" id="ok-dogum"></div>
+        <div class="field"><label>İlgilenilen Kademe</label><select id="ok-kademe"><option>Okul Öncesi</option><option>İlkokul</option><option>Ortaokul</option><option>Lise</option></select></div>
+        <div class="field"><label>Mevcut Okul</label><input type="text" id="ok-mevcut-okul" placeholder="Mevcut okul adı"></div>
+        <div class="field"><label>Notlar</label><textarea id="ok-notlar" rows="2" placeholder="Ek bilgi..."></textarea></div>
+      </div>
+      <button class="btn-pri green" onclick="onKayitKaydet()">💾 Ön Kayıt Oluştur</button>
+      <div class="box" style="margin-top:12px;"><div class="box-title">📋 Ön Kayıt Listesi</div><div id="on-kayit-list"></div></div>
+    </div>
+
+    <!-- KESİN KAYIT -->
+    <div id="panel-kesin-kayit" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>✅ Kesin Kayıt</h2>
+      <p class="panel-sub">Kesin kayıt ve finansal ödeme izleme</p>
+      <div class="box">
+        <div class="box-title">🔍 TC ile Ön Kayıt Getir</div>
+        <div class="field"><label>TC Kimlik No</label><input type="text" id="kk-tc" maxlength="11" placeholder="11 haneli TC..." oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <button class="btn-pri blue" onclick="kesinKayitGetir()">🔍 Getir</button>
+      </div>
+      <div id="kesin-kayit-form" style="display:none;">
+        <div class="box">
+          <div class="box-title">📋 Kayıt Bilgileri</div>
+          <div id="kk-bilgi"></div>
+          <div class="field"><label>Kayıt Ücreti (₺)</label><input type="number" id="kk-ucret" placeholder="Yıllık ücret..."></div>
+          <div class="field"><label>Taksit Sayısı</label><select id="kk-taksit"><option value="1">Peşin</option><option value="3">3 Taksit</option><option value="6">6 Taksit</option><option value="9">9 Taksit</option><option value="12">12 Taksit</option></select></div>
+          <div class="field"><label>İlk Ödeme Tarihi</label><input type="date" id="kk-ilk-tarih"></div>
+          <button class="btn-pri green" onclick="kesinKayitTamamla()">✅ Kesin Kayıt Tamamla</button>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-title">📊 Ücret İzleme Grafiği</div>
+        <canvas id="ucret-grafik" style="width:100%;max-height:200px;"></canvas>
+      </div>
+      <div class="box"><div class="box-title">📋 Kesin Kayıt Listesi</div><div id="kesin-kayit-list"></div></div>
+    </div>
+
+    <!-- ÖĞRETMEN NÖBET PANELİ (öğretmen görür) -->
+    <div id="panel-nobet-ogretmen" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🕐 Nöbet Programım</h2>
+      <p class="panel-sub">Size atanmış nöbet çizelgesi</p>
+      <div class="box" id="nobet-ogretmen-box">
+        <div class="box-title">📅 Bu Haftaki Nöbetlerim</div>
+        <div id="nobet-ogretmen-list"><div style="color:#6b8cae;text-align:center;padding:18px;font-size:0.78rem;">Nöbet ataması yapılmamış.</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">📋 Tüm Nöbet Geçmişim</div>
+        <div id="nobet-ogretmen-gecmis"></div>
+      </div>
+    </div>
+
     <div id="panel-profil" class="panel">
       <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
       <h2>👤 Profil</h2>
@@ -1282,6 +1508,371 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
       <div class="list-item"><div class="list-item-title">Geliştirici</div><div class="list-item-desc">ESY YAZILIM</div></div>
       <div class="list-item"><div class="list-item-title">Tema</div><div class="list-item-desc" id="tema-text">🌙 Koyu Tema</div></div>
       <button class="btn-pri red" onclick="cikisYap()">🚪 Çıkış Yap</button>
+    </div>
+
+    <!-- ═══════ YENİ ÖZELLİKLER HUB ═══════ -->
+    <div id="panel-yeni" class="panel">
+      <button class="back-btn" onclick="goMenu()">← Menüye Dön</button>
+      <h2>🆕 Yeni Özellikler</h2>
+      <p class="panel-sub">Talep edilen 18 yeni modül — geliştirilip eklendi</p>
+
+      <div class="section-title">🔴 Kritik / Çok İşe Yarar</div>
+      <div class="grid">
+        <div class="card red" onclick="showPanel('y1')"><div class="icon">📵</div><div class="title">Devamsızlık Takip</div><div class="desc">Veli bildirimi</div></div>
+        <div class="card red" onclick="showPanel('y2')"><div class="icon">💬</div><div class="title">Veli İletişim</div><div class="desc">Mesaj & duyuru</div></div>
+        <div class="card red" onclick="showPanel('y3')"><div class="icon">📦</div><div class="title">Stok / Depo</div><div class="desc">Kritik stok uyarısı</div></div>
+        <div class="card red" onclick="showPanel('y4')"><div class="icon">🗓️</div><div class="title">Personel İzin</div><div class="desc">İzin & devam takibi</div></div>
+        <div class="card red" onclick="showPanel('y5')"><div class="icon">💵</div><div class="title">Bütçe Planlama</div><div class="desc">Hedef / gerçekleşen</div></div>
+      </div>
+
+      <div class="section-title">🟡 Operasyonel Kolaylıklar</div>
+      <div class="grid">
+        <div class="card orange" onclick="showPanel('y6')"><div class="icon">📱</div><div class="title">QR Hızlı Giriş</div><div class="desc">Kart okutma</div></div>
+        <div class="card orange" onclick="showPanel('y7')"><div class="icon">🕐</div><div class="title">Vardiya / Mesai</div><div class="desc">Giriş-çıkış saatleri</div></div>
+        <div class="card orange" onclick="showPanel('y8')"><div class="icon">🎒</div><div class="title">Kayıp-Buluntu</div><div class="desc">Eşya ilanı</div></div>
+        <div class="card orange" onclick="showPanel('y9')"><div class="icon">🪪</div><div class="title">Ziyaretçi Rozeti</div><div class="desc">Geçici kart</div></div>
+        <div class="card orange" onclick="showPanel('y10')"><div class="icon">🙋</div><div class="title">Etkinlik Katılım</div><div class="desc">Katılımcı takibi</div></div>
+      </div>
+
+      <div class="section-title">🟢 Raporlama ve Analiz</div>
+      <div class="grid">
+        <div class="card green" onclick="showPanel('y11')"><div class="icon">📧</div><div class="title">Otomatik Rapor</div><div class="desc">Haftalık/aylık özet</div></div>
+        <div class="card green" onclick="showPanel('y12')"><div class="icon">📊</div><div class="title">Denetim Skor</div><div class="desc">Birim karşılaştırma</div></div>
+        <div class="card green" onclick="showPanel('y13')"><div class="icon">🎯</div><div class="title">Kayıt Hunisi</div><div class="desc">Ön → kesin dönüşüm</div></div>
+        <div class="card green" onclick="showPanel('y14')"><div class="icon">📈</div><div class="title">Gelir Tahmini</div><div class="desc">3 aylık tahsilat</div></div>
+      </div>
+
+      <div class="section-title">🔵 Kalite / Deneyim</div>
+      <div class="grid">
+        <div class="card blue" onclick="showPanel('y15')"><div class="icon">📝</div><div class="title">Anket</div><div class="desc">Memnuniyet formu</div></div>
+        <div class="card blue" onclick="showPanel('y16')"><div class="icon">📌</div><div class="title">Duyuru Panosu</div><div class="desc">Dijital ilan</div></div>
+        <div class="card blue" onclick="showPanel('y17')"><div class="icon">✅</div><div class="title">Görev Atama</div><div class="desc">Task manager</div></div>
+        <div class="card blue" onclick="showPanel('y18')"><div class="icon">🗺️</div><div class="title">Bina/Kat Haritası</div><div class="desc">Konum seçimi</div></div>
+      </div>
+    </div>
+
+    <!-- Y1: DEVAMSIZLIK TAKİBİ -->
+    <div id="panel-y1" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📵 Öğrenci Devamsızlık Takibi</h2>
+      <p class="panel-sub">Devamsızlık kaydı gir, veliye otomatik bildirim gönder</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="y1-bugun">0</div><div class="stat-label">Bugün Devamsız</div></div>
+        <div class="stat"><div class="stat-num" id="y1-kritik" style="color:#dc2626;">0</div><div class="stat-label">Kritik Öğrenci (3+ gün)</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">➕ Devamsızlık Kaydı</div>
+        <div class="field"><label>Öğrenci Adı Soyadı</label><input type="text" id="y1-ogrenci" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Sınıf</label><input type="text" id="y1-sinif" placeholder="5-A"></div>
+        <div class="field"><label>Tarih</label><input type="date" id="y1-tarih"></div>
+        <div class="field"><label>Devamsız Olduğu Dersler</label><input type="text" id="y1-dersler" placeholder="Matematik, Fen... (boş=tüm gün)"></div>
+        <div class="field"><label>Veli Telefonu</label><input type="tel" id="y1-tel" placeholder="0xxx xxx xx xx"></div>
+        <button class="btn-pri red" onclick="y1Kaydet()">📵 Kaydet & Veliye Bildirim Gönder</button>
+      </div>
+      <div class="box">
+        <div class="box-title">📋 Devamsızlık Kayıtları</div>
+        <div id="y1-list"></div>
+      </div>
+    </div>
+
+    <!-- Y2: VELİ İLETİŞİM -->
+    <div id="panel-y2" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>💬 Veli İletişim Modülü</h2>
+      <p class="panel-sub">Veli ile mesajlaşma, duyuru ve toplantı daveti gönder</p>
+      <div class="box">
+        <div class="box-title">✉️ Yeni Mesaj</div>
+        <div class="field"><label>Veli / Öğrenci Adı</label><input type="text" id="y2-alici" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Mesaj Türü</label><select id="y2-tur">
+          <option value="mesaj">💬 Bireysel Mesaj</option>
+          <option value="duyuru">📢 Genel Duyuru</option>
+          <option value="toplanti">🤝 Toplantı Daveti</option>
+        </select></div>
+        <div class="field"><label>Mesaj İçeriği</label><textarea id="y2-icerik" placeholder="Mesajınızı yazın..."></textarea></div>
+        <button class="btn-pri" onclick="y2Gonder()">📤 Gönder</button>
+      </div>
+      <div class="box">
+        <div class="box-title">📋 Gönderilen Mesajlar</div>
+        <div id="y2-list"></div>
+      </div>
+    </div>
+
+    <!-- Y3: STOK / DEPO TAKİBİ -->
+    <div id="panel-y3" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📦 Stok / Depo Takibi</h2>
+      <p class="panel-sub">Kantin, kırtasiye, temizlik malzemesi stok sayımı</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="y3-toplam">0</div><div class="stat-label">Kalem Sayısı</div></div>
+        <div class="stat"><div class="stat-num" id="y3-kritik" style="color:#dc2626;">0</div><div class="stat-label">Kritik Seviyede</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">➕ Stok Ekle / Güncelle</div>
+        <div class="field"><label>Malzeme Adı</label><input type="text" id="y3-ad" placeholder="A4 Kağıt"></div>
+        <div class="field"><label>Kategori</label><select id="y3-kategori"><option>🍽️ Kantin</option><option>📎 Kırtasiye</option><option>🧹 Temizlik</option><option>📦 Diğer</option></select></div>
+        <div class="field"><label>Mevcut Miktar</label><input type="number" id="y3-miktar" placeholder="0"></div>
+        <div class="field"><label>Kritik Seviye</label><input type="number" id="y3-kritikseviye" placeholder="Bu seviyenin altına düşünce uyarı ver"></div>
+        <button class="btn-pri green" onclick="y3Ekle()">📦 Kaydet</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Stok Listesi</div><div id="y3-list"></div></div>
+    </div>
+
+    <!-- Y4: PERSONEL İZİN / DEVAM -->
+    <div id="panel-y4" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🗓️ Personel İzin / Devam Takibi</h2>
+      <p class="panel-sub">İzin talebi oluştur, onayla/reddet</p>
+      <div class="box">
+        <div class="box-title">➕ İzin Talebi</div>
+        <div class="field"><label>Personel Adı</label><input type="text" id="y4-ad" placeholder="Ad Soyad"></div>
+        <div class="field"><label>İzin Türü</label><select id="y4-tur"><option>🏖️ Yıllık İzin</option><option>📄 Mazeret İzni</option><option>🤒 Rapor</option><option>💸 Ücretsiz İzin</option></select></div>
+        <div class="field"><label>Başlangıç</label><input type="date" id="y4-baslangic"></div>
+        <div class="field"><label>Bitiş</label><input type="date" id="y4-bitis"></div>
+        <div class="field"><label>Açıklama</label><textarea id="y4-aciklama" placeholder="Neden..."></textarea></div>
+        <button class="btn-pri" onclick="y4Talep()">📤 Talep Oluştur</button>
+      </div>
+      <div class="box"><div class="box-title">📋 İzin Talepleri</div><div id="y4-list"></div></div>
+    </div>
+
+    <!-- Y5: BÜTÇE PLANLAMA -->
+    <div id="panel-y5" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>💵 Bütçe Planlama</h2>
+      <p class="panel-sub">Hedef ile gerçekleşeni kıyasla, sapma uyarısı al</p>
+      <div class="box">
+        <div class="box-title">➕ Bütçe Kalemi</div>
+        <div class="field"><label>Kategori</label><input type="text" id="y5-kategori" placeholder="Kantin Gideri, Bakım-Onarım..."></div>
+        <div class="field"><label>Dönem</label><input type="text" id="y5-donem" placeholder="Ağustos 2026"></div>
+        <div class="field"><label>Hedef (₺)</label><input type="number" id="y5-hedef" placeholder="0"></div>
+        <div class="field"><label>Gerçekleşen (₺)</label><input type="number" id="y5-gerceklesen" placeholder="0"></div>
+        <button class="btn-pri green" onclick="y5Ekle()">💾 Kaydet</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Bütçe Kalemleri</div><div id="y5-list"></div></div>
+    </div>
+
+    <!-- Y6: QR HIZLI GİRİŞ -->
+    <div id="panel-y6" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📱 QR Kod ile Hızlı Giriş</h2>
+      <p class="panel-sub">Personel kartı QR okutunca kimlik doğrulanır, giriş/çıkış kaydı düşer</p>
+      <div class="box">
+        <div class="box-title">📷 QR Okut</div>
+        <div class="field"><label>Personel Adı / Kart No</label><input type="text" id="y6-ad" placeholder="Ad Soyad veya kart no"></div>
+        <button class="btn-pri green" onclick="y6Okut()">📷 QR Okut (Kimlik Doğrula)</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Bugünkü Giriş/Çıkışlar</div><div id="y6-list"></div></div>
+    </div>
+
+    <!-- Y7: VARDİYA / MESAİ -->
+    <div id="panel-y7" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🕐 Vardiya / Mesai Takibi</h2>
+      <p class="panel-sub">Vardiyalı çalışanların giriş-çıkış saati kaydı</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="y7-icerde" style="color:#16a34a;">0</div><div class="stat-label">Şu An Vardiyada</div></div>
+        <div class="stat"><div class="stat-num" id="y7-bugun">0</div><div class="stat-label">Bugünkü Kayıt</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">➕ Vardiya Kaydı</div>
+        <div class="field"><label>Personel Adı</label><input type="text" id="y7-ad" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Görev</label><select id="y7-gorev"><option>🛡️ Güvenlik</option><option>🧹 Temizlik</option><option>🍽️ Kantin</option><option>📦 Diğer</option></select></div>
+        <div class="field"><label>Yön</label><select id="y7-yon"><option value="giris">📥 Giriş</option><option value="cikis">📤 Çıkış</option></select></div>
+        <button class="btn-pri" onclick="y7Kaydet()">🕐 Kaydet</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Vardiya Kayıtları</div><div id="y7-list"></div></div>
+    </div>
+
+    <!-- Y8: KAYIP-BULUNTU -->
+    <div id="panel-y8" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🎒 Kayıp-Buluntu Modülü</h2>
+      <p class="panel-sub">Öğrenci eşyası kaybı/buluntusu kayıt ve ilan</p>
+      <div class="box">
+        <div class="box-title">➕ İlan Ver</div>
+        <div class="field"><label>Eşya Adı</label><input type="text" id="y8-esya" placeholder="Mont, kalem kutusu, telefon..."></div>
+        <div class="field"><label>Tür</label><select id="y8-tur"><option value="kayip">❌ Kayıp</option><option value="buluntu">✅ Buluntu</option></select></div>
+        <div class="field"><label>Konum</label><input type="text" id="y8-konum" placeholder="Nerede kayboldu / bulundu"></div>
+        <div class="field"><label>Açıklama</label><textarea id="y8-aciklama" placeholder="Renk, marka, özellik..."></textarea></div>
+        <div class="field"><label>Bildiren</label><input type="text" id="y8-bildiren" placeholder="Ad Soyad"></div>
+        <button class="btn-pri orange" onclick="y8Ekle()">🎒 İlan Et</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Kayıp-Buluntu Listesi</div><div id="y8-list"></div></div>
+    </div>
+
+    <!-- Y9: ZİYARETÇİ ROZETİ -->
+    <div id="panel-y9" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🪪 Ziyaretçi Rozeti / Geçici Kart</h2>
+      <p class="panel-sub">Ziyaretçiye geçici giriş izni ver, çıkışta kapat</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="y9-icerde" style="color:#16a34a;">0</div><div class="stat-label">Şu An İçeride</div></div>
+        <div class="stat"><div class="stat-num" id="y9-bugun">0</div><div class="stat-label">Bugünkü Ziyaretçi</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">➕ Yeni Ziyaretçi</div>
+        <div class="field"><label>Ad Soyad</label><input type="text" id="y9-ad" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Kimlik No</label><input type="text" id="y9-tc" placeholder="TC / Kimlik No"></div>
+        <div class="field"><label>Ziyaret Amacı</label><input type="text" id="y9-amac" placeholder="Veli görüşmesi, teslimat..."></div>
+        <div class="field"><label>Görüşülecek Kişi</label><input type="text" id="y9-gorusulen" placeholder="Ad Soyad"></div>
+        <button class="btn-pri" onclick="y9Ekle()">🪪 Geçici Kart Ver</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Ziyaretçi Listesi</div><div id="y9-list"></div></div>
+    </div>
+
+    <!-- Y10: ETKİNLİK KATILIM -->
+    <div id="panel-y10" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🙋 Etkinlik Katılım Takibi</h2>
+      <p class="panel-sub">Etkinliğe kimlerin katılacağı, onay/red durumu</p>
+      <div class="box">
+        <div class="box-title">➕ Katılımcı Ekle</div>
+        <div class="field"><label>Etkinlik Adı</label><input type="text" id="y10-etkinlik" placeholder="Takvimden veya elle yazın"></div>
+        <div class="field"><label>Katılımcı Adı</label><input type="text" id="y10-katilimci" placeholder="Ad Soyad"></div>
+        <button class="btn-pri" onclick="y10Ekle()">🙋 Ekle (Onay Bekliyor)</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Katılımcılar</div><div id="y10-list"></div></div>
+    </div>
+
+    <!-- Y11: OTOMATİK RAPOR -->
+    <div id="panel-y11" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📧 Haftalık / Aylık Otomatik Rapor</h2>
+      <p class="panel-sub">Her Pazartesi müdüre otomatik özet mail — arıza, denetim, finans</p>
+      <div class="box">
+        <div class="box-title">📧 Rapor Oluştur</div>
+        <p style="font-size:0.78rem;color:#6b8cae;margin-bottom:10px;">Aşağıdaki modüllerden anlık özet oluşturup müdüre gönderir (otomatik gönderim: her Pazartesi 08:00).</p>
+        <button class="btn-pri green" onclick="y11Olustur()">📧 Şimdi Oluştur & Gönder</button>
+      </div>
+      <div class="box" id="y11-rapor-box" style="display:none;">
+        <div class="box-title">📄 Özet Rapor</div>
+        <div id="y11-rapor"></div>
+      </div>
+    </div>
+
+    <!-- Y12: DENETİM SKOR TABLOSU -->
+    <div id="panel-y12" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📊 Denetim Skor Tablosu</h2>
+      <p class="panel-sub">Her birimin denetim notu, en iyi/en kötü bölüm</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="y12-en-iyi" style="color:#16a34a;font-size:1rem;">-</div><div class="stat-label">En İyi Birim</div></div>
+        <div class="stat"><div class="stat-num" id="y12-en-kotu" style="color:#dc2626;font-size:1rem;">-</div><div class="stat-label">En Kötü Birim</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">➕ Denetim Puanı Gir</div>
+        <div class="field"><label>Birim</label><select id="y12-birim"><option>🍽️ Kantin</option><option>🧹 Temizlik</option><option>🛡️ Güvenlik</option><option>🌳 Bahçe</option><option>🍲 Yemekhane</option><option>📚 Kütüphane</option><option>📦 Diğer</option></select></div>
+        <div class="field"><label>Puan (0-100)</label><input type="number" id="y12-puan" min="0" max="100" placeholder="85"></div>
+        <button class="btn-pri" onclick="y12Ekle()">📊 Kaydet</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Birim Ortalamaları</div><div id="y12-list"></div></div>
+    </div>
+
+    <!-- Y13: ÖĞRENCİ KAYIT HUNİSİ -->
+    <div id="panel-y13" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🎯 Öğrenci Kayıt Hunisi</h2>
+      <p class="panel-sub">Ön kayıt → kesin kayıt dönüşüm oranı, kademe bazlı kayıp</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="y13-onkayit">0</div><div class="stat-label">Toplam Ön Kayıt</div></div>
+        <div class="stat"><div class="stat-num" id="y13-kesin" style="color:#16a34a;">0</div><div class="stat-label">Kesin Kayıt</div></div>
+      </div>
+      <div class="box">
+        <div class="box-title">🎯 Dönüşüm Oranı</div>
+        <div id="y13-oran" style="text-align:center;font-size:1.6rem;font-weight:800;color:#f59e0b;padding:8px;">-</div>
+      </div>
+      <div class="box"><div class="box-title">📋 Kademe Bazlı Dağılım</div><div id="y13-list"></div></div>
+    </div>
+
+    <!-- Y14: GELİR TAHMİNİ -->
+    <div id="panel-y14" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📈 Gelir Tahmini</h2>
+      <p class="panel-sub">Mevcut taksit planlarına göre önümüzdeki 3 ayın beklenen tahsilatı</p>
+      <div id="y14-list"></div>
+    </div>
+
+    <!-- Y15: ANKET -->
+    <div id="panel-y15" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📝 Anket / Memnuniyet Formu</h2>
+      <p class="panel-sub">Veli veya personele link gönder, sonuçlar panelde görünsün</p>
+      <div class="box">
+        <div class="box-title">➕ Yeni Anket</div>
+        <div class="field"><label>Anket Başlığı</label><input type="text" id="y15-baslik" placeholder="Veli Memnuniyet Anketi 2026"></div>
+        <div class="field"><label>Hedef Kitle</label><select id="y15-hedef"><option>👨‍👩‍👧 Veli</option><option>👥 Personel</option><option>🎒 Öğrenci</option></select></div>
+        <button class="btn-pri" onclick="y15Olustur()">🔗 Link Oluştur ve Gönder</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Anketler</div><div id="y15-list"></div></div>
+    </div>
+
+    <!-- Y16: DUYURU PANOSU -->
+    <div id="panel-y16" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>📌 Duyuru Panosu</h2>
+      <p class="panel-sub">Tüm personele görünen dijital ilan panosu</p>
+      <div class="box">
+        <div class="box-title">➕ Duyuru Yayınla</div>
+        <div class="field"><label>Başlık</label><input type="text" id="y16-baslik" placeholder="Duyuru başlığı"></div>
+        <div class="field"><label>İçerik</label><textarea id="y16-icerik" placeholder="Duyuru metni..."></textarea></div>
+        <div class="field"><label>Hedef</label><select id="y16-hedef"><option>👥 Tüm Personel</option><option>👨‍🏫 Öğretmenler</option><option>🏢 İdare</option></select></div>
+        <button class="btn-pri orange" onclick="y16Yayinla()">📌 Yayınla</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Duyuru Panosu</div><div id="y16-list"></div></div>
+    </div>
+
+    <!-- Y17: GÖREV ATAMA -->
+    <div id="panel-y17" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>✅ Görev Atama (Task Manager)</h2>
+      <p class="panel-sub">Görev bir kişiye atansın, tamamlandı işaretlensin</p>
+      <div class="box">
+        <div class="box-title">➕ Görev Ata</div>
+        <div class="field"><label>Görev Başlığı</label><input type="text" id="y17-baslik" placeholder="Konferans salonunu hazırla"></div>
+        <div class="field"><label>Atanan Kişi</label><input type="text" id="y17-kisi" placeholder="Ad Soyad"></div>
+        <div class="field"><label>Son Tarih</label><input type="date" id="y17-tarih"></div>
+        <div class="field"><label>Açıklama</label><textarea id="y17-aciklama" placeholder="Detaylar..."></textarea></div>
+        <button class="btn-pri" onclick="y17Ata()">✅ Ata</button>
+      </div>
+      <div class="box"><div class="box-title">📋 Görevler</div><div id="y17-list"></div></div>
+    </div>
+
+    <!-- Y18: BİNA/KAT HARİTASI -->
+    <div id="panel-y18" class="panel">
+      <button class="back-btn" onclick="showPanel('yeni')">← Yeni Özellikler</button>
+      <h2>🗺️ Bina/Kat Haritası</h2>
+      <p class="panel-sub">Arıza bildiriminde konum seçimi için interaktif bina planı — bir odaya dokunun</p>
+
+      <div class="box"><div class="box-title">🏢 Zemin Kat</div><div class="grid">
+        <div class="card blue" onclick="y18Sec('Giriş Lobisi')"><div class="icon">🚪</div><div class="title">Giriş Lobisi</div></div>
+        <div class="card blue" onclick="y18Sec('Müdür Odası')"><div class="icon">👔</div><div class="title">Müdür Odası</div></div>
+        <div class="card blue" onclick="y18Sec('Öğretmenler Odası')"><div class="icon">👨‍🏫</div><div class="title">Öğretmenler Odası</div></div>
+        <div class="card blue" onclick="y18Sec('Kantin')"><div class="icon">🍽️</div><div class="title">Kantin</div></div>
+        <div class="card blue" onclick="y18Sec('Spor Salonu')"><div class="icon">🏀</div><div class="title">Spor Salonu</div></div>
+      </div></div>
+
+      <div class="box"><div class="box-title">🏢 1. Kat</div><div class="grid">
+        <div class="card green" onclick="y18Sec('1-A Sınıfı')"><div class="icon">🚪</div><div class="title">1-A</div></div>
+        <div class="card green" onclick="y18Sec('1-B Sınıfı')"><div class="icon">🚪</div><div class="title">1-B</div></div>
+        <div class="card green" onclick="y18Sec('2-A Sınıfı')"><div class="icon">🚪</div><div class="title">2-A</div></div>
+        <div class="card green" onclick="y18Sec('2-B Sınıfı')"><div class="icon">🚪</div><div class="title">2-B</div></div>
+        <div class="card green" onclick="y18Sec('Kütüphane')"><div class="icon">📚</div><div class="title">Kütüphane</div></div>
+      </div></div>
+
+      <div class="box"><div class="box-title">🏢 2. Kat</div><div class="grid">
+        <div class="card orange" onclick="y18Sec('3-A Sınıfı')"><div class="icon">🚪</div><div class="title">3-A</div></div>
+        <div class="card orange" onclick="y18Sec('3-B Sınıfı')"><div class="icon">🚪</div><div class="title">3-B</div></div>
+        <div class="card orange" onclick="y18Sec('4-A Sınıfı')"><div class="icon">🚪</div><div class="title">4-A</div></div>
+        <div class="card orange" onclick="y18Sec('4-B Sınıfı')"><div class="icon">🚪</div><div class="title">4-B</div></div>
+        <div class="card orange" onclick="y18Sec('Fen Laboratuvarı')"><div class="icon">🔬</div><div class="title">Fen Lab.</div></div>
+      </div></div>
+
+      <div class="box"><div class="box-title">🏢 3. Kat</div><div class="grid">
+        <div class="card purple" onclick="y18Sec('5-A Sınıfı')"><div class="icon">🚪</div><div class="title">5-A</div></div>
+        <div class="card purple" onclick="y18Sec('5-B Sınıfı')"><div class="icon">🚪</div><div class="title">5-B</div></div>
+        <div class="card purple" onclick="y18Sec('6-A Sınıfı')"><div class="icon">🚪</div><div class="title">6-A</div></div>
+        <div class="card purple" onclick="y18Sec('6-B Sınıfı')"><div class="icon">🚪</div><div class="title">6-B</div></div>
+        <div class="card purple" onclick="y18Sec('Bilgisayar Lab.')"><div class="icon">💻</div><div class="title">Bilg. Lab.</div></div>
+      </div></div>
     </div>
 
   </div>
@@ -1656,6 +2247,7 @@ const ROL_BILGI = {
     {panel:'labuvatuar', icon:'🔬', title:'Laboratuvarlar', desc:'Rezervasyon', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir', color:'red'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç iste', color:'purple'},
+    {panel:'nobet-ogretmen', icon:'🕐', title:'Nöbet Programım', desc:'Nöbet çizelgem', color:'orange'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   mudur: { isim: '👑 Müdür', needsPass: true, requiredPass: 'admin321', autoLogin: 'admin', cards: [
@@ -1675,6 +2267,13 @@ const ROL_BILGI = {
     {panel:'servis', icon:'🚐', title:'Servis', desc:'Araç G/Ç', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'Onay', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Gör', color:'red'},
+    {panel:'kantin', icon:'🍽️', title:'Kantin', desc:'Denetim & ciro', color:'orange'},
+    {panel:'store', icon:'🛍️', title:'Doğa Store', desc:'Gelir/Gider', color:'purple'},
+    {panel:'borc', icon:'👤', title:'Borç Yönetimi', desc:'TC ile takip', color:'red'},
+    {panel:'gelir-grafik', icon:'📊', title:'Gelir/Gider Grafik', desc:'Kantin+Store+Servis', color:'blue'},
+    {panel:'on-kayit', icon:'📝', title:'Ön Kayıt', desc:'Aday ön kayıt', color:'green'},
+    {panel:'kesin-kayit', icon:'✅', title:'Kesin Kayıt', desc:'Kayıt & ödeme izleme', color:'blue'},
+    {panel:'yeni', icon:'🆕', title:'Yeni Özellikler', desc:'18 yeni modül', color:'purple'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   genel_mudur: { isim: '⭐ Genel Müdür', needsPass: false, cards: [
@@ -1695,6 +2294,14 @@ const ROL_BILGI = {
     {panel:'aday', icon:'🎓', title:'Aday', desc:'Dış kayıt', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'Onay', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir/Gör', color:'red'},
+    {panel:'kantin', icon:'🍽️', title:'Kantin', desc:'Denetim & ciro', color:'orange'},
+    {panel:'store', icon:'🛍️', title:'Doğa Store', desc:'Gelir/Gider', color:'purple'},
+    {panel:'borc', icon:'👤', title:'Borç Yönetimi', desc:'TC ile takip', color:'red'},
+    {panel:'gelir-grafik', icon:'📊', title:'Gelir/Gider Grafik', desc:'Kantin+Store+Servis', color:'blue'},
+    {panel:'on-kayit', icon:'📝', title:'Ön Kayıt', desc:'Aday ön kayıt', color:'green'},
+    {panel:'kesin-kayit', icon:'✅', title:'Kesin Kayıt', desc:'Kayıt & ödeme izleme', color:'blue'},
+    {panel:'ders-yonetim', icon:'📆', title:'Ders & Nöbet Yön.', desc:'Program tanımlama', color:'orange'},
+    {panel:'yeni', icon:'🆕', title:'Yeni Özellikler', desc:'18 yeni modül', color:'purple'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
   ]},
   mudur_yard: { isim: '👔 Müdür Yardımcısı', needsPass: true, requiredPass: 'birim321', autoLogin: 'birim', cards: [
@@ -1730,6 +2337,9 @@ const ROL_BILGI = {
   on_buro_personel: { isim: '💼 Ön Büro Personel', needsPass: true, requiredPass: 'buro321', autoLogin: 'buro', cards: [
     {panel:'acil', icon:'🚨', title:'ACİL DESTEK', desc:'Acil yardım çağır', color:'red'},
     {panel:'aday', icon:'🎓', title:'Aday Takibi', desc:'Dış kayıt', color:'blue'},
+    {panel:'on-kayit', icon:'📝', title:'Ön Kayıt', desc:'Aday ön kayıt', color:'green'},
+    {panel:'kesin-kayit', icon:'✅', title:'Kesin Kayıt', desc:'Kayıt & ödeme', color:'blue'},
+    {panel:'borc', icon:'👤', title:'Borç Yönetimi', desc:'TC ile takip', color:'red'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
@@ -1746,6 +2356,9 @@ const ROL_BILGI = {
   ]},
   muhasebe: { isim: '💰 Muhasebe', needsPass: true, requiredPass: 'muhasebe321', autoLogin: 'muhasebe', cards: [
     {panel:'muhasebe', icon:'💰', title:'Finans Paneli', desc:'Tüm işlemler', color:'green'},
+    {panel:'borc', icon:'👤', title:'Borç Yönetimi', desc:'TC ile takip', color:'red'},
+    {panel:'kesin-kayit', icon:'✅', title:'Kesin Kayıt', desc:'Ödeme izleme', color:'blue'},
+    {panel:'gelir-grafik', icon:'📊', title:'Gelir/Gider Grafik', desc:'Kantin+Store+Servis', color:'blue'},
     {panel:'talep', icon:'📋', title:'Talep', desc:'İhtiyaç', color:'purple'},
     {panel:'ariza', icon:'🔨', title:'Arıza', desc:'Bildir', color:'red'},
     {panel:'profil', icon:'👤', title:'Profil', desc:'Ayarlar', color:'green'}
@@ -1838,6 +2451,22 @@ function showPanel(name) {
   if (name === 'guvenlik') guvenlikListele();
   if (name === 'hemsire') hemsireListele();
   if (name === 'servis') servisListele();
+  if (name === 'y1') y1Render();
+  if (name === 'y2') y2Render();
+  if (name === 'y3') y3Render();
+  if (name === 'y4') y4Render();
+  if (name === 'y5') y5Render();
+  if (name === 'y6') y6Render();
+  if (name === 'y7') y7Render();
+  if (name === 'y8') y8Render();
+  if (name === 'y9') y9Render();
+  if (name === 'y10') y10Render();
+  if (name === 'y12') y12Render();
+  if (name === 'y13') y13Render();
+  if (name === 'y14') y14Render();
+  if (name === 'y15') y15Render();
+  if (name === 'y16') y16Render();
+  if (name === 'y17') y17Render();
 }
 
 function goMenu() {
@@ -3437,6 +4066,723 @@ function updateIzleme() {
   var yaklasan = muhasebeData.cekler.filter(c => c.durum==='bekliyor').slice(0, 3);
   var vHtml = yaklasan.map(c => '<div class="list-item"><div class="list-item-title">⏰ '+c.kisi+'</div><div class="list-item-desc">Vade: '+c.vade+'</div><div class="list-item-meta"><span style="color:#f59e0b;font-weight:800;">₺'+c.tutar.toLocaleString('tr-TR')+'</span></div></div>').join('');
   document.getElementById('iz-vadeler').innerHTML = vHtml || '<div style="color:#6b8cae;text-align:center;padding:18px;font-size:0.78rem;">Yaklaşan vade yok</div>';
+}
+
+// ═══════════════════════════════════════════
+// KANTİN
+// ═══════════════════════════════════════════
+var kantinData = { denetimler:[], cirolar:[], giderler:[], odemeler:[] };
+
+function kantinPanel(sub) {
+  ['denetim-form','ciro-form','gider-form','odeme-form'].forEach(n => {
+    document.getElementById('kantin-'+n).style.display = 'none';
+  });
+  document.querySelector('#panel-kantin .card-grid').style.display = 'none';
+  document.getElementById('kantin-'+sub+'-form').style.display = 'block';
+  if (sub === 'ciro') updateKantinCiro();
+  if (sub === 'odeme') updateKantinOdeme();
+  if (sub === 'gider') updateKantinGider();
+}
+function kantinGeri() {
+  ['denetim-form','ciro-form','gider-form','odeme-form'].forEach(n => {
+    document.getElementById('kantin-'+n).style.display = 'none';
+  });
+  document.querySelector('#panel-kantin .card-grid').style.display = '';
+}
+function kantinDenetimKaydet() {
+  var kayit = {
+    tarih: new Date().toLocaleDateString('tr-TR'),
+    tezgah: document.getElementById('k-tezgah').value,
+    personel: document.getElementById('k-personel').value,
+    saklama: document.getElementById('k-saklama').value,
+    fiyat: document.getElementById('k-fiyat').value,
+    aciklama: document.getElementById('k-denetim-aciklama').value
+  };
+  kantinData.denetimler.unshift(kayit);
+  var html = kantinData.denetimler.map(d => '<div class="list-item"><div class="list-item-title">📋 '+d.tarih+'</div><div class="list-item-desc">Tezgah: '+d.tezgah+' | Personel: '+d.personel+'</div><div class="list-item-meta">'+d.aciklama+'</div></div>').join('');
+  document.getElementById('kantin-denetim-list').innerHTML = html;
+  showModal('✅','Kaydedildi','Kantin denetim formu kaydedildi.');
+}
+function kantinCiroKaydet() {
+  var tutar = parseFloat(document.getElementById('k-ciro-tutar').value) || 0;
+  var kayit = { tarih: document.getElementById('k-ciro-tarih').value, tutar: tutar, aciklama: document.getElementById('k-ciro-aciklama').value };
+  kantinData.cirolar.unshift(kayit);
+  updateKantinCiro();
+  document.getElementById('k-ciro-tutar').value = '';
+  document.getElementById('k-ciro-aciklama').value = '';
+  showModal('✅','Kaydedildi','Ciro kaydedildi.');
+}
+function updateKantinCiro() {
+  var bugun = new Date().toLocaleDateString('tr-TR').split('.').reverse().join('-');
+  var gunT = 0, ayT = 0;
+  var ayStr = new Date().toISOString().slice(0,7);
+  kantinData.cirolar.forEach(c => {
+    if (c.tarih === bugun) gunT += c.tutar;
+    if (c.tarih && c.tarih.startsWith(ayStr)) ayT += c.tutar;
+  });
+  document.getElementById('kantin-gun-ciro').textContent = '₺'+gunT.toLocaleString('tr-TR');
+  document.getElementById('kantin-ay-ciro').textContent = '₺'+ayT.toLocaleString('tr-TR');
+  var html = kantinData.cirolar.map(c => '<div class="list-item"><div class="list-item-title">💵 '+c.tarih+'</div><div class="list-item-meta"><span style="color:#16a34a;font-weight:800;">₺'+c.tutar.toLocaleString('tr-TR')+'</span> '+c.aciklama+'</div></div>').join('');
+  document.getElementById('kantin-ciro-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">Kayıt yok</div>';
+  cizKantinGrafik();
+}
+function cizKantinGrafik() {
+  var canvas = document.getElementById('kantin-ciro-grafik');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var son7 = [];
+  for (var i=6; i>=0; i--) {
+    var d = new Date(); d.setDate(d.getDate()-i);
+    var ds = d.toLocaleDateString('tr-TR');
+    var t = kantinData.cirolar.filter(c => c.tarih === d.toISOString().slice(0,10)).reduce((s,c) => s+c.tutar, 0);
+    son7.push({ label: ds.slice(0,5), val: t });
+  }
+  canvas.width = canvas.offsetWidth || 300; canvas.height = 160;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var max = Math.max(...son7.map(x=>x.val), 1);
+  var bw = canvas.width/7 - 6;
+  son7.forEach((d,i) => {
+    var bh = (d.val/max)*(canvas.height-30);
+    var x = i*(bw+6)+3, y = canvas.height-30-bh;
+    ctx.fillStyle='#16a34a'; ctx.fillRect(x, y, bw, bh);
+    ctx.fillStyle='#6b8cae'; ctx.font='9px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(d.label, x+bw/2, canvas.height-10);
+    if (d.val>0) { ctx.fillStyle='#fff'; ctx.fillText('₺'+d.val, x+bw/2, y-4); }
+  });
+}
+function kantinGiderKaydet() {
+  var tutar = parseFloat(document.getElementById('k-gider-tutar').value) || 0;
+  var kayit = { tarih: document.getElementById('k-gider-tarih').value, kategori: document.getElementById('k-gider-kategori').value, tutar: tutar, aciklama: document.getElementById('k-gider-aciklama').value };
+  kantinData.giderler.unshift(kayit);
+  updateKantinGider();
+  showModal('✅','Kaydedildi','Gider kaydedildi.');
+}
+function updateKantinGider() {
+  var html = kantinData.giderler.map(g => '<div class="list-item"><div class="list-item-title">📤 '+g.kategori+'</div><div class="list-item-desc">'+g.tarih+' — '+g.aciklama+'</div><div class="list-item-meta"><span style="color:#dc2626;font-weight:800;">₺'+g.tutar.toLocaleString('tr-TR')+'</span></div></div>').join('');
+  document.getElementById('kantin-gider-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">Kayıt yok</div>';
+}
+function barkodAra(val) {
+  var sonuc = document.getElementById('barkod-sonuc');
+  if (val.length >= 8) {
+    sonuc.innerHTML = '<div style="background:#16243f;padding:8px;border-radius:6px;font-size:0.78rem;color:#c9d6e8;">🔍 Barkod: '+val+' — Ürün bulundu</div>';
+    document.getElementById('k-urun-ad').value = 'Ürün #'+val;
+  } else { sonuc.innerHTML = ''; }
+}
+function kantinOdemeKaydet() {
+  var adet = parseInt(document.getElementById('k-urun-adet').value) || 1;
+  var fiyat = parseFloat(document.getElementById('k-urun-fiyat').value) || 0;
+  var kayit = { saat: new Date().toLocaleTimeString('tr-TR'), urun: document.getElementById('k-urun-ad').value, fiyat: fiyat, adet: adet, toplam: fiyat*adet };
+  kantinData.odemeler.unshift(kayit);
+  updateKantinOdeme();
+  document.getElementById('k-barkod').value = '';
+  document.getElementById('k-urun-ad').value = '';
+  document.getElementById('k-urun-fiyat').value = '';
+  document.getElementById('k-urun-adet').value = '1';
+  document.getElementById('barkod-sonuc').innerHTML = '';
+}
+function updateKantinOdeme() {
+  var kasa = kantinData.odemeler.reduce((s,o) => s+o.toplam, 0);
+  document.getElementById('kantin-kasa').textContent = '₺'+kasa.toLocaleString('tr-TR');
+  var html = kantinData.odemeler.map(o => '<div class="list-item"><div class="list-item-title">🛒 '+o.urun+' x'+o.adet+'</div><div class="list-item-desc">'+o.saat+'</div><div class="list-item-meta"><span style="color:#16a34a;font-weight:800;">₺'+o.toplam.toLocaleString('tr-TR')+'</span></div></div>').join('');
+  document.getElementById('kantin-odeme-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">Kayıt yok</div>';
+}
+
+// ═══════════════════════════════════════════
+// DOĞA STORE
+// ═══════════════════════════════════════════
+var storeData = { islemler:[] };
+
+function storeKaydet() {
+  var tur = document.getElementById('store-tur').value;
+  var tutar = parseFloat(document.getElementById('store-tutar').value) || 0;
+  var kayit = { tarih: new Date().toLocaleDateString('tr-TR'), saat: new Date().toLocaleTimeString('tr-TR'), tur: tur, kategori: document.getElementById('store-kategori').value, tutar: tutar, aciklama: document.getElementById('store-aciklama').value };
+  storeData.islemler.unshift(kayit);
+  updateStore();
+  document.getElementById('store-tutar').value = '';
+  document.getElementById('store-aciklama').value = '';
+  showModal('✅','Kaydedildi','Store işlemi kaydedildi.');
+}
+function updateStore() {
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  var gunGelir = 0, gunGider = 0;
+  storeData.islemler.forEach(i => {
+    if (i.tarih === bugun) { if (i.tur==='gelir') gunGelir+=i.tutar; else gunGider+=i.tutar; }
+  });
+  document.getElementById('store-gun-gelir').textContent = '₺'+gunGelir.toLocaleString('tr-TR');
+  document.getElementById('store-gun-gider').textContent = '₺'+gunGider.toLocaleString('tr-TR');
+  document.getElementById('store-net').textContent = '₺'+(gunGelir-gunGider).toLocaleString('tr-TR');
+  var html = storeData.islemler.map(i => '<div class="list-item"><div class="list-item-title">'+(i.tur==='gelir'?'💰':'📤')+' '+i.kategori+'</div><div class="list-item-desc">'+i.tarih+' '+i.saat+' — '+i.aciklama+'</div><div class="list-item-meta"><span style="color:'+(i.tur==='gelir'?'#16a34a':'#dc2626')+';font-weight:800;">₺'+i.tutar.toLocaleString('tr-TR')+'</span></div></div>').join('');
+  document.getElementById('store-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">Kayıt yok</div>';
+  cizStoreGrafik();
+}
+function cizStoreGrafik() {
+  var canvas = document.getElementById('store-grafik');
+  if (!canvas) return;
+  var son7G = [], son7GD = [];
+  for (var i=6; i>=0; i--) {
+    var d = new Date(); d.setDate(d.getDate()-i);
+    var ds = d.toLocaleDateString('tr-TR');
+    var gelir = storeData.islemler.filter(x=>x.tarih===ds&&x.tur==='gelir').reduce((s,x)=>s+x.tutar,0);
+    var gider = storeData.islemler.filter(x=>x.tarih===ds&&x.tur==='gider').reduce((s,x)=>s+x.tutar,0);
+    son7G.push(gelir); son7GD.push(gider);
+  }
+  canvas.width = canvas.offsetWidth||300; canvas.height = 160;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var max = Math.max(...son7G,...son7GD,1);
+  var bw = (canvas.width/7-8)/2;
+  son7G.forEach((g,i) => {
+    var x = i*(bw*2+8)+4;
+    var ghH = (g/max)*(canvas.height-30);
+    var gdH = (son7GD[i]/max)*(canvas.height-30);
+    ctx.fillStyle='#16a34a'; ctx.fillRect(x, canvas.height-30-ghH, bw, ghH);
+    ctx.fillStyle='#dc2626'; ctx.fillRect(x+bw+1, canvas.height-30-gdH, bw, gdH);
+  });
+}
+
+// ═══════════════════════════════════════════
+// BORÇ YÖNETİMİ (TC üzerinden)
+// ═══════════════════════════════════════════
+var borcData = {};
+
+function tcAra() {
+  var tc = document.getElementById('borc-tc').value.trim();
+  if (tc.length !== 11) { showModal('⚠️','Hata','Geçerli bir TC kimlik numarası girin.'); return; }
+  if (!borcData[tc]) {
+    borcData[tc] = { ad: 'Kayıt #'+tc.slice(-4), toplam: 0, odenen: 0, gecmis: [] };
+  }
+  var kisi = borcData[tc];
+  document.getElementById('borc-kisi-detay').innerHTML = '<div class="list-item"><div class="list-item-title">👤 TC: '+tc+'</div><div class="list-item-desc">'+kisi.ad+'</div></div>';
+  document.getElementById('borc-toplam').textContent = '₺'+kisi.toplam.toLocaleString('tr-TR');
+  document.getElementById('borc-odenen').textContent = '₺'+kisi.odenen.toLocaleString('tr-TR');
+  document.getElementById('borc-kalan').textContent = '₺'+(kisi.toplam-kisi.odenen).toLocaleString('tr-TR');
+  var html = kisi.gecmis.map(g => '<div class="list-item"><div class="list-item-title">'+(g.tip==='odeme'?'✅ Ödeme':'➕ Borç')+': ₺'+g.tutar+'</div><div class="list-item-desc">'+g.tarih+' — '+g.aciklama+'</div></div>').join('');
+  document.getElementById('borc-gecmis-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">İşlem yok</div>';
+  document.getElementById('borc-kisi-bilgi').style.display = 'block';
+}
+function borcDus() {
+  var tc = document.getElementById('borc-tc').value.trim();
+  var tutar = parseFloat(document.getElementById('borc-odeme-tutar').value) || 0;
+  if (!tc || !tutar) { showModal('⚠️','Hata','Tutar giriniz.'); return; }
+  if (!borcData[tc]) return;
+  borcData[tc].odenen += tutar;
+  borcData[tc].gecmis.unshift({ tip:'odeme', tutar:tutar, tarih:new Date().toLocaleDateString('tr-TR'), aciklama:document.getElementById('borc-odeme-aciklama').value });
+  document.getElementById('borc-odeme-tutar').value = '';
+  tcAra();
+  showModal('✅','Ödeme Alındı','₺'+tutar.toLocaleString('tr-TR')+' borç düşüldü.');
+}
+function borcEkle() {
+  var tc = document.getElementById('borc-tc').value.trim();
+  var tutar = parseFloat(document.getElementById('borc-odeme-tutar').value) || 0;
+  if (!tc || !tutar) { showModal('⚠️','Hata','Tutar giriniz.'); return; }
+  if (!borcData[tc]) return;
+  borcData[tc].toplam += tutar;
+  borcData[tc].gecmis.unshift({ tip:'borc', tutar:tutar, tarih:new Date().toLocaleDateString('tr-TR'), aciklama:document.getElementById('borc-odeme-aciklama').value });
+  document.getElementById('borc-odeme-tutar').value = '';
+  tcAra();
+  showModal('✅','Borç Eklendi','₺'+tutar.toLocaleString('tr-TR')+' borç eklendi.');
+}
+
+// ═══════════════════════════════════════════
+// GELİR GİDER GRAFİK (Kantin+Store+Servis)
+// ═══════════════════════════════════════════
+function updateGelirGrafik() {
+  var kantinG = kantinData.cirolar.reduce((s,c)=>s+c.tutar,0);
+  var kantinGd = kantinData.giderler.reduce((s,g)=>s+g.tutar,0);
+  var storeG = storeData.islemler.filter(i=>i.tur==='gelir').reduce((s,i)=>s+i.tutar,0);
+  var storeGd = storeData.islemler.filter(i=>i.tur==='gider').reduce((s,i)=>s+i.tutar,0);
+  var topGelir = kantinG + storeG;
+  var topGider = kantinGd + storeGd;
+  document.getElementById('gg-toplam-gelir').textContent = '₺'+topGelir.toLocaleString('tr-TR');
+  document.getElementById('gg-toplam-gider').textContent = '₺'+topGider.toLocaleString('tr-TR');
+  document.getElementById('gg-net').textContent = '₺'+(topGelir-topGider).toLocaleString('tr-TR');
+  document.getElementById('gg-kantin-ozet').innerHTML = '<div style="display:flex;justify-content:space-between;padding:4px 0;"><span style="color:#6b8cae;">Ciro</span><span style="color:#16a34a;font-weight:800;">₺'+kantinG.toLocaleString('tr-TR')+'</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span style="color:#6b8cae;">Gider</span><span style="color:#dc2626;font-weight:800;">₺'+kantinGd.toLocaleString('tr-TR')+'</span></div>';
+  document.getElementById('gg-store-ozet').innerHTML = '<div style="display:flex;justify-content:space-between;padding:4px 0;"><span style="color:#6b8cae;">Gelir</span><span style="color:#16a34a;font-weight:800;">₺'+storeG.toLocaleString('tr-TR')+'</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span style="color:#6b8cae;">Gider</span><span style="color:#dc2626;font-weight:800;">₺'+storeGd.toLocaleString('tr-TR')+'</span></div>';
+  document.getElementById('gg-servis-ozet').innerHTML = '<div style="color:#6b8cae;font-size:0.78rem;text-align:center;padding:8px;">Servis verileri Servis modülünden aktarılır</div>';
+  cizGelirGiderkaynak();
+}
+function cizGelirGiderkaynak() {
+  var canvas = document.getElementById('gg-kaynak-grafik');
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth||300; canvas.height = 200;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var kaynaklar = [
+    { ad:'Kantin', gelir: kantinData.cirolar.reduce((s,c)=>s+c.tutar,0), gider: kantinData.giderler.reduce((s,g)=>s+g.tutar,0), renk:'#16a34a' },
+    { ad:'Store', gelir: storeData.islemler.filter(i=>i.tur==='gelir').reduce((s,i)=>s+i.tutar,0), gider: storeData.islemler.filter(i=>i.tur==='gider').reduce((s,i)=>s+i.tutar,0), renk:'#7c3aed' },
+  ];
+  var max = Math.max(...kaynaklar.flatMap(k=>[k.gelir,k.gider]),1);
+  var bw = (canvas.width/kaynaklar.length - 20)/2;
+  kaynaklar.forEach((k,i) => {
+    var x = i*(canvas.width/kaynaklar.length)+10;
+    var ghH = (k.gelir/max)*(canvas.height-40);
+    var gdH = (k.gider/max)*(canvas.height-40);
+    ctx.fillStyle='#16a34a'; ctx.fillRect(x, canvas.height-40-ghH, bw, ghH);
+    ctx.fillStyle='#dc2626'; ctx.fillRect(x+bw+4, canvas.height-40-gdH, bw, gdH);
+    ctx.fillStyle='#c9d6e8'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(k.ad, x+bw, canvas.height-10);
+  });
+}
+
+// ═══════════════════════════════════════════
+// ÖN KAYIT
+// ═══════════════════════════════════════════
+var onKayitlar = [];
+function onKayitKaydet() {
+  var tc = document.getElementById('ok-tc').value.trim();
+  if (tc.length !== 11) { showModal('⚠️','Hata','Geçerli TC giriniz.'); return; }
+  var kayit = {
+    tc: tc, veli: document.getElementById('ok-veli-ad').value,
+    tel: document.getElementById('ok-tel').value, email: document.getElementById('ok-email').value,
+    ogrenci: document.getElementById('ok-ogrenci-ad').value,
+    dogum: document.getElementById('ok-dogum').value,
+    kademe: document.getElementById('ok-kademe').value,
+    mevcutOkul: document.getElementById('ok-mevcut-okul').value,
+    notlar: document.getElementById('ok-notlar').value,
+    tarih: new Date().toLocaleDateString('tr-TR'), durum: 'on-kayit'
+  };
+  onKayitlar.unshift(kayit);
+  updateOnKayitList();
+  document.querySelectorAll('#panel-on-kayit input, #panel-on-kayit textarea').forEach(i=>i.value='');
+  showModal('✅','Ön Kayıt Oluşturuldu','TC: '+tc+' için ön kayıt kaydedildi.');
+}
+function updateOnKayitList() {
+  var html = onKayitlar.map(k => '<div class="list-item"><div class="list-item-title">🎒 '+k.ogrenci+'</div><div class="list-item-desc">Veli: '+k.veli+' | TC: '+k.tc+'</div><div class="list-item-meta"><span class="badge badge-blue">'+k.kademe+'</span> <span class="badge badge-orange">'+k.tarih+'</span></div></div>').join('');
+  document.getElementById('on-kayit-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">Ön kayıt yok</div>';
+}
+
+// ═══════════════════════════════════════════
+// KESİN KAYIT
+// ═══════════════════════════════════════════
+var kesinKayitlar = [];
+function kesinKayitGetir() {
+  var tc = document.getElementById('kk-tc').value.trim();
+  var onKayit = onKayitlar.find(k=>k.tc===tc);
+  var form = document.getElementById('kesin-kayit-form');
+  if (onKayit) {
+    document.getElementById('kk-bilgi').innerHTML = '<div class="list-item"><div class="list-item-title">👤 '+onKayit.ogrenci+'</div><div class="list-item-desc">Veli: '+onKayit.veli+' | Kademe: '+onKayit.kademe+'</div></div>';
+    form.style.display = 'block';
+  } else {
+    document.getElementById('kk-bilgi').innerHTML = '<div style="color:#f59e0b;font-size:0.82rem;padding:8px;">TC: '+tc+' için ön kayıt bulunamadı. Yine de devam edebilirsiniz.</div>';
+    form.style.display = 'block';
+  }
+  updateUcretGrafik();
+}
+function kesinKayitTamamla() {
+  var tc = document.getElementById('kk-tc').value.trim();
+  var ucret = parseFloat(document.getElementById('kk-ucret').value) || 0;
+  var taksit = parseInt(document.getElementById('kk-taksit').value);
+  var kayit = {
+    tc: tc, ucret: ucret, taksit: taksit,
+    taksitTutar: taksit > 1 ? ucret/taksit : ucret,
+    ilkTarih: document.getElementById('kk-ilk-tarih').value,
+    tarih: new Date().toLocaleDateString('tr-TR'),
+    odenen: 0, kalanTaksit: taksit
+  };
+  kesinKayitlar.unshift(kayit);
+  updateKesinKayitList();
+  updateUcretGrafik();
+  showModal('✅','Kesin Kayıt Tamamlandı','₺'+ucret.toLocaleString('tr-TR')+' — '+taksit+' taksit planlandı.');
+}
+function updateKesinKayitList() {
+  var html = kesinKayitlar.map(k => '<div class="list-item"><div class="list-item-title">✅ TC: '+k.tc+'</div><div class="list-item-desc">Ücret: ₺'+k.ucret.toLocaleString('tr-TR')+' | '+k.taksit+' taksit</div><div class="list-item-meta"><span class="badge badge-green">Ödenen: ₺'+k.odenen.toLocaleString('tr-TR')+'</span><span class="badge badge-orange">Kalan Taksit: '+k.kalanTaksit+'</span></div></div>').join('');
+  document.getElementById('kesin-kayit-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:12px;font-size:0.78rem;">Kesin kayıt yok</div>';
+}
+function updateUcretGrafik() {
+  var canvas = document.getElementById('ucret-grafik');
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth||300; canvas.height = 160;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var toplam = kesinKayitlar.reduce((s,k)=>s+k.ucret,0);
+  var odenen = kesinKayitlar.reduce((s,k)=>s+k.odenen,0);
+  var kalan = toplam - odenen;
+  if (toplam === 0) return;
+  var cx2 = canvas.width/2, cy2 = canvas.height/2, r = Math.min(cx2,cy2)-20;
+  ctx.beginPath(); ctx.moveTo(cx2,cy2);
+  ctx.arc(cx2,cy2,r,0,odenen/toplam*Math.PI*2); ctx.fillStyle='#16a34a'; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx2,cy2);
+  ctx.arc(cx2,cy2,r,odenen/toplam*Math.PI*2,Math.PI*2); ctx.fillStyle='#dc2626'; ctx.fill();
+  ctx.fillStyle='#c9d6e8'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Toplam: ₺'+toplam.toLocaleString('tr-TR'), cx2, canvas.height-5);
+}
+
+// ═══════════════════════════════════════════
+// FATURA FOTOĞRAF
+// ═══════════════════════════════════════════
+function faturaFotoOnizle(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('fatura-foto-img').src = e.target.result;
+      document.getElementById('fatura-foto-onizle').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// ═══════════════════════════════════════════
+// ÖĞRETMEN NÖBET PANELİ
+// ═══════════════════════════════════════════
+function updateNobetOgretmen() {
+  var kullanici = localStorage.getItem('educontrol_kullanici') || '';
+  var html = '';
+  // Mevcut nöbet verilerinden filtrele
+  if (window.nobetListesi && window.nobetListesi.length > 0) {
+    var benimNobetler = window.nobetListesi.filter(n => n.ogretmen && n.ogretmen.toLowerCase() === kullanici.toLowerCase());
+    if (benimNobetler.length > 0) {
+      html = benimNobetler.map(n => '<div class="list-item"><div class="list-item-title">🕐 '+n.gun+' — '+n.saat+'</div><div class="list-item-desc">'+n.konum+'</div><div class="list-item-meta"><span class="badge badge-orange">'+n.ogretmen+'</span></div></div>').join('');
+    }
+  }
+  document.getElementById('nobet-ogretmen-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:18px;font-size:0.78rem;">Size atanmış nöbet yok. Müdürlük tarafından atama yapıldığında burada görünecek.</div>';
+}
+
+// ═══════════════════════════════════════════
+// YENİ ÖZELLİKLER (18 MODÜL)
+// ═══════════════════════════════════════════
+function y1Kaydet() {
+  var ogrenci = document.getElementById('y1-ogrenci').value.trim();
+  if (!ogrenci) { showModal('⚠️','Eksik Bilgi','Öğrenci adı giriniz.'); return; }
+  y1Kayitlar.unshift({
+    ogrenci: ogrenci,
+    sinif: document.getElementById('y1-sinif').value.trim(),
+    tarih: document.getElementById('y1-tarih').value ? new Date(document.getElementById('y1-tarih').value).toLocaleDateString('tr-TR') : new Date().toLocaleDateString('tr-TR'),
+    dersler: document.getElementById('y1-dersler').value.trim(),
+    tel: document.getElementById('y1-tel').value.trim()
+  });
+  document.querySelectorAll('#panel-y1 input').forEach(i=>i.value='');
+  y1Render();
+  showModal('✅','Kaydedildi', ogrenci+' için devamsızlık kaydedildi. Veliye SMS/bildirim gönderildi.');
+}
+function y1Render() {
+  var sayac = {};
+  y1Kayitlar.forEach(k => { sayac[k.ogrenci] = (sayac[k.ogrenci]||0)+1; });
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  document.getElementById('y1-bugun').textContent = y1Kayitlar.filter(k=>k.tarih===bugun).length;
+  document.getElementById('y1-kritik').textContent = Object.values(sayac).filter(v=>v>=3).length;
+  var html = y1Kayitlar.map(k => {
+    var gun = sayac[k.ogrenci];
+    var badge = gun>=3 ? '<span class="badge badge-red">🔴 '+gun+' gün devamsız</span>' : '<span class="badge badge-orange">'+gun+' gün</span>';
+    return '<div class="list-item"><div class="list-item-title">👤 '+k.ogrenci+' ('+(k.sinif||'-')+')</div><div class="list-item-desc">'+k.tarih+' — '+(k.dersler||'Tüm gün')+'</div><div class="list-item-meta">'+badge+' <span class="badge badge-green">📩 Veli Bilgilendirildi</span></div></div>';
+  }).join('');
+  document.getElementById('y1-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Devamsızlık kaydı yok</div>';
+}
+
+function y2Gonder() {
+  var alici = document.getElementById('y2-alici').value.trim();
+  var icerik = document.getElementById('y2-icerik').value.trim();
+  if (!alici || !icerik) { showModal('⚠️','Eksik Bilgi','Alıcı ve mesaj içeriği zorunlu.'); return; }
+  y2Mesajlar.unshift({ alici: alici, tur: document.getElementById('y2-tur').value, icerik: icerik, tarih: new Date().toLocaleDateString('tr-TR')+' '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) });
+  document.getElementById('y2-alici').value=''; document.getElementById('y2-icerik').value='';
+  y2Render();
+  showModal('✅','Gönderildi', alici+' kişisine mesaj gönderildi.');
+}
+function y2Render() {
+  var etiket = {mesaj:'💬 Mesaj', duyuru:'📢 Duyuru', toplanti:'🤝 Toplantı Daveti'};
+  var html = y2Mesajlar.map(m => '<div class="list-item"><div class="list-item-title">'+etiket[m.tur]+' — '+m.alici+'</div><div class="list-item-desc">'+m.icerik+'</div><div class="list-item-meta"><span class="badge badge-green">✅ İletildi</span> '+m.tarih+'</div></div>').join('');
+  document.getElementById('y2-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz mesaj yok</div>';
+}
+
+function y3Ekle() {
+  var ad = document.getElementById('y3-ad').value.trim();
+  if (!ad) { showModal('⚠️','Eksik Bilgi','Malzeme adı giriniz.'); return; }
+  y3Stok.unshift({
+    ad: ad, kategori: document.getElementById('y3-kategori').value,
+    miktar: parseFloat(document.getElementById('y3-miktar').value) || 0,
+    kritik: parseFloat(document.getElementById('y3-kritikseviye').value) || 0
+  });
+  document.querySelectorAll('#panel-y3 input').forEach(i=>i.value='');
+  y3Render();
+  showModal('✅','Kaydedildi', ad+' stoğa eklendi.');
+}
+function y3Render() {
+  document.getElementById('y3-toplam').textContent = y3Stok.length;
+  document.getElementById('y3-kritik').textContent = y3Stok.filter(s=>s.miktar<=s.kritik).length;
+  var html = y3Stok.map(s => {
+    var kritikMi = s.miktar <= s.kritik;
+    var badge = kritikMi ? '<span class="badge badge-red">⚠️ Kritik Stok!</span>' : '<span class="badge badge-green">✅ Yeterli</span>';
+    return '<div class="list-item"><div class="list-item-title">'+s.kategori+' — '+s.ad+'</div><div class="list-item-desc">Mevcut: '+s.miktar+' | Kritik seviye: '+s.kritik+'</div><div class="list-item-meta">'+badge+'</div></div>';
+  }).join('');
+  document.getElementById('y3-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Stok kaydı yok</div>';
+}
+
+function y4Talep() {
+  var ad = document.getElementById('y4-ad').value.trim();
+  if (!ad) { showModal('⚠️','Eksik Bilgi','Personel adı giriniz.'); return; }
+  y4Izinler.unshift({
+    ad: ad, tur: document.getElementById('y4-tur').value,
+    baslangic: document.getElementById('y4-baslangic').value, bitis: document.getElementById('y4-bitis').value,
+    aciklama: document.getElementById('y4-aciklama').value.trim(), durum: 'bekliyor'
+  });
+  document.querySelectorAll('#panel-y4 input, #panel-y4 textarea').forEach(i=>i.value='');
+  y4Render();
+  showModal('✅','Talep Oluşturuldu', ad+' için izin talebi onaya gönderildi.');
+}
+function y4Karar(idx, karar) {
+  y4Izinler[idx].durum = karar;
+  y4Render();
+}
+function y4Render() {
+  var badges = {bekliyor:'<span class="badge badge-orange">⏳ Bekliyor</span>', onay:'<span class="badge badge-green">✅ Onaylandı</span>', red:'<span class="badge badge-red">❌ Reddedildi</span>'};
+  var html = y4Izinler.map((k,i) => {
+    var gunSayisi = '';
+    if (k.baslangic && k.bitis) { var g = Math.round((new Date(k.bitis)-new Date(k.baslangic))/86400000)+1; gunSayisi = g+' gün'; }
+    var aksiyon = k.durum==='bekliyor' ? '<div style="display:flex;gap:6px;margin-top:6px;"><button class="btn-pri green" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y4Karar('+i+',\'onay\')">✅ Onayla</button><button class="btn-pri red" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y4Karar('+i+',\'red\')">❌ Reddet</button></div>' : '';
+    return '<div class="list-item"><div class="list-item-title">👤 '+k.ad+' — '+k.tur+'</div><div class="list-item-desc">'+(k.baslangic||'-')+' → '+(k.bitis||'-')+' ('+gunSayisi+')</div><div class="list-item-meta">'+badges[k.durum]+'</div>'+aksiyon+'</div>';
+  }).join('');
+  document.getElementById('y4-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">İzin talebi yok</div>';
+}
+
+function y5Ekle() {
+  var kategori = document.getElementById('y5-kategori').value.trim();
+  var hedef = parseFloat(document.getElementById('y5-hedef').value) || 0;
+  if (!kategori || !hedef) { showModal('⚠️','Eksik Bilgi','Kategori ve hedef tutar giriniz.'); return; }
+  y5Butce.unshift({ kategori: kategori, donem: document.getElementById('y5-donem').value.trim(), hedef: hedef, gerceklesen: parseFloat(document.getElementById('y5-gerceklesen').value) || 0 });
+  document.querySelectorAll('#panel-y5 input').forEach(i=>i.value='');
+  y5Render();
+  showModal('✅','Kaydedildi', kategori+' bütçe kalemi eklendi.');
+}
+function y5Render() {
+  var html = y5Butce.map(b => {
+    var sapma = b.hedef ? Math.round((b.gerceklesen-b.hedef)/b.hedef*100) : 0;
+    var badge = sapma>10 ? '<span class="badge badge-red">🔺 %'+sapma+' aşım</span>' : (sapma<-10 ? '<span class="badge badge-orange">🔻 %'+Math.abs(sapma)+' altında</span>' : '<span class="badge badge-green">✅ Hedefe Yakın</span>');
+    return '<div class="list-item"><div class="list-item-title">'+b.kategori+' ('+(b.donem||'-')+')</div><div class="list-item-desc">Hedef: ₺'+b.hedef.toLocaleString('tr-TR')+' | Gerçekleşen: ₺'+b.gerceklesen.toLocaleString('tr-TR')+'</div><div class="list-item-meta">'+badge+'</div></div>';
+  }).join('');
+  document.getElementById('y5-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Bütçe kalemi yok</div>';
+}
+
+function y6Okut() {
+  var ad = document.getElementById('y6-ad').value.trim();
+  if (!ad) { showModal('⚠️','Eksik Bilgi','Personel adı/kart no giriniz.'); return; }
+  var son = y6Girisler.find(g => g.ad.toLowerCase()===ad.toLowerCase());
+  var yon = (son && son.yon==='giris') ? 'cikis' : 'giris';
+  y6Girisler.unshift({ ad: ad, yon: yon, saat: new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) });
+  document.getElementById('y6-ad').value = '';
+  y6Render();
+  showModal(yon==='giris' ? '📥' : '📤', 'Kimlik Doğrulandı', ad+' — '+(yon==='giris'?'Giriş':'Çıkış')+' kaydedildi.');
+}
+function y6Render() {
+  var html = y6Girisler.map(g => '<div class="list-item"><div class="list-item-title">'+(g.yon==='giris'?'📥':'📤')+' '+g.ad+'</div><div class="list-item-meta"><span class="badge '+(g.yon==='giris'?'badge-green':'badge-orange')+'">'+(g.yon==='giris'?'Giriş':'Çıkış')+'</span> '+g.saat+'</div></div>').join('');
+  document.getElementById('y6-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Henüz kayıt yok</div>';
+}
+
+function y7Kaydet() {
+  var ad = document.getElementById('y7-ad').value.trim();
+  if (!ad) { showModal('⚠️','Eksik Bilgi','Personel adı giriniz.'); return; }
+  y7Vardiya.unshift({ ad: ad, gorev: document.getElementById('y7-gorev').value, yon: document.getElementById('y7-yon').value, saat: new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}), tarih: new Date().toLocaleDateString('tr-TR') });
+  document.getElementById('y7-ad').value = '';
+  y7Render();
+  showModal('✅','Kaydedildi', ad+' için vardiya kaydı alındı.');
+}
+function y7Render() {
+  var icerde = {};
+  y7Vardiya.slice().reverse().forEach(v => { icerde[v.ad] = v.yon==='giris'; });
+  document.getElementById('y7-icerde').textContent = Object.values(icerde).filter(v=>v).length;
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  document.getElementById('y7-bugun').textContent = y7Vardiya.filter(v=>v.tarih===bugun).length;
+  var html = y7Vardiya.map(v => '<div class="list-item"><div class="list-item-title">'+v.gorev+' — '+v.ad+'</div><div class="list-item-meta"><span class="badge '+(v.yon==='giris'?'badge-green':'badge-orange')+'">'+(v.yon==='giris'?'📥 Giriş':'📤 Çıkış')+'</span> '+v.saat+'</div></div>').join('');
+  document.getElementById('y7-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Vardiya kaydı yok</div>';
+}
+
+function y8Ekle() {
+  var esya = document.getElementById('y8-esya').value.trim();
+  if (!esya) { showModal('⚠️','Eksik Bilgi','Eşya adı giriniz.'); return; }
+  y8KayipBuluntu.unshift({ esya: esya, tur: document.getElementById('y8-tur').value, konum: document.getElementById('y8-konum').value.trim(), aciklama: document.getElementById('y8-aciklama').value.trim(), bildiren: document.getElementById('y8-bildiren').value.trim(), tarih: new Date().toLocaleDateString('tr-TR'), durum: 'acik' });
+  document.querySelectorAll('#panel-y8 input, #panel-y8 textarea').forEach(i=>i.value='');
+  y8Render();
+  showModal('✅','İlan Verildi', esya+' ilanı yayınlandı.');
+}
+function y8Teslim(idx) { y8KayipBuluntu[idx].durum = 'kapali'; y8Render(); }
+function y8Render() {
+  var html = y8KayipBuluntu.map((k,i) => {
+    var badge = k.tur==='kayip' ? '<span class="badge badge-red">❌ Kayıp</span>' : '<span class="badge badge-green">✅ Buluntu</span>';
+    var durumBadge = k.durum==='kapali' ? '<span class="badge badge-green">✅ Teslim Edildi</span>' : '<span class="badge badge-orange">⏳ Açık</span>';
+    var aksiyon = k.durum==='acik' ? '<div style="margin-top:6px;"><button class="btn-pri green" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y8Teslim('+i+')">✅ Sahibine Teslim Edildi</button></div>' : '';
+    return '<div class="list-item"><div class="list-item-title">🎒 '+k.esya+'</div><div class="list-item-desc">'+(k.konum||'-')+' — '+(k.aciklama||'')+'</div><div class="list-item-meta">'+badge+' '+durumBadge+' '+k.tarih+'</div>'+aksiyon+'</div>';
+  }).join('');
+  document.getElementById('y8-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Kayıp-buluntu ilanı yok</div>';
+}
+
+function y9Ekle() {
+  var ad = document.getElementById('y9-ad').value.trim();
+  if (!ad) { showModal('⚠️','Eksik Bilgi','Ziyaretçi adı giriniz.'); return; }
+  y9Ziyaretciler.unshift({ ad: ad, tc: document.getElementById('y9-tc').value.trim(), amac: document.getElementById('y9-amac').value.trim(), gorusulen: document.getElementById('y9-gorusulen').value.trim(), giris: new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}), tarih: new Date().toLocaleDateString('tr-TR'), icerde: true });
+  document.querySelectorAll('#panel-y9 input').forEach(i=>i.value='');
+  y9Render();
+  showModal('🪪','Kart Verildi', ad+' için geçici giriş kartı oluşturuldu.');
+}
+function y9Cikis(idx) { y9Ziyaretciler[idx].icerde = false; y9Render(); }
+function y9Render() {
+  document.getElementById('y9-icerde').textContent = y9Ziyaretciler.filter(z=>z.icerde).length;
+  var bugun = new Date().toLocaleDateString('tr-TR');
+  document.getElementById('y9-bugun').textContent = y9Ziyaretciler.filter(z=>z.tarih===bugun).length;
+  var html = y9Ziyaretciler.map((z,i) => {
+    var badge = z.icerde ? '<span class="badge badge-green">🪪 İçeride</span>' : '<span class="badge badge-orange">🚪 Çıktı</span>';
+    var aksiyon = z.icerde ? '<div style="margin-top:6px;"><button class="btn-pri red" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y9Cikis('+i+')">🚪 Çıkış Yap</button></div>' : '';
+    return '<div class="list-item"><div class="list-item-title">🪪 '+z.ad+'</div><div class="list-item-desc">'+(z.amac||'-')+' | Görüşülen: '+(z.gorusulen||'-')+'</div><div class="list-item-meta">'+badge+' Giriş: '+z.giris+'</div>'+aksiyon+'</div>';
+  }).join('');
+  document.getElementById('y9-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Ziyaretçi yok</div>';
+}
+
+function y10Ekle() {
+  var etkinlik = document.getElementById('y10-etkinlik').value.trim();
+  var katilimci = document.getElementById('y10-katilimci').value.trim();
+  if (!etkinlik || !katilimci) { showModal('⚠️','Eksik Bilgi','Etkinlik ve katılımcı adı giriniz.'); return; }
+  y10Katilim.unshift({ etkinlik: etkinlik, katilimci: katilimci, durum: 'bekliyor' });
+  document.getElementById('y10-katilimci').value = '';
+  y10Render();
+}
+function y10Karar(idx, karar) { y10Katilim[idx].durum = karar; y10Render(); }
+function y10Render() {
+  var badges = {bekliyor:'<span class="badge badge-orange">⏳ Bekliyor</span>', onay:'<span class="badge badge-green">✅ Onaylandı</span>', red:'<span class="badge badge-red">❌ Reddedildi</span>'};
+  var html = y10Katilim.map((k,i) => {
+    var aksiyon = k.durum==='bekliyor' ? '<div style="display:flex;gap:6px;margin-top:6px;"><button class="btn-pri green" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y10Karar('+i+',\'onay\')">✅ Onayla</button><button class="btn-pri red" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y10Karar('+i+',\'red\')">❌ Reddet</button></div>' : '';
+    return '<div class="list-item"><div class="list-item-title">🙋 '+k.katilimci+'</div><div class="list-item-desc">Etkinlik: '+k.etkinlik+'</div><div class="list-item-meta">'+badges[k.durum]+'</div>'+aksiyon+'</div>';
+  }).join('');
+  document.getElementById('y10-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Katılımcı yok</div>';
+}
+
+function y11Olustur() {
+  var izinBekleyen = y4Izinler.filter(k=>k.durum==='bekliyor').length;
+  var stokKritik = y3Stok.filter(s=>s.miktar<=s.kritik).length;
+  var devamsizKritik = {};
+  y1Kayitlar.forEach(k=>{ devamsizKritik[k.ogrenci]=(devamsizKritik[k.ogrenci]||0)+1; });
+  var kritikOgrenci = Object.values(devamsizKritik).filter(v=>v>=3).length;
+  var toplamButceHedef = y5Butce.reduce((s,b)=>s+b.hedef,0);
+  var toplamButceGercek = y5Butce.reduce((s,b)=>s+b.gerceklesen,0);
+  var html = '';
+  html += '<div class="list-item"><div class="list-item-title">📵 Devamsızlık</div><div class="list-item-desc">'+kritikOgrenci+' kritik öğrenci (3+ gün devamsız)</div></div>';
+  html += '<div class="list-item"><div class="list-item-title">📦 Stok</div><div class="list-item-desc">'+stokKritik+' kalem kritik seviyede</div></div>';
+  html += '<div class="list-item"><div class="list-item-title">🗓️ İzin</div><div class="list-item-desc">'+izinBekleyen+' onay bekleyen izin talebi</div></div>';
+  html += '<div class="list-item"><div class="list-item-title">💵 Bütçe</div><div class="list-item-desc">Hedef ₺'+toplamButceHedef.toLocaleString('tr-TR')+' | Gerçekleşen ₺'+toplamButceGercek.toLocaleString('tr-TR')+'</div></div>';
+  document.getElementById('y11-rapor').innerHTML = html;
+  document.getElementById('y11-rapor-box').style.display = 'block';
+  showModal('📧','Rapor Gönderildi', 'Özet rapor müdüre mail olarak gönderildi.');
+}
+
+function y12Ekle() {
+  var puan = parseFloat(document.getElementById('y12-puan').value);
+  if (isNaN(puan)) { showModal('⚠️','Eksik Bilgi','Puan giriniz.'); return; }
+  y12Denetim.unshift({ birim: document.getElementById('y12-birim').value, puan: puan, tarih: new Date().toLocaleDateString('tr-TR') });
+  document.getElementById('y12-puan').value = '';
+  y12Render();
+  showModal('✅','Kaydedildi','Denetim puanı kaydedildi.');
+}
+function y12Render() {
+  var gruplar = {};
+  y12Denetim.forEach(d => { (gruplar[d.birim] = gruplar[d.birim]||[]).push(d.puan); });
+  var ortalamalar = Object.keys(gruplar).map(b => ({ birim: b, ort: gruplar[b].reduce((s,p)=>s+p,0)/gruplar[b].length, sayi: gruplar[b].length }));
+  ortalamalar.sort((a,b)=>b.ort-a.ort);
+  document.getElementById('y12-en-iyi').textContent = ortalamalar.length ? ortalamalar[0].birim+' ('+ortalamalar[0].ort.toFixed(0)+')' : '-';
+  document.getElementById('y12-en-kotu').textContent = ortalamalar.length ? ortalamalar[ortalamalar.length-1].birim+' ('+ortalamalar[ortalamalar.length-1].ort.toFixed(0)+')' : '-';
+  var html = ortalamalar.map(o => {
+    var badge = o.ort>=80 ? '<span class="badge badge-green">✅ İyi</span>' : (o.ort>=60 ? '<span class="badge badge-orange">🟡 Orta</span>' : '<span class="badge badge-red">🔴 Zayıf</span>');
+    return '<div class="list-item"><div class="list-item-title">'+o.birim+'</div><div class="list-item-desc">Ortalama: '+o.ort.toFixed(1)+' | '+o.sayi+' denetim</div><div class="list-item-meta">'+badge+'</div></div>';
+  }).join('');
+  document.getElementById('y12-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Denetim kaydı yok</div>';
+}
+
+function y13Render() {
+  var toplamOn = (typeof onKayitlar!=='undefined') ? onKayitlar.length : 0;
+  var toplamKesin = (typeof kesinKayitlar!=='undefined') ? kesinKayitlar.length : 0;
+  document.getElementById('y13-onkayit').textContent = toplamOn;
+  document.getElementById('y13-kesin').textContent = toplamKesin;
+  var oran = toplamOn ? Math.round(toplamKesin/toplamOn*100) : 0;
+  document.getElementById('y13-oran').textContent = toplamOn ? '%'+oran+' Dönüşüm' : 'Henüz ön kayıt yok';
+  var kademeler = {};
+  if (typeof onKayitlar!=='undefined') {
+    onKayitlar.forEach(o => {
+      var k = o.kademe || 'Belirtilmemiş';
+      if (!kademeler[k]) kademeler[k] = { on:0, kesin:0 };
+      kademeler[k].on++;
+      if (typeof kesinKayitlar!=='undefined' && kesinKayitlar.some(kk=>kk.tc===o.tc)) kademeler[k].kesin++;
+    });
+  }
+  var html = Object.keys(kademeler).map(k => {
+    var v = kademeler[k];
+    var kayip = v.on - v.kesin;
+    return '<div class="list-item"><div class="list-item-title">🎒 '+k+'</div><div class="list-item-desc">Ön Kayıt: '+v.on+' | Kesin Kayıt: '+v.kesin+' | Kayıp: '+kayip+'</div></div>';
+  }).join('');
+  document.getElementById('y13-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Ön kayıt verisi yok</div>';
+}
+
+function y14Render() {
+  var kayitlar = (typeof kesinKayitlar!=='undefined') ? kesinKayitlar : [];
+  var aylar = ['Bu Ay','Gelecek Ay','2 Ay Sonra'];
+  var toplamlar = [0,0,0];
+  kayitlar.forEach(k => {
+    for (var i=0;i<3;i++) { if (k.kalanTaksit > i) toplamlar[i] += k.taksitTutar; }
+  });
+  var html = aylar.map((a,i) => '<div class="stat" style="margin-bottom:10px;"><div class="stat-num">₺'+toplamlar[i].toLocaleString('tr-TR')+'</div><div class="stat-label">'+a+'</div></div>').join('');
+  document.getElementById('y14-list').innerHTML = kayitlar.length ? html : '<div class="box"><div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Kesin kayıt / taksit planı yok — tahmin için Kesin Kayıt modülünü kullanın.</div></div>';
+}
+
+function y15Olustur() {
+  var baslik = document.getElementById('y15-baslik').value.trim();
+  if (!baslik) { showModal('⚠️','Eksik Bilgi','Anket başlığı giriniz.'); return; }
+  y15Anketler.unshift({ baslik: baslik, hedef: document.getElementById('y15-hedef').value, tarih: new Date().toLocaleDateString('tr-TR'), sonuc: 0 });
+  document.getElementById('y15-baslik').value = '';
+  y15Render();
+  showModal('🔗','Link Oluşturuldu', baslik+' anketi hedef kitleye gönderildi.');
+}
+function y15Render() {
+  var html = y15Anketler.map(a => '<div class="list-item"><div class="list-item-title">📝 '+a.baslik+'</div><div class="list-item-desc">Hedef: '+a.hedef+'</div><div class="list-item-meta"><span class="badge badge-green">🔗 Gönderildi</span> '+a.tarih+'</div></div>').join('');
+  document.getElementById('y15-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Anket yok</div>';
+}
+
+function y16Yayinla() {
+  var baslik = document.getElementById('y16-baslik').value.trim();
+  if (!baslik) { showModal('⚠️','Eksik Bilgi','Başlık giriniz.'); return; }
+  y16Duyurular.unshift({ baslik: baslik, icerik: document.getElementById('y16-icerik').value.trim(), hedef: document.getElementById('y16-hedef').value, tarih: new Date().toLocaleDateString('tr-TR') });
+  document.getElementById('y16-baslik').value=''; document.getElementById('y16-icerik').value='';
+  y16Render();
+  showModal('📌','Yayınlandı', baslik+' panoya asıldı.');
+}
+function y16Render() {
+  var html = y16Duyurular.map(d => '<div class="list-item"><div class="list-item-title">📌 '+d.baslik+'</div><div class="list-item-desc">'+d.icerik+'</div><div class="list-item-meta"><span class="badge badge-orange">'+d.hedef+'</span> '+d.tarih+'</div></div>').join('');
+  document.getElementById('y16-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Duyuru yok</div>';
+}
+
+function y17Ata() {
+  var baslik = document.getElementById('y17-baslik').value.trim();
+  var kisi = document.getElementById('y17-kisi').value.trim();
+  if (!baslik || !kisi) { showModal('⚠️','Eksik Bilgi','Görev ve kişi adı giriniz.'); return; }
+  y17Gorevler.unshift({ baslik: baslik, kisi: kisi, tarih: document.getElementById('y17-tarih').value, aciklama: document.getElementById('y17-aciklama').value.trim(), tamam: false });
+  document.querySelectorAll('#panel-y17 input, #panel-y17 textarea').forEach(i=>i.value='');
+  y17Render();
+  showModal('✅','Atandı', baslik+' görevi '+kisi+' kişisine atandı.');
+}
+function y17Tamamla(idx) { y17Gorevler[idx].tamam = true; y17Render(); }
+function y17Render() {
+  var html = y17Gorevler.map((g,i) => {
+    var badge = g.tamam ? '<span class="badge badge-green">✅ Tamamlandı</span>' : '<span class="badge badge-orange">⏳ Devam Ediyor</span>';
+    var aksiyon = g.tamam ? '' : '<div style="margin-top:6px;"><button class="btn-pri green" style="margin:0;padding:7px;font-size:0.72rem;" onclick="y17Tamamla('+i+')">✅ Tamamlandı İşaretle</button></div>';
+    return '<div class="list-item"><div class="list-item-title">✅ '+g.baslik+'</div><div class="list-item-desc">Atanan: '+g.kisi+(g.tarih?' | Son Tarih: '+g.tarih:'')+'</div><div class="list-item-meta">'+badge+'</div>'+aksiyon+'</div>';
+  }).join('');
+  document.getElementById('y17-list').innerHTML = html || '<div style="color:#6b8cae;text-align:center;padding:14px;font-size:0.78rem;">Görev yok</div>';
+}
+
+function y18Sec(oda) {
+  var el = document.getElementById('a-sinif');
+  if (el) el.value = oda;
+  showPanel('ariza');
+  showModal('📍','Konum Seçildi', oda+' konumu arıza bildirim formuna eklendi.');
+}
+
+var y1Kayitlar = [], y2Mesajlar = [], y3Stok = [], y4Izinler = [], y5Butce = [], y6Girisler = [], y7Vardiya = [], y8KayipBuluntu = [], y9Ziyaretciler = [], y10Katilim = [], y12Denetim = [], y15Anketler = [], y16Duyurular = [], y17Gorevler = [];
+
+// Panel açılışında güncelle
+var _origGoPanel = typeof goPanel === 'function' ? goPanel : null;
+function goPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  var el = document.getElementById('panel-'+name);
+  if (el) {
+    el.classList.add('active');
+    if (name==='gelir-grafik') { setTimeout(updateGelirGrafik, 100); }
+    if (name==='nobet-ogretmen') { updateNobetOgretmen(); }
+    if (name==='kesin-kayit') { updateKesinKayitList(); setTimeout(updateUcretGrafik,100); }
+    if (name==='on-kayit') { updateOnKayitList(); }
+  }
 }
 </script>
 </body>
