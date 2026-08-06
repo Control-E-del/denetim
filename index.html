@@ -208,6 +208,12 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
       <div style="text-align:center;margin-top:16px;">
         <div style="font-size:0.65rem;color:#6b8cae;">Kullanıcı adı veya PIN'inizi unuttuysanız<br>müdürünüzle iletişime geçin.</div>
       </div>
+
+      <button class="back-btn" style="margin-top:18px;width:100%;justify-content:center;" onclick="anaEkranaEkle()">📲 Uygulamayı Ana Ekrana Ekle</button>
+
+      <div style="text-align:center;margin-top:14px;padding-bottom:6px;">
+        <div style="font-size:0.62rem;color:#3d5a80;letter-spacing:1px;font-weight:700;">EduControl v3.2</div>
+      </div>
     </div>
 
     <!-- MENU -->
@@ -1504,7 +1510,7 @@ body.light .ogrenci-row{background:#f5f7f5;border-color:#d4e0d4;}
         <div style="font-size:0.78rem;color:#6b8cae;margin-bottom:4px;">Giriş Yapan Rol</div>
         <div class="stat-num" id="rol-text" style="font-size:1.2rem;">Şifresiz</div>
       </div>
-      <div class="list-item"><div class="list-item-title">Versiyon</div><div class="list-item-desc">v3.1 - EduControl App</div></div>
+      <div class="list-item"><div class="list-item-title">Versiyon</div><div class="list-item-desc">v3.2 - EduControl App</div></div>
       <div class="list-item"><div class="list-item-title">Geliştirici</div><div class="list-item-desc">ESY YAZILIM</div></div>
       <div class="list-item"><div class="list-item-title">Tema</div><div class="list-item-desc" id="tema-text">🌙 Koyu Tema</div></div>
       <button class="btn-pri red" onclick="cikisYap()">🚪 Çıkış Yap</button>
@@ -2033,6 +2039,19 @@ window.addEventListener('appinstalled', function() {
   if (banner) banner.style.display = 'none';
   deferredPrompt = null;
 });
+
+function anaEkranaEkle() {
+  if (deferredPrompt) {
+    pwaCur();
+  } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    var b = document.getElementById('ios-banner');
+    if (b) b.style.display = 'block';
+  } else if (/Android/i.test(navigator.userAgent)) {
+    showModal('📲','Ana Ekrana Ekle','Tarayıcı menüsünden (⋮) "Ana ekrana ekle" veya "Uygulamayı yükle" seçeneğine dokunun.');
+  } else {
+    showModal('📲','Ana Ekrana Ekle','Tarayıcı menüsünden "Ana ekrana ekle" veya "Yükle" seçeneğini kullanabilirsiniz.');
+  }
+}
 
 function pwaCur() {
   if (deferredPrompt) {
